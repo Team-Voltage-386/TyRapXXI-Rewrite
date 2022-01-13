@@ -14,7 +14,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class DriveSubsystem extends SubsystemBase {
-
+    // initialize motors and drivetrain
     public final CANSparkMax m_frontLeftMotor = new CANSparkMax(Constants.DriveConstants.kFrontLeft,
             MotorType.kBrushless);
     public final CANSparkMax m_frontRightMotor = new CANSparkMax(Constants.DriveConstants.kFrontRight,
@@ -23,13 +23,14 @@ public class DriveSubsystem extends SubsystemBase {
             MotorType.kBrushless);
     public final CANSparkMax m_rearRightMotor = new CANSparkMax(Constants.DriveConstants.kRearRight,
             MotorType.kBrushless);
-    public final DifferentialDrive m_driveTrain = new DifferentialDrive(m_rearLeftMotor, m_frontRightMotor);
+    public final DifferentialDrive m_driveTrain = new DifferentialDrive(m_frontLeftMotor, m_rearRightMotor);
 
     public DriveSubsystem() {
         // drivetrain
-        m_rearLeftMotor.setInverted(true);
-        m_frontLeftMotor.follow(m_rearLeftMotor);
-        m_rearRightMotor.follow(m_frontRightMotor);
+        m_frontLeftMotor.setInverted(true);
+        m_rearRightMotor.setInverted(false);
+        m_rearLeftMotor.follow(m_frontLeftMotor);
+        m_frontRightMotor.follow(m_rearRightMotor);
     }
 
     @Override
