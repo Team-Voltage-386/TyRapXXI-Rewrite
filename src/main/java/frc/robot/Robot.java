@@ -35,9 +35,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    m_robotContainer.m_frontRightMotor.setInverted(true);
-    m_robotContainer.m_frontLeftMotor.follow(m_robotContainer.m_rearLeftMotor);
-    m_robotContainer.m_rearRightMotor.follow(m_robotContainer.m_frontRightMotor);
+    
 
   }
 

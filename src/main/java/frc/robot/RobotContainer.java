@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -25,19 +26,13 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  public final CANSparkMax m_frontLeftMotor = new CANSparkMax(Constants.DriveConstants.kFrontLeft,
-      MotorType.kBrushless);
-  public final CANSparkMax m_frontRightMotor = new CANSparkMax(Constants.DriveConstants.kFrontRight,
-      MotorType.kBrushless);
-  public final CANSparkMax m_rearLeftMotor = new CANSparkMax(Constants.DriveConstants.kRearLeft, MotorType.kBrushless);
-  public final CANSparkMax m_rearRightMotor = new CANSparkMax(Constants.DriveConstants.kRearLeft, MotorType.kBrushless);
-  public final DifferentialDrive m_driveTrain = new DifferentialDrive(m_rearLeftMotor, m_frontRightMotor);
 
-  public final Joystick m_joystick = new Joystick(0);
+  // drivecontroller
+  public static final Joystick m_joystick = new Joystick(0);
 
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-
+  private final DriveSubsystem m_driveSubSystem = new DriveSubsystem();
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
   /**
