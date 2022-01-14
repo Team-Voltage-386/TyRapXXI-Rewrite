@@ -27,9 +27,12 @@ public class BallMovementSubsystem extends SubsystemBase {
         // This method will be called once per scheduler run
         // m_compressor.enableDigital();
         m_ballPickupSolenoid.set(DoubleSolenoid.Value.kOff);
-        if (RobotContainer.m_manipulatorController.getRawButtonPressed(kA)) {
+        if (RobotContainer.m_manipulatorController.getRawButtonPressed(kA)
+                && (m_ballPickupSolenoid.get() == DoubleSolenoid.Value.kReverse
+                        || m_ballPickupSolenoid.get() == DoubleSolenoid.Value.kOff)) {
             m_ballPickupSolenoid.set(DoubleSolenoid.Value.kForward);
-        } else if (RobotContainer.m_manipulatorController.getRawButtonPressed(kB)) {
+        } else if (RobotContainer.m_manipulatorController.getRawButtonPressed(kB)
+                && m_ballPickupSolenoid.get() == DoubleSolenoid.Value.kForward) {
             m_ballPickupSolenoid.set(DoubleSolenoid.Value.kReverse);
         }
 
