@@ -14,15 +14,17 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax.ExternalFollower;
 
+import static frc.robot.Constants.DriveConstants.*;
+
 public class DriveSubsystem extends SubsystemBase {
         // initialize motors and drivetrain
-        public final CANSparkMax m_frontLeftMotor = new CANSparkMax(Constants.DriveConstants.kFrontLeft,
+        public final CANSparkMax m_frontLeftMotor = new CANSparkMax(kFrontLeft,
                         MotorType.kBrushless);
-        public final CANSparkMax m_frontRightMotor = new CANSparkMax(Constants.DriveConstants.kFrontRight,
+        public final CANSparkMax m_frontRightMotor = new CANSparkMax(kFrontRight,
                         MotorType.kBrushless);
-        public final CANSparkMax m_rearLeftMotor = new CANSparkMax(Constants.DriveConstants.kRearLeft,
+        public final CANSparkMax m_rearLeftMotor = new CANSparkMax(kRearLeft,
                         MotorType.kBrushless);
-        public final CANSparkMax m_rearRightMotor = new CANSparkMax(Constants.DriveConstants.kRearRight,
+        public final CANSparkMax m_rearRightMotor = new CANSparkMax(kRearRight,
                         MotorType.kBrushless);
         public final DifferentialDrive m_driveTrain = new DifferentialDrive(m_frontLeftMotor, m_rearRightMotor);
 
@@ -43,8 +45,8 @@ public class DriveSubsystem extends SubsystemBase {
         public void periodic() {
                 // This method will be called once per scheduler run
                 m_driveTrain.tankDrive(
-                                RobotContainer.m_joystick.getRawAxis(Constants.ControllerConstants.kLeftVertical),
-                                RobotContainer.m_joystick.getRawAxis(Constants.ControllerConstants.kRightVertical));
+                                RobotContainer.m_driverController.getRawAxis(Constants.ControllerConstants.kLeftVertical),
+                                RobotContainer.m_driverController.getRawAxis(Constants.ControllerConstants.kRightVertical));
         }
 
         // @Override
