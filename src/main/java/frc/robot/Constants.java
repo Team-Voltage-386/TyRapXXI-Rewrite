@@ -45,7 +45,7 @@ public final class Constants {
         public static final int kRearRight = 3; // CAN (Spark)
     }
 
-    public static final class IntakeConstants {
+    public static final class BallMovementConstants {
         public static final int kPneumaticsModule = 0; // PCM
         public static final int kBallPickupForwardChannel = 0; // PCM
         public static final int kBallPickupReverseChannel = 1; // PCM
