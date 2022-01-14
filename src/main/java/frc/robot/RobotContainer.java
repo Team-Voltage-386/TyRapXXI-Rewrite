@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.BallMovementSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -31,11 +32,12 @@ public class RobotContainer {
   public static final Joystick m_driverController = new Joystick(0);
 
   // manipulatorcontroller
-  public static final Joystick m_manipulatorController = new Joystick(0); //TESTING
+  public static final Joystick m_manipulatorController = new Joystick(0); // TESTING
 
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final DriveSubsystem m_driveSubSystem = new DriveSubsystem();
+  private final BallMovementSubsystem m_BallMovementSubsystem = new BallMovementSubsystem();
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
   /**
