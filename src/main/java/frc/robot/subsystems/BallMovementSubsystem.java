@@ -22,19 +22,46 @@ public class BallMovementSubsystem extends SubsystemBase {
 
     }
 
+    protected boolean b_intakeDeployed;
+
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        // m_compressor.enableDigital();
-        m_ballPickupSolenoid.set(DoubleSolenoid.Value.kOff);
-        if (RobotContainer.m_manipulatorController.getRawButtonPressed(kA)
-                && (m_ballPickupSolenoid.get() == DoubleSolenoid.Value.kReverse
-                        || m_ballPickupSolenoid.get() == DoubleSolenoid.Value.kOff)) {
-            m_ballPickupSolenoid.set(DoubleSolenoid.Value.kForward);
-        } else if (RobotContainer.m_manipulatorController.getRawButtonPressed(kB)
-                && m_ballPickupSolenoid.get() == DoubleSolenoid.Value.kForward) {
-            m_ballPickupSolenoid.set(DoubleSolenoid.Value.kReverse);
+        /* Toggle mode */
+        
+        if (RobotContainer.m_manipulatorController.getRawButtonPressed(kA)) {
+            if (m_ballPickupSolenoid.get() == DoubleSolenoid.Value.kReverse
+                    || m_ballPickupSolenoid.get() == DoubleSolenoid.Value.kOff) {
+                m_ballPickupSolenoid.set(DoubleSolenoid.Value.kForward);
+                System.out.println("deploy");
+            } else {
+                m_ballPickupSolenoid.set(DoubleSolenoid.Value.kReverse);
+                System.out.println("retract");
+            }
         }
+        /* A-B mode */
+        // if (RobotContainer.m_manipulatorController.getRawButtonPressed(kA)
+        // && (m_ballPickupSolenoid.get() == DoubleSolenoid.Value.kReverse
+        // || m_ballPickupSolenoid.get() == DoubleSolenoid.Value.kOff)) {
+        // System.out.println("!!!!!!about to deploy!!!!!!");
+        // m_ballPickupSolenoid.set(DoubleSolenoid.Value.kForward);
+        // System.out.println("!!!!!!deploy!!!!!!");
+        // } else if (RobotContainer.m_manipulatorController.getRawButtonPressed(kB)
+        // && (m_ballPickupSolenoid.get() == DoubleSolenoid.Value.kForward
+        // || m_ballPickupSolenoid.get() == DoubleSolenoid.Value.kOff)) {
+        // System.out.println("!!!!!!about to retract!!!!!!");
+        // m_ballPickupSolenoid.set(DoubleSolenoid.Value.kReverse);
+        // System.out.println("!!!!!!retract!!!!!!");
+        // }
+        /* */
+
+        // if(RobotContainer.m_manipulatorController.getRawButtonPressed(kA)){
+        // System.out.println("A");
+        // }
+        // else if(RobotContainer.m_manipulatorController.getRawButtonPressed(kB)){
+        // System.out.println("B");
+        // }
+        System.out.println(m_ballPickupSolenoid.get());
 
         // if
         // (RobotContainer.m_manipulatorController.getRawButton(kBallPickupForwardChannel))

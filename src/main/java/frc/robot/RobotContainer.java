@@ -32,7 +32,7 @@ public class RobotContainer {
   public static final Joystick m_driverController = new Joystick(0);
 
   // manipulatorcontroller
-  public static final Joystick m_manipulatorController = new Joystick(0); // TESTING
+  public static final Joystick m_manipulatorController = new Joystick(1);
 
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
