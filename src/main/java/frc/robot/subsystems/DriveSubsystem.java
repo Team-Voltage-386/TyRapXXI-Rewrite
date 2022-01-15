@@ -14,21 +14,26 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax.ExternalFollower;
 
 public class DriveSubsystem extends SubsystemBase {
 
         // initialize motors and drivetrain
-        public final CANSparkMax m_frontLeftMotor = new CANSparkMax(Constants.DriveConstants.kFrontLeft,
+        public final CANSparkMax frontLeftMotor = new CANSparkMax(Constants.DriveConstants.kFrontLeft,
                         MotorType.kBrushless);
-        public final CANSparkMax m_frontRightMotor = new CANSparkMax(Constants.DriveConstants.kFrontRight,
+        public final CANSparkMax frontRightMotor = new CANSparkMax(Constants.DriveConstants.kFrontRight,
                         MotorType.kBrushless);
-        public final CANSparkMax m_rearLeftMotor = new CANSparkMax(Constants.DriveConstants.kRearLeft,
+        public final CANSparkMax rearLeftMotor = new CANSparkMax(Constants.DriveConstants.kRearLeft,
                         MotorType.kBrushless);
-        public final CANSparkMax m_rearRightMotor = new CANSparkMax(Constants.DriveConstants.kRearRight,
+        public final CANSparkMax rearRightMotor = new CANSparkMax(Constants.DriveConstants.kRearRight,
                         MotorType.kBrushless);
-        public final DifferentialDrive m_driveTrain = new DifferentialDrive(m_frontLeftMotor, m_rearRightMotor);
+        public final DifferentialDrive driveTrain = new DifferentialDrive(frontLeftMotor, rearRightMotor);
+
+        // Sensor instantiations
+        RelativeEncoder leftEncoder = rearLeftMotor.getEncoder();
+        RelativeEncoder rightEncoder = frontRightMotor.getEncoder();
 
         // Creates a shuffleboard tab for the drive
   private ShuffleboardTab tab = Shuffleboard.getTab("Drive");
@@ -58,23 +63,44 @@ public class DriveSubsystem extends SubsystemBase {
       
         public DriveSubsystem() {
                 // drivetrain
-                m_frontLeftMotor.restoreFactoryDefaults();
-                m_frontRightMotor.restoreFactoryDefaults();
-                m_rearLeftMotor.restoreFactoryDefaults();
-                m_rearRightMotor.restoreFactoryDefaults();
+                frontLeftMotor.restoreFactoryDefaults();
+                frontRightMotor.restoreFactoryDefaults();
+                rearLeftMotor.restoreFactoryDefaults();
+                rearRightMotor.restoreFactoryDefaults();
 
-                m_frontLeftMotor.setInverted(true);
-                m_rearRightMotor.setInverted(false);
-                m_rearLeftMotor.follow(m_frontLeftMotor);
-                m_frontRightMotor.follow(m_rearRightMotor);
+                frontLeftMotor.setInverted(true);
+                rearRightMotor.setInverted(false);
+                rearLeftMotor.follow(frontLeftMotor);
+                frontRightMotor.follow(rearRightMotor);
         }
 
         @Override
         public void periodic() {
                 // This method will be called once per scheduler run
-                m_driveTrain.tankDrive(
+                driveTrain.tankDrive(
                                 RobotContainer.m_joystick.getRawAxis(Constants.ControllerConstants.kLeftVertical),
                                 RobotContainer.m_joystick.getRawAxis(Constants.ControllerConstants.kRightVertical));
+                // Update output widgets
+                frontLeftOutputWidget.setDouble(frontLeftMotor.get());
+                frontRightOutputWidget.setDouble(frontRightMotor.get());
+                backLeftOutputWidget.setDouble(rearLeftMotor.get());
+                backRightOutputWidget.setDouble(rearRightMotor.get());
+
+                // Update temp widgets
+                frontLeftTempWidget.setDouble(frontLeftMotor.getMotorTemperature());
+                frontRightTempWidget.setDouble(frontRightMotor.getMotorTemperature());
+                backLeftTempWidget.setDouble(rearLeftMotor.getMotorTemperature());
+                backRightTempWidget.setDouble(rearRightMotor.getMotorTemperature());
+
+                // Update current widgets
+                frontLeftCurrentWidget.setDouble(frontLeftMotor.getOutputCurrent());
+                frontRightCurrentWidget.setDouble(frontRightMotor.getOutputCurrent());
+                backLeftCurrentWidget.setDouble(rearLeftMotor.getOutputCurrent());
+                backRightCurrentWidget.setDouble(rearRightMotor.getOutputCurrent());
+
+                // Update encoder widgets
+                leftEncoderWidget.setDouble(leftEncoder.getPosition());
+                rightEncoderWidget.setDouble(rightEncoder.getPosition());
         }
 
         // @Override
