@@ -59,10 +59,10 @@ public class RobotContainer {
      teleopSendableChooser.setDefaultOption("Drive & Ball Movement", true);
      driverTab.add(teleopSendableChooser).withSize(2, 1).withPosition(0, 1);
 
-  // }
+  }
 
-  // public Boolean getTeleopSendableChooser() {
-  //       return teleopSendableChooser.getSelected();
+  public Boolean getTeleopSendableChooser() {
+        return teleopSendableChooser.getSelected();
   }
 
   /**
