@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 public final class Constants {
 
     public static final class ControllerConstants {
-        
+
         public static final int kLeftVertical = 1;
         public static final int kRightVertical = 5;
         public static final int kLeftHorizontal = 0;
@@ -64,8 +64,7 @@ public final class Constants {
         public static final int kIndexer = 9; // DIO
         public static final int kEntrance = 7; // DIO
         public static final int kFeederSensor = 10; // DIO (MoreBoard Slot 0)
-       
-        
+
     }
-    }
+
 }

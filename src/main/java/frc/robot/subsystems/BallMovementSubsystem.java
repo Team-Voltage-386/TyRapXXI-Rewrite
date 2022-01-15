@@ -28,11 +28,17 @@ public class BallMovementSubsystem extends SubsystemBase {
 
     /* motor instantiations */
     public final TalonSRX m_intakeMotor = new TalonSRX(kIntakeMotor);
-
+    public final CANSparkMax m_launcherLead = new CANSparkMax(kLauncherLead, MotorType.kBrushless);
+    public final CANSparkMax m_launcherFollower = new CANSparkMax(kLauncherFollower, MotorType.kBrushless);
     /* sensor instantiations */
 
     public BallMovementSubsystem() {
+        m_intakeMotor.configFactoryDefault();
+        m_intakeMotor.configNeutralDeadband(.1);
 
+        m_launcherFollower.restoreFactoryDefaults();
+        m_launcherLead.restoreFactoryDefaults();
+        m_launcherFollower.follow(m_launcherLead, true);
     }
 
     protected boolean d_intakeLatch = false;// intake deployed status
@@ -49,21 +55,20 @@ public class BallMovementSubsystem extends SubsystemBase {
         } else {
             m_ballPickupSolenoid.set(DoubleSolenoid.Value.kReverse);
         }
+        /* intake motor */
         if (d_intakeLatch) {
             m_intakeMotor.set(ControlMode.PercentOutput,
-                    deadband(RobotContainer.m_manipulatorController.getRawAxis(kRightTrigger)));
+                    RobotContainer.m_manipulatorController.getRawAxis(kRightTrigger));
         } else {
             m_intakeMotor.set(ControlMode.PercentOutput, 0);
         }
-
-    }
-
-    // throw small values
-    private double deadband(double power) {
-        if (power < 0.1 && power > -0.1) {
-            return 0;
+        /* launcher */
+        if (d_intakeLatch) {
+            m_launcherLead.set(RobotContainer.m_manipulatorController.getRawAxis(kLeftTrigger));
+        } else {
+            m_launcherLead.set(0);
         }
-        return power;
+
     }
 
     @Override
