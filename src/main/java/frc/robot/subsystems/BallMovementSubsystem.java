@@ -30,6 +30,8 @@ public class BallMovementSubsystem extends SubsystemBase {
     public final TalonSRX m_intakeMotor = new TalonSRX(kIntakeMotor);
     public final CANSparkMax m_launcherLead = new CANSparkMax(kLauncherLead, MotorType.kBrushless);
     public final CANSparkMax m_launcherFollower = new CANSparkMax(kLauncherFollower, MotorType.kBrushless);
+    public final TalonSRX m_serializer = new TalonSRX(kSerializerMotor);
+    public final TalonSRX m_feeder = new TalonSRX(kFeeder);
     /* sensor instantiations */
 
     public BallMovementSubsystem() {
@@ -39,6 +41,11 @@ public class BallMovementSubsystem extends SubsystemBase {
         m_launcherFollower.restoreFactoryDefaults();
         m_launcherLead.restoreFactoryDefaults();
         m_launcherFollower.follow(m_launcherLead, true);
+
+        m_serializer.configFactoryDefault();
+        m_serializer.configNeutralDeadband(.1);
+        m_feeder.configFactoryDefault();
+        m_feeder.configNeutralDeadband(.1);
     }
 
     protected boolean d_intakeLatch = false;// intake deployed status
@@ -67,6 +74,20 @@ public class BallMovementSubsystem extends SubsystemBase {
             m_launcherLead.set(RobotContainer.m_manipulatorController.getRawAxis(kLeftTrigger));
         } else {
             m_launcherLead.set(0);
+        }
+        /* serializer manual */
+        if (d_intakeLatch) {
+            m_serializer.set(ControlMode.PercentOutput,
+                    RobotContainer.m_manipulatorController.getRawAxis(kLeftVertical));
+        } else {
+            m_serializer.set(ControlMode.PercentOutput, 0);
+        }
+        /* feeder manual */
+        if (d_intakeLatch) {
+            m_feeder.set(ControlMode.PercentOutput,
+                    RobotContainer.m_manipulatorController.getRawAxis(kRightVertical));
+        } else {
+            m_feeder.set(ControlMode.PercentOutput, 0);
         }
 
     }
