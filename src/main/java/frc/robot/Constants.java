@@ -24,6 +24,10 @@ public final class Constants {
         
         public static final int kLeftVertical = 1;
         public static final int kRightVertical = 5;
+        public static final int kLeftHorizontal = 0;
+        public static final int kRightHorizontal = 4;
+        public static final int kLeftTrigger = 2;
+        public static final int kRightTrigger = 3;
 
         public static final int kA = 1;
         public static final int kB = 2;
@@ -51,5 +55,17 @@ public final class Constants {
         public static final int kBallPickupReverseChannel = 1; // PCM
         public static final DoubleSolenoid.Value kIntakeDeployed = DoubleSolenoid.Value.kForward;
         public static final DoubleSolenoid.Value kIntakeRetracted = DoubleSolenoid.Value.kReverse;
+
+        public static final int kLauncherLead = 9; // CAN (Spark)
+        public static final int kLauncherFollower = 8; // CAN (Spark)
+        public static final int kFeeder = 9; // CAN (Talon)
+        public static final int kSerializerMotor = 3; // CAN (Talon)
+        public static final int kIntakeMotor = 7; // CAN (Talon)
+        public static final int kIndexer = 9; // DIO
+        public static final int kEntrance = 7; // DIO
+        public static final int kFeederSensor = 10; // DIO (MoreBoard Slot 0)
+       
+        
+    }
     }
 }
