@@ -15,6 +15,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax.ExternalFollower;
 
 import static frc.robot.Constants.DriveConstants.*;
+import static frc.robot.Constants.ControllerConstants.*;
 
 public class DriveSubsystem extends SubsystemBase {
         // initialize motors and drivetrain
@@ -41,12 +42,37 @@ public class DriveSubsystem extends SubsystemBase {
                 m_frontRightMotor.follow(m_rearRightMotor);
         }
 
+        protected double slowSpeedFactor = 0.6;
+        protected double topSpeedFactor = 1;
+        protected double safetySpeedFactor = 0.5;
+        protected double driveSpeedFactor;
+        protected double turnSpeedFactor;
+
+        protected int direction = -1;// -1 is turret is front, 1 is turret is back
+
+        protected boolean topGear = false;
+        protected boolean safetyMode = false; // edit for safety mode
+
         @Override
         public void periodic() {
                 // This method will be called once per scheduler run
-                m_driveTrain.tankDrive(
-                                RobotContainer.m_driverController.getRawAxis(Constants.ControllerConstants.kLeftVertical),
-                                RobotContainer.m_driverController.getRawAxis(Constants.ControllerConstants.kRightVertical));
+                topGear = (RobotContainer.m_driverController.getRawAxis(kRightTrigger) >= 0.1);
+                if (topGear) {
+                        driveSpeedFactor = topSpeedFactor;
+                } else {
+                        driveSpeedFactor = slowSpeedFactor;
+                }
+                turnSpeedFactor = slowSpeedFactor;
+                // turnSpeedFactor = driveSpeedFactor;
+                if (safetyMode) {
+                        driveSpeedFactor = driveSpeedFactor * safetySpeedFactor;
+                        turnSpeedFactor = turnSpeedFactor * safetySpeedFactor;
+                }
+                m_driveTrain.arcadeDrive(
+                                driveSpeedFactor * direction
+                                                * RobotContainer.m_driverController.getRawAxis(kLeftVertical),
+                                turnSpeedFactor * -1
+                                                * RobotContainer.m_driverController.getRawAxis(kRightHorizontal));
         }
 
         // @Override
