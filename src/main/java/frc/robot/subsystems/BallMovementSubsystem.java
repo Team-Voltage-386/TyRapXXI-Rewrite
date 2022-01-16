@@ -23,71 +23,71 @@ import com.revrobotics.CANSparkMax.ExternalFollower;
 public class BallMovementSubsystem extends SubsystemBase {
 
     /* actuator instantiations */
-    public final DoubleSolenoid m_ballPickupSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
+    public final DoubleSolenoid ballPickupSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
             kBallPickupForwardChannel, kBallPickupReverseChannel);
 
     /* motor instantiations */
-    public final TalonSRX m_intakeMotor = new TalonSRX(kIntakeMotor);
-    public final CANSparkMax m_launcherLead = new CANSparkMax(kLauncherLead, MotorType.kBrushless);
-    public final CANSparkMax m_launcherFollower = new CANSparkMax(kLauncherFollower, MotorType.kBrushless);
-    public final TalonSRX m_serializer = new TalonSRX(kSerializerMotor);
-    public final TalonSRX m_feeder = new TalonSRX(kFeeder);
+    public final TalonSRX intakeMotor = new TalonSRX(kIntakeMotor);
+    public final CANSparkMax launcherLead = new CANSparkMax(kLauncherLead, MotorType.kBrushless);
+    public final CANSparkMax launcherFollower = new CANSparkMax(kLauncherFollower, MotorType.kBrushless);
+    public final TalonSRX serializer = new TalonSRX(kSerializerMotor);
+    public final TalonSRX feeder = new TalonSRX(kFeeder);
     /* sensor instantiations */
 
     public BallMovementSubsystem() {
-        m_intakeMotor.configFactoryDefault();
-        m_intakeMotor.configNeutralDeadband(.1);
+        intakeMotor.configFactoryDefault();
+        intakeMotor.configNeutralDeadband(.1);
 
-        m_launcherFollower.restoreFactoryDefaults();
-        m_launcherLead.restoreFactoryDefaults();
-        m_launcherFollower.follow(m_launcherLead, true);
+        launcherFollower.restoreFactoryDefaults();
+        launcherLead.restoreFactoryDefaults();
+        launcherFollower.follow(launcherLead, true);
 
-        m_serializer.configFactoryDefault();
-        m_serializer.configNeutralDeadband(.1);
-        m_feeder.configFactoryDefault();
-        m_feeder.configNeutralDeadband(.1);
+        serializer.configFactoryDefault();
+        serializer.configNeutralDeadband(.1);
+        feeder.configFactoryDefault();
+        feeder.configNeutralDeadband(.1);
     }
 
-    protected boolean d_intakeLatch = false;// intake deployed status
+    protected boolean intakeLatch = false;// intake deployed status
 
     @Override
     public void periodic() {
 
         /* intake deploy latch switch mode */
-        if (RobotContainer.m_manipulatorController.getRawButtonPressed(kA)) {
-            d_intakeLatch = !d_intakeLatch;
+        if (RobotContainer.manipulatorController.getRawButtonPressed(kA)) {
+            intakeLatch = !intakeLatch;
         }
-        if (d_intakeLatch) {
-            m_ballPickupSolenoid.set(DoubleSolenoid.Value.kForward);
+        if (intakeLatch) {
+            ballPickupSolenoid.set(DoubleSolenoid.Value.kForward);
         } else {
-            m_ballPickupSolenoid.set(DoubleSolenoid.Value.kReverse);
+            ballPickupSolenoid.set(DoubleSolenoid.Value.kReverse);
         }
         /* intake motor */
-        if (d_intakeLatch) {
-            m_intakeMotor.set(ControlMode.PercentOutput,
-                    RobotContainer.m_manipulatorController.getRawAxis(kRightTrigger));
+        if (intakeLatch) {
+            intakeMotor.set(ControlMode.PercentOutput,
+                    RobotContainer.manipulatorController.getRawAxis(kRightTrigger));
         } else {
-            m_intakeMotor.set(ControlMode.PercentOutput, 0);
+            intakeMotor.set(ControlMode.PercentOutput, 0);
         }
         /* launcher */
-        if (d_intakeLatch) {
-            m_launcherLead.set(RobotContainer.m_manipulatorController.getRawAxis(kLeftTrigger));
+        if (intakeLatch) {
+            launcherLead.set(RobotContainer.manipulatorController.getRawAxis(kLeftTrigger));
         } else {
-            m_launcherLead.set(0);
+            launcherLead.set(0);
         }
         /* serializer manual */
-        if (d_intakeLatch) {
-            m_serializer.set(ControlMode.PercentOutput,
-                    RobotContainer.m_manipulatorController.getRawAxis(kLeftVertical));
+        if (intakeLatch) {
+            serializer.set(ControlMode.PercentOutput,
+                    RobotContainer.manipulatorController.getRawAxis(kLeftVertical));
         } else {
-            m_serializer.set(ControlMode.PercentOutput, 0);
+            serializer.set(ControlMode.PercentOutput, 0);
         }
         /* feeder manual */
-        if (d_intakeLatch) {
-            m_feeder.set(ControlMode.PercentOutput,
-                    RobotContainer.m_manipulatorController.getRawAxis(kRightVertical));
+        if (intakeLatch) {
+            feeder.set(ControlMode.PercentOutput,
+                    RobotContainer.manipulatorController.getRawAxis(kRightVertical));
         } else {
-            m_feeder.set(ControlMode.PercentOutput, 0);
+            feeder.set(ControlMode.PercentOutput, 0);
         }
 
     }

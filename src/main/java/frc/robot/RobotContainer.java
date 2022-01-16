@@ -32,16 +32,16 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class RobotContainer {
 
   // drivecontroller
-  public static final Joystick m_driverController = new Joystick(0);
+  public static final Joystick driverController = new Joystick(0);
 
   // manipulatorcontroller
-  public static final Joystick m_manipulatorController = new Joystick(1);
+  public static final Joystick manipulatorController = new Joystick(1);
 
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final DriveSubsystem m_driveSubSystem = new DriveSubsystem();
-  private final BallMovementSubsystem m_BallMovementSubsystem = new BallMovementSubsystem();
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+  private final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
+  private final DriveSubsystem driveSubSystem = new DriveSubsystem();
+  private final BallMovementSubsystem BallMovementSubsystem = new BallMovementSubsystem();
+  private final ExampleCommand autoCommand = new ExampleCommand(exampleSubsystem);
 
    // Sendable chooser declarations
   // Shuffleboard declarations
@@ -88,6 +88,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return autoCommand;
   }
 }
