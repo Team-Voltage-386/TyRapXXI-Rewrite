@@ -18,6 +18,8 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax.ExternalFollower;
 
+import static frc.robot.Constants.DriveConstants.*;
+
 public class DriveSubsystem extends SubsystemBase {
 
         // initialize motors and drivetrain
@@ -78,8 +80,9 @@ public class DriveSubsystem extends SubsystemBase {
         public void periodic() {
                 // This method will be called once per scheduler run
                 driveTrain.tankDrive(
-                                RobotContainer.m_joystick.getRawAxis(Constants.ControllerConstants.kLeftVertical),
-                                RobotContainer.m_joystick.getRawAxis(Constants.ControllerConstants.kRightVertical));
+                        RobotContainer.driverController.getRawAxis(Constants.ControllerConstants.kLeftVertical),
+                        RobotContainer.driverController.getRawAxis(Constants.ControllerConstants.kRightVertical));
+
                 // Update output widgets
                 frontLeftOutputWidget.setDouble(frontLeftMotor.get());
                 frontRightOutputWidget.setDouble(frontRightMotor.get());

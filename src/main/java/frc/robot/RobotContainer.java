@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.BallMovementSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -31,11 +32,15 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class RobotContainer {
 
   // drivecontroller
-  public static final Joystick m_joystick = new Joystick(0);
+  public static final Joystick m_driverController = new Joystick(0);
+
+  // manipulatorcontroller
+  public static final Joystick m_manipulatorController = new Joystick(1);
 
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final DriveSubsystem m_driveSubSystem = new DriveSubsystem();
+  private final BallMovementSubsystem m_BallMovementSubsystem = new BallMovementSubsystem();
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
    // Sendable chooser declarations
