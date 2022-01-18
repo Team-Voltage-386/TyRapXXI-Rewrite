@@ -34,8 +34,7 @@ public class BallMovementSubsystem extends SubsystemBase {
     public final TalonSRX serializerMotor = new TalonSRX(kSerializerMotor);
     public final TalonSRX feederMotor = new TalonSRX(kFeeder);
     public final DigitalInput indexerSensor = new DigitalInput(kIndexer);
-    // DigitalInput entranceSensor;
-    // DigitalInput feederSensor;
+ 
     I2C.Port entranceSensorI2CPort = I2C.Port.kOnboard; // Port 0
     I2C.Port feederSensorI2CPort = I2C.Port.kMXP; // Port 1  
     /* sensor instantiations */
