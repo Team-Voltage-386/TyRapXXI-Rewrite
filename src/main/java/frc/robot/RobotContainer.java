@@ -7,6 +7,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.BallMovementSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -29,16 +32,21 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class RobotContainer {
 
   // drivecontroller
-  public static final Joystick m_driverController = new Joystick(0);
+  public static final Joystick driverController = new Joystick(0);
 
   // manipulatorcontroller
-  public static final Joystick m_manipulatorController = new Joystick(1);
+  public static final Joystick manipulatorController = new Joystick(1);
 
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final DriveSubsystem m_driveSubSystem = new DriveSubsystem();
-  private final BallMovementSubsystem m_BallMovementSubsystem = new BallMovementSubsystem();
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+  private final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
+  private final DriveSubsystem driveSubSystem = new DriveSubsystem();
+  private final BallMovementSubsystem BallMovementSubsystem = new BallMovementSubsystem();
+  private final ExampleCommand autoCommand = new ExampleCommand(exampleSubsystem);
+
+   // Sendable chooser declarations
+  // Shuffleboard declarations
+  public static ShuffleboardTab driverTab;
+  private SendableChooser<Boolean> teleopSendableChooser;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -46,6 +54,20 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+
+    // Instantiate Driver Tab
+    driverTab = Shuffleboard.getTab("Driver Tab");
+
+    // Set up teleop sendable chooser
+     teleopSendableChooser = new SendableChooser<Boolean>();
+     teleopSendableChooser.addOption("Drive Only", false);
+     teleopSendableChooser.setDefaultOption("Drive & Ball Movement", true);
+     driverTab.add(teleopSendableChooser).withSize(2, 1).withPosition(0, 1);
+
+  }
+
+  public Boolean getTeleopSendableChooser() {
+        return teleopSendableChooser.getSelected();
   }
 
   /**
@@ -66,6 +88,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return autoCommand;
   }
 }

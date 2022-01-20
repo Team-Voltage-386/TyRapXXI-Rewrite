@@ -4,13 +4,17 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax.ExternalFollower;
 
@@ -18,28 +22,59 @@ import static frc.robot.Constants.DriveConstants.*;
 import static frc.robot.Constants.ControllerConstants.*;
 
 public class DriveSubsystem extends SubsystemBase {
-        // initialize motors and drivetrain
-        public final CANSparkMax m_frontLeftMotor = new CANSparkMax(kFrontLeft,
-                        MotorType.kBrushless);
-        public final CANSparkMax m_frontRightMotor = new CANSparkMax(kFrontRight,
-                        MotorType.kBrushless);
-        public final CANSparkMax m_rearLeftMotor = new CANSparkMax(kRearLeft,
-                        MotorType.kBrushless);
-        public final CANSparkMax m_rearRightMotor = new CANSparkMax(kRearRight,
-                        MotorType.kBrushless);
-        public final DifferentialDrive m_driveTrain = new DifferentialDrive(m_frontLeftMotor, m_rearRightMotor);
 
+        // initialize motors and drivetrain
+        public final CANSparkMax frontLeftMotor = new CANSparkMax(Constants.DriveConstants.kFrontLeft,
+                        MotorType.kBrushless);
+        public final CANSparkMax frontRightMotor = new CANSparkMax(Constants.DriveConstants.kFrontRight,
+                        MotorType.kBrushless);
+        public final CANSparkMax rearLeftMotor = new CANSparkMax(Constants.DriveConstants.kRearLeft,
+                        MotorType.kBrushless);
+        public final CANSparkMax rearRightMotor = new CANSparkMax(Constants.DriveConstants.kRearRight,
+                        MotorType.kBrushless);
+        public final DifferentialDrive driveTrain = new DifferentialDrive(frontLeftMotor, rearRightMotor);
+
+        // Sensor instantiations
+        RelativeEncoder leftEncoder = rearLeftMotor.getEncoder();
+        RelativeEncoder rightEncoder = frontRightMotor.getEncoder();
+
+        // Creates a shuffleboard tab for the drive
+  private ShuffleboardTab tab = Shuffleboard.getTab("Drive");
+
+  // Create output widgets
+  private NetworkTableEntry frontLeftOutputWidget = tab.add("F-L Output", 0).withPosition(0, 0).getEntry();
+  private NetworkTableEntry frontRightOutputWidget = tab.add("F-R Output", 0).withPosition(1, 0).getEntry();
+  private NetworkTableEntry backLeftOutputWidget = tab.add("R-L Output", 0).withPosition(0, 1).getEntry();
+  private NetworkTableEntry backRightOutputWidget = tab.add("R-R Output", 0).withPosition(1, 1).getEntry();
+
+  // Create temperature widgets
+  private NetworkTableEntry frontLeftTempWidget = tab.add("F-L Temp", 0).withPosition(3, 0).getEntry();
+  private NetworkTableEntry frontRightTempWidget = tab.add("F-R Temp", 0).withPosition(4, 0).getEntry();
+  private NetworkTableEntry backLeftTempWidget = tab.add("R-L Temp", 0).withPosition(3, 1).getEntry();
+  private NetworkTableEntry backRightTempWidget = tab.add("R-R Temp", 0).withPosition(4, 1).getEntry();
+
+  // Create current widgets
+  private NetworkTableEntry frontLeftCurrentWidget = tab.add("F-L Current", 0).withPosition(6, 0).getEntry();
+  private NetworkTableEntry frontRightCurrentWidget = tab.add("F-R Current", 0).withPosition(7, 0).getEntry();
+  private NetworkTableEntry backLeftCurrentWidget = tab.add("R-L Current", 0).withPosition(6, 1).getEntry();
+  private NetworkTableEntry backRightCurrentWidget = tab.add("R-R Current", 0).withPosition(7, 1).getEntry();
+
+  // Create encoder widgets
+  private NetworkTableEntry leftEncoderWidget = tab.add("Left Encoder", 0).withSize(2, 1).withPosition(2, 2).getEntry();
+  private NetworkTableEntry rightEncoderWidget = tab.add("Right Encoder", 0).withSize(2, 1).withPosition(4, 2)
+      .getEntry();
+      
         public DriveSubsystem() {
                 // drivetrain
-                m_frontLeftMotor.restoreFactoryDefaults();
-                m_frontRightMotor.restoreFactoryDefaults();
-                m_rearLeftMotor.restoreFactoryDefaults();
-                m_rearRightMotor.restoreFactoryDefaults();
+                frontLeftMotor.restoreFactoryDefaults();
+                frontRightMotor.restoreFactoryDefaults();
+                rearLeftMotor.restoreFactoryDefaults();
+                rearRightMotor.restoreFactoryDefaults();
 
-                m_frontLeftMotor.setInverted(true);
-                m_rearRightMotor.setInverted(false);
-                m_rearLeftMotor.follow(m_frontLeftMotor);
-                m_frontRightMotor.follow(m_rearRightMotor);
+                frontLeftMotor.setInverted(true);
+                rearRightMotor.setInverted(false);
+                rearLeftMotor.follow(frontLeftMotor);
+                frontRightMotor.follow(rearRightMotor);
         }
 
         protected double slowSpeedFactor = 0.6;
@@ -56,7 +91,8 @@ public class DriveSubsystem extends SubsystemBase {
         @Override
         public void periodic() {
                 // This method will be called once per scheduler run
-                topGear = (RobotContainer.m_driverController.getRawAxis(kRightTrigger) >= 0.1);
+
+                topGear = (RobotContainer.driverController.getRawAxis(kRightTrigger) >= 0.1);
                 if (topGear) {
                         driveSpeedFactor = topSpeedFactor;
                 } else {
@@ -68,11 +104,50 @@ public class DriveSubsystem extends SubsystemBase {
                         driveSpeedFactor = driveSpeedFactor * safetySpeedFactor;
                         turnSpeedFactor = turnSpeedFactor * safetySpeedFactor;
                 }
-                m_driveTrain.arcadeDrive(
+                driveTrain.arcadeDrive(
                                 driveSpeedFactor * direction
-                                                * RobotContainer.m_driverController.getRawAxis(kLeftVertical),
+                                                * RobotContainer.driverController.getRawAxis(kLeftVertical),
                                 turnSpeedFactor * -1
-                                                * RobotContainer.m_driverController.getRawAxis(kRightHorizontal));
+                                                * RobotContainer.driverController.getRawAxis(kRightHorizontal));
+
+                // Update output widgets
+                frontLeftOutputWidget.setDouble(frontLeftMotor.get());
+                frontRightOutputWidget.setDouble(frontRightMotor.get());
+                backLeftOutputWidget.setDouble(rearLeftMotor.get());
+                backRightOutputWidget.setDouble(rearRightMotor.get());
+
+                // Update temp widgets
+                frontLeftTempWidget.setDouble(frontLeftMotor.getMotorTemperature());
+                frontRightTempWidget.setDouble(frontRightMotor.getMotorTemperature());
+                backLeftTempWidget.setDouble(rearLeftMotor.getMotorTemperature());
+                backRightTempWidget.setDouble(rearRightMotor.getMotorTemperature());
+
+                // Update current widgets
+                frontLeftCurrentWidget.setDouble(frontLeftMotor.getOutputCurrent());
+                frontRightCurrentWidget.setDouble(frontRightMotor.getOutputCurrent());
+                backLeftCurrentWidget.setDouble(rearLeftMotor.getOutputCurrent());
+                backRightCurrentWidget.setDouble(rearRightMotor.getOutputCurrent());
+
+                // Update encoder widgets
+                leftEncoderWidget.setDouble(leftEncoder.getPosition());
+                rightEncoderWidget.setDouble(rightEncoder.getPosition());
+                topGear = (RobotContainer.driverController.getRawAxis(kRightTrigger) >= 0.1);
+                if (topGear) {
+                        driveSpeedFactor = topSpeedFactor;
+                } else {
+                        driveSpeedFactor = slowSpeedFactor;
+                }
+                turnSpeedFactor = slowSpeedFactor;
+                // turnSpeedFactor = driveSpeedFactor;
+                if (safetyMode) {
+                        driveSpeedFactor = driveSpeedFactor * safetySpeedFactor;
+                        turnSpeedFactor = turnSpeedFactor * safetySpeedFactor;
+                }
+                driveTrain.arcadeDrive(
+                                driveSpeedFactor * direction
+                                                * RobotContainer.driverController.getRawAxis(kLeftVertical),
+                                turnSpeedFactor * -1
+                                                * RobotContainer.driverController.getRawAxis(kRightHorizontal));
         }
 
         // @Override
