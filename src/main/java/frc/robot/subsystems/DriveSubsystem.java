@@ -19,7 +19,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax.ExternalFollower;
 
 import static frc.robot.Constants.DriveConstants.*;
-import static frc.robot.Constants.ControllerConstants.*;
 
 public class DriveSubsystem extends SubsystemBase {
 
@@ -39,31 +38,32 @@ public class DriveSubsystem extends SubsystemBase {
         RelativeEncoder rightEncoder = frontRightMotor.getEncoder();
 
         // Creates a shuffleboard tab for the drive
-  private ShuffleboardTab tab = Shuffleboard.getTab("Drive");
+        private ShuffleboardTab tab = Shuffleboard.getTab("Drive");
 
-  // Create output widgets
-  private NetworkTableEntry frontLeftOutputWidget = tab.add("F-L Output", 0).withPosition(0, 0).getEntry();
-  private NetworkTableEntry frontRightOutputWidget = tab.add("F-R Output", 0).withPosition(1, 0).getEntry();
-  private NetworkTableEntry backLeftOutputWidget = tab.add("R-L Output", 0).withPosition(0, 1).getEntry();
-  private NetworkTableEntry backRightOutputWidget = tab.add("R-R Output", 0).withPosition(1, 1).getEntry();
+        // Create output widgets
+        private NetworkTableEntry frontLeftOutputWidget = tab.add("F-L Output", 0).withPosition(0, 0).getEntry();
+        private NetworkTableEntry frontRightOutputWidget = tab.add("F-R Output", 0).withPosition(1, 0).getEntry();
+        private NetworkTableEntry backLeftOutputWidget = tab.add("R-L Output", 0).withPosition(0, 1).getEntry();
+        private NetworkTableEntry backRightOutputWidget = tab.add("R-R Output", 0).withPosition(1, 1).getEntry();
 
-  // Create temperature widgets
-  private NetworkTableEntry frontLeftTempWidget = tab.add("F-L Temp", 0).withPosition(3, 0).getEntry();
-  private NetworkTableEntry frontRightTempWidget = tab.add("F-R Temp", 0).withPosition(4, 0).getEntry();
-  private NetworkTableEntry backLeftTempWidget = tab.add("R-L Temp", 0).withPosition(3, 1).getEntry();
-  private NetworkTableEntry backRightTempWidget = tab.add("R-R Temp", 0).withPosition(4, 1).getEntry();
+        // Create temperature widgets
+        private NetworkTableEntry frontLeftTempWidget = tab.add("F-L Temp", 0).withPosition(3, 0).getEntry();
+        private NetworkTableEntry frontRightTempWidget = tab.add("F-R Temp", 0).withPosition(4, 0).getEntry();
+        private NetworkTableEntry backLeftTempWidget = tab.add("R-L Temp", 0).withPosition(3, 1).getEntry();
+        private NetworkTableEntry backRightTempWidget = tab.add("R-R Temp", 0).withPosition(4, 1).getEntry();
 
-  // Create current widgets
-  private NetworkTableEntry frontLeftCurrentWidget = tab.add("F-L Current", 0).withPosition(6, 0).getEntry();
-  private NetworkTableEntry frontRightCurrentWidget = tab.add("F-R Current", 0).withPosition(7, 0).getEntry();
-  private NetworkTableEntry backLeftCurrentWidget = tab.add("R-L Current", 0).withPosition(6, 1).getEntry();
-  private NetworkTableEntry backRightCurrentWidget = tab.add("R-R Current", 0).withPosition(7, 1).getEntry();
+        // Create current widgets
+        private NetworkTableEntry frontLeftCurrentWidget = tab.add("F-L Current", 0).withPosition(6, 0).getEntry();
+        private NetworkTableEntry frontRightCurrentWidget = tab.add("F-R Current", 0).withPosition(7, 0).getEntry();
+        private NetworkTableEntry backLeftCurrentWidget = tab.add("R-L Current", 0).withPosition(6, 1).getEntry();
+        private NetworkTableEntry backRightCurrentWidget = tab.add("R-R Current", 0).withPosition(7, 1).getEntry();
 
-  // Create encoder widgets
-  private NetworkTableEntry leftEncoderWidget = tab.add("Left Encoder", 0).withSize(2, 1).withPosition(2, 2).getEntry();
-  private NetworkTableEntry rightEncoderWidget = tab.add("Right Encoder", 0).withSize(2, 1).withPosition(4, 2)
-      .getEntry();
-      
+        // Create encoder widgets
+        private NetworkTableEntry leftEncoderWidget = tab.add("Left Encoder", 0).withSize(2, 1).withPosition(2, 2)
+                        .getEntry();
+        private NetworkTableEntry rightEncoderWidget = tab.add("Right Encoder", 0).withSize(2, 1).withPosition(4, 2)
+                        .getEntry();
+
         public DriveSubsystem() {
                 // drivetrain
                 frontLeftMotor.restoreFactoryDefaults();
@@ -77,38 +77,20 @@ public class DriveSubsystem extends SubsystemBase {
                 frontRightMotor.follow(rearRightMotor);
         }
 
-        protected double slowSpeedFactor = 0.6;
-        protected double topSpeedFactor = 1;
-        protected double safetySpeedFactor = 0.5;
-        protected double driveSpeedFactor;
-        protected double turnSpeedFactor;
+        // protected double slowSpeedFactor = 0.6;
+        // protected double topSpeedFactor = 1;
+        // protected double safetySpeedFactor = 0.5;
+        // protected double driveSpeedFactor;
+        // protected double turnSpeedFactor;
 
-        protected int direction = -1;// -1 is turret is front, 1 is turret is back
+        // protected int direction = -1;// -1 is turret is front, 1 is turret is back
 
-        protected boolean topGear = false;
-        protected boolean safetyMode = false; // edit for safety mode
+        // protected boolean topGear = false;
+        // protected boolean safetyMode = false; // edit for safety mode
 
         @Override
         public void periodic() {
                 // This method will be called once per scheduler run
-
-                topGear = (RobotContainer.driverController.getRawAxis(kRightTrigger) >= 0.1);
-                if (topGear) {
-                        driveSpeedFactor = topSpeedFactor;
-                } else {
-                        driveSpeedFactor = slowSpeedFactor;
-                }
-                turnSpeedFactor = slowSpeedFactor;
-                // turnSpeedFactor = driveSpeedFactor;
-                if (safetyMode) {
-                        driveSpeedFactor = driveSpeedFactor * safetySpeedFactor;
-                        turnSpeedFactor = turnSpeedFactor * safetySpeedFactor;
-                }
-                driveTrain.arcadeDrive(
-                                driveSpeedFactor * direction
-                                                * RobotContainer.driverController.getRawAxis(kLeftVertical),
-                                turnSpeedFactor * -1
-                                                * RobotContainer.driverController.getRawAxis(kRightHorizontal));
 
                 // Update output widgets
                 frontLeftOutputWidget.setDouble(frontLeftMotor.get());
@@ -131,25 +113,29 @@ public class DriveSubsystem extends SubsystemBase {
                 // Update encoder widgets
                 leftEncoderWidget.setDouble(leftEncoder.getPosition());
                 rightEncoderWidget.setDouble(rightEncoder.getPosition());
-                topGear = (RobotContainer.driverController.getRawAxis(kRightTrigger) >= 0.1);
-                if (topGear) {
-                        driveSpeedFactor = topSpeedFactor;
-                } else {
-                        driveSpeedFactor = slowSpeedFactor;
-                }
-                turnSpeedFactor = slowSpeedFactor;
-                // turnSpeedFactor = driveSpeedFactor;
-                if (safetyMode) {
-                        driveSpeedFactor = driveSpeedFactor * safetySpeedFactor;
-                        turnSpeedFactor = turnSpeedFactor * safetySpeedFactor;
-                }
-                driveTrain.arcadeDrive(
-                                driveSpeedFactor * direction
-                                                * RobotContainer.driverController.getRawAxis(kLeftVertical),
-                                turnSpeedFactor * -1
-                                                * RobotContainer.driverController.getRawAxis(kRightHorizontal));
+
         }
 
+        public void arcadeDrive(Double forwardPower, Double turnPower) {
+                // topGear = (RobotContainer.driverController.getRawAxis(kRightTrigger) >= 0.1);
+                // if (topGear) {
+                // driveSpeedFactor = topSpeedFactor;
+                // } else {
+                // driveSpeedFactor = slowSpeedFactor;
+                // }
+                // turnSpeedFactor = slowSpeedFactor;
+                // // turnSpeedFactor = driveSpeedFactor;
+                // if (safetyMode) {
+                // driveSpeedFactor = driveSpeedFactor * safetySpeedFactor;
+                // turnSpeedFactor = turnSpeedFactor * safetySpeedFactor;
+                // }
+                // driveTrain.arcadeDrive(
+                // driveSpeedFactor * direction
+                // * RobotContainer.driverController.getRawAxis(kLeftVertical),
+                // turnSpeedFactor * -1
+                // * RobotContainer.driverController.getRawAxis(kRightHorizontal));
+                driveTrain.arcadeDrive(forwardPower, turnPower);
+        }
         // @Override
         // public void simulationPeriodic() {
         // // This method will be called once per scheduler run during simulation

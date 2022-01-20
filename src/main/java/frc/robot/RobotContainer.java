@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.drive.*;
 import frc.robot.subsystems.BallMovementSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -42,6 +43,7 @@ public class RobotContainer {
   private final DriveSubsystem driveSubSystem = new DriveSubsystem();
   private final BallMovementSubsystem BallMovementSubsystem = new BallMovementSubsystem();
   private final ExampleCommand autoCommand = new ExampleCommand(exampleSubsystem);
+  private final ManualDrive manualDriveCommand = new ManualDrive(driveSubSystem);
 
    // Sendable chooser declarations
   // Shuffleboard declarations
@@ -89,5 +91,9 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
     return autoCommand;
+  }
+  
+  public Command getManualDriveCommand(){
+    return manualDriveCommand;
   }
 }
