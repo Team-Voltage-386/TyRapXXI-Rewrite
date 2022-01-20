@@ -65,6 +65,8 @@ public final class Constants {
         public static final int kEntrance = 7; // DIO
         public static final int kFeederSensor = 10; // DIO (MoreBoard Slot 0)
 
+        public static final int kEntranceProximityThreshold = 100;
+        public static final int kFeederProximityThreshold = 100;
     }
 
 }
