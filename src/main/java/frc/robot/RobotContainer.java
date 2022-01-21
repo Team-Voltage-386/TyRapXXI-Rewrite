@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.drive.*;
+import frc.robot.Constants.ControllerConstants;
+import frc.robot.Constants.ControllerConstants.*;
 import frc.robot.subsystems.BallMovementSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -45,7 +47,7 @@ public class RobotContainer {
   private final ExampleCommand autoCommand = new ExampleCommand(exampleSubsystem);
   private final ManualDrive manualDriveCommand = new ManualDrive(driveSubSystem);
 
-   // Sendable chooser declarations
+  // Sendable chooser declarations
   // Shuffleboard declarations
   public static ShuffleboardTab driverTab;
   private SendableChooser<Boolean> teleopSendableChooser;
@@ -61,15 +63,18 @@ public class RobotContainer {
     driverTab = Shuffleboard.getTab("Driver Tab");
 
     // Set up teleop sendable chooser
-     teleopSendableChooser = new SendableChooser<Boolean>();
-     teleopSendableChooser.addOption("Drive Only", false);
-     teleopSendableChooser.setDefaultOption("Drive & Ball Movement", true);
-     driverTab.add(teleopSendableChooser).withSize(2, 1).withPosition(0, 1);
+    teleopSendableChooser = new SendableChooser<Boolean>();
+    teleopSendableChooser.addOption("Drive Only", false);
+    teleopSendableChooser.setDefaultOption("Drive & Ball Movement", true);
+    driverTab.add(teleopSendableChooser).withSize(2, 1).withPosition(0, 1);
+
+    // configure default commands
+    driveSubSystem.setDefaultCommand(manualDriveCommand);
 
   }
 
   public Boolean getTeleopSendableChooser() {
-        return teleopSendableChooser.getSelected();
+    return teleopSendableChooser.getSelected();
   }
 
   /**
@@ -92,8 +97,8 @@ public class RobotContainer {
     // An ExampleCommand will run in autonomous
     return autoCommand;
   }
-  
-  public Command getManualDriveCommand(){
+
+  public Command getManualDriveCommand() {
     return manualDriveCommand;
   }
 }

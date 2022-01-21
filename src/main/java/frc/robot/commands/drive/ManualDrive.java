@@ -13,7 +13,7 @@ import static frc.robot.Constants.ControllerConstants.*;
 
 /** An example command that uses an example subsystem. */
 public class ManualDrive extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+  @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem m_subsystem;
 
   /**
@@ -29,17 +29,20 @@ public class ManualDrive extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.arcadeDrive(RobotContainer.driverController.getRawAxis(kLeftVertical), -1*RobotContainer.driverController.getRawAxis(kRightHorizontal));
+    m_subsystem.arcadeDrive(RobotContainer.driverController.getRawAxis(kLeftVertical),
+        -1 * RobotContainer.driverController.getRawAxis(kRightHorizontal));
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override
