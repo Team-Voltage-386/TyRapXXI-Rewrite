@@ -74,7 +74,7 @@ public class DriveSubsystem extends SubsystemBase {
                 frontLeftMotor.setInverted(true);
                 frontRightMotor.setInverted(false);
                 rearLeftMotor.follow(frontLeftMotor);
-                rearRightMotor.follow(rearRightMotor);
+                rearRightMotor.follow(frontRightMotor);
         }
 
         @Override
