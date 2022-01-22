@@ -47,9 +47,9 @@ public class BallMovementSubsystem extends SubsystemBase {
     private ShuffleboardTab tab = Shuffleboard.getTab("Ball Movement");
 
     // Create sensor widgets
-    private NetworkTableEntry feedWidget = tab.add("Feeder Sensor", false).withPosition(7, 3).withSize(2, 1).getEntry();
-    private NetworkTableEntry indexWidget = tab.add("Indexer", false).withPosition(5, 3).withSize(2, 1).getEntry();
-    private NetworkTableEntry entranceWidget = tab.add("Entrance", false).withPosition(3, 3).withSize(2, 1).getEntry();
+    private NetworkTableEntry feedWidget = tab.add("Feeder Sensor", false).withPosition(7, 1).withSize(2, 1).getEntry();
+    private NetworkTableEntry indexWidget = tab.add("Indexer", false).withPosition(5, 1).withSize(2, 1).getEntry();
+    private NetworkTableEntry entranceWidget = tab.add("Entrance", false).withPosition(3, 1).withSize(2, 1).getEntry();
 
     private NetworkTableEntry entranceColorSensorProximityWidget = tab.add("Entrance Color Sensor - Proximity", 2048)
         .withSize(2, 1).getEntry();

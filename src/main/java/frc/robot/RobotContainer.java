@@ -15,6 +15,7 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.ControllerConstants.*;
 import frc.robot.subsystems.BallMovementSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -41,6 +42,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem driveSubSystem = new DriveSubsystem();
   private final BallMovementSubsystem BallMovementSubsystem = new BallMovementSubsystem();
+  private final LimelightSubsystem limelightSubsystem = new LimelightSubsystem();
   private final ManualDrive manualDriveCommand = new ManualDrive(driveSubSystem);
 
   // Sendable chooser declarations
