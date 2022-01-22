@@ -31,7 +31,7 @@ public class DriveSubsystem extends SubsystemBase {
                         MotorType.kBrushless);
         public final CANSparkMax rearRightMotor = new CANSparkMax(Constants.DriveConstants.kRearRight,
                         MotorType.kBrushless);
-        public final DifferentialDrive driveTrain = new DifferentialDrive(frontLeftMotor, rearRightMotor);
+        public final DifferentialDrive driveTrain = new DifferentialDrive(frontLeftMotor, frontRightMotor);
 
         // Sensor instantiations
         RelativeEncoder leftEncoder = rearLeftMotor.getEncoder();
@@ -72,9 +72,9 @@ public class DriveSubsystem extends SubsystemBase {
                 rearRightMotor.restoreFactoryDefaults();
 
                 frontLeftMotor.setInverted(true);
-                rearRightMotor.setInverted(false);
+                frontRightMotor.setInverted(false);
                 rearLeftMotor.follow(frontLeftMotor);
-                frontRightMotor.follow(rearRightMotor);
+                rearRightMotor.follow(rearRightMotor);
         }
 
         @Override
@@ -109,8 +109,9 @@ public class DriveSubsystem extends SubsystemBase {
         public void arcadeDrive(Double forwardPower, Double turnPower) {
                 driveTrain.arcadeDrive(forwardPower, turnPower);
         }
-        // @Override
-        // public void simulationPeriodic() {
-        // // This method will be called once per scheduler run during simulation
-        // }
+
+        @Override
+        public void simulationPeriodic() {
+                // This method will be called once per scheduler run during simulation
+        }
 }
