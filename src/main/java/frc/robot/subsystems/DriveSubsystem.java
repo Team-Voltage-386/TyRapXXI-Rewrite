@@ -31,7 +31,7 @@ public class DriveSubsystem extends SubsystemBase {
                         MotorType.kBrushless);
         public final CANSparkMax rearRightMotor = new CANSparkMax(Constants.DriveConstants.kRearRight,
                         MotorType.kBrushless);
-        public final DifferentialDrive driveTrain = new DifferentialDrive(frontLeftMotor, frontRightMotor);
+        public final DifferentialDrive driveTrain = new DifferentialDrive(rearLeftMotor, frontRightMotor);
 
         // Sensor instantiations
         RelativeEncoder leftEncoder = rearLeftMotor.getEncoder();
@@ -71,10 +71,11 @@ public class DriveSubsystem extends SubsystemBase {
                 rearLeftMotor.restoreFactoryDefaults();
                 rearRightMotor.restoreFactoryDefaults();
 
-                frontLeftMotor.setInverted(true);
+                rearLeftMotor.setInverted(true);
                 frontRightMotor.setInverted(false);
-                rearLeftMotor.follow(frontLeftMotor);
+                frontLeftMotor.follow(rearLeftMotor);// front left yields faulty encoder values so that set follower
                 rearRightMotor.follow(frontRightMotor);
+
         }
 
         @Override
