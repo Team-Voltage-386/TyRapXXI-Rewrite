@@ -10,10 +10,11 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.drive.*;
+import frc.robot.Constants.ControllerConstants;
+import frc.robot.Constants.ControllerConstants.*;
 import frc.robot.subsystems.BallMovementSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -38,12 +39,11 @@ public class RobotContainer {
   public static final Joystick manipulatorController = new Joystick(1);
 
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
   private final DriveSubsystem driveSubSystem = new DriveSubsystem();
   private final BallMovementSubsystem BallMovementSubsystem = new BallMovementSubsystem();
-  private final ExampleCommand autoCommand = new ExampleCommand(exampleSubsystem);
+  private final ManualDrive manualDriveCommand = new ManualDrive(driveSubSystem);
 
-   // Sendable chooser declarations
+  // Sendable chooser declarations
   // Shuffleboard declarations
   public static ShuffleboardTab driverTab;
   private SendableChooser<Boolean> teleopSendableChooser;
@@ -59,15 +59,18 @@ public class RobotContainer {
     driverTab = Shuffleboard.getTab("Driver Tab");
 
     // Set up teleop sendable chooser
-     teleopSendableChooser = new SendableChooser<Boolean>();
-     teleopSendableChooser.addOption("Drive Only", false);
-     teleopSendableChooser.setDefaultOption("Drive & Ball Movement", true);
-     driverTab.add(teleopSendableChooser).withSize(2, 1).withPosition(0, 1);
+    teleopSendableChooser = new SendableChooser<Boolean>();
+    teleopSendableChooser.addOption("Drive Only", false);
+    teleopSendableChooser.setDefaultOption("Drive & Ball Movement", true);
+    driverTab.add(teleopSendableChooser).withSize(2, 1).withPosition(0, 1);
+
+    // configure default commands
+    driveSubSystem.setDefaultCommand(manualDriveCommand);
 
   }
 
   public Boolean getTeleopSendableChooser() {
-        return teleopSendableChooser.getSelected();
+    return teleopSendableChooser.getSelected();
   }
 
   /**
@@ -88,6 +91,10 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return autoCommand;
+    return null;
+  }
+
+  public Command getManualDriveCommand() {
+    return manualDriveCommand;
   }
 }
