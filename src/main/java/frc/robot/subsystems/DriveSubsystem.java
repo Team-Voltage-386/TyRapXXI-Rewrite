@@ -77,17 +77,6 @@ public class DriveSubsystem extends SubsystemBase {
                 frontRightMotor.follow(rearRightMotor);
         }
 
-        // protected double slowSpeedFactor = 0.6;
-        // protected double topSpeedFactor = 1;
-        // protected double safetySpeedFactor = 0.5;
-        // protected double driveSpeedFactor;
-        // protected double turnSpeedFactor;
-
-        // protected int direction = -1;// -1 is turret is front, 1 is turret is back
-
-        // protected boolean topGear = false;
-        // protected boolean safetyMode = false; // edit for safety mode
-
         @Override
         public void periodic() {
                 // This method will be called once per scheduler run
@@ -116,24 +105,8 @@ public class DriveSubsystem extends SubsystemBase {
 
         }
 
+        // arcade drive method to be called by commands
         public void arcadeDrive(Double forwardPower, Double turnPower) {
-                // topGear = (RobotContainer.driverController.getRawAxis(kRightTrigger) >= 0.1);
-                // if (topGear) {
-                // driveSpeedFactor = topSpeedFactor;
-                // } else {
-                // driveSpeedFactor = slowSpeedFactor;
-                // }
-                // turnSpeedFactor = slowSpeedFactor;
-                // // turnSpeedFactor = driveSpeedFactor;
-                // if (safetyMode) {
-                // driveSpeedFactor = driveSpeedFactor * safetySpeedFactor;
-                // turnSpeedFactor = turnSpeedFactor * safetySpeedFactor;
-                // }
-                // driveTrain.arcadeDrive(
-                // driveSpeedFactor * direction
-                // * RobotContainer.driverController.getRawAxis(kLeftVertical),
-                // turnSpeedFactor * -1
-                // * RobotContainer.driverController.getRawAxis(kRightHorizontal));
                 driveTrain.arcadeDrive(forwardPower, turnPower);
         }
         // @Override
