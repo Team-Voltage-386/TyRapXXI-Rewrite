@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.ballmovement.ManualBallMovementCommand;
 import frc.robot.subsystems.BallMovementSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -38,10 +39,9 @@ public class RobotContainer {
   public static final Joystick manipulatorController = new Joystick(1);
 
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
   private final DriveSubsystem driveSubSystem = new DriveSubsystem();
-  private final BallMovementSubsystem BallMovementSubsystem = new BallMovementSubsystem();
-  private final ExampleCommand autoCommand = new ExampleCommand(exampleSubsystem);
+  private final BallMovementSubsystem ballMovementSubsystem = new BallMovementSubsystem();
+  private final ManualBallMovementCommand ballMovementCommand = new ManualBallMovementCommand(ballMovementSubsystem);
 
    // Sendable chooser declarations
   // Shuffleboard declarations
@@ -64,6 +64,8 @@ public class RobotContainer {
      teleopSendableChooser.setDefaultOption("Drive & Ball Movement", true);
      driverTab.add(teleopSendableChooser).withSize(2, 1).withPosition(0, 1);
 
+     // configure default commands
+     ballMovementSubsystem.setDefaultCommand(ballMovementCommand);
   }
 
   public Boolean getTeleopSendableChooser() {
@@ -88,6 +90,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return autoCommand;
+    // return autoCommand;
+    return null;
   }
 }

@@ -71,8 +71,6 @@ public class BallMovementSubsystem extends SubsystemBase {
         feederMotor.configNeutralDeadband(.1);
     }
 
-    protected boolean intakeLatch = false;// intake deployed status
-
     public boolean getEntranceSensor() {
         return entranceBallDetected;
       }
@@ -84,6 +82,49 @@ public class BallMovementSubsystem extends SubsystemBase {
     public boolean getFeederSensor() {
         return feederBallDetected;
       }
+
+      public void retractIntake() {
+        ballPickupSolenoid.set(DoubleSolenoid.Value.kForward);
+      }
+    
+      public void deployIntake() {
+        ballPickupSolenoid.set(DoubleSolenoid.Value.kReverse);
+      }
+    
+    /**
+     * @param power positive = launching direction
+     */
+    public void runLauncher(double power) {
+        launcherLeadMotor.set(deadband(power));
+    }
+
+    /**
+     * @param power positive = launching direction
+     */
+    public void runFeeder(double power) {
+        feederMotor.set(ControlMode.PercentOutput, deadband(power));
+    }
+
+    /***
+     * @param power positive = intake / launching direction
+     */
+    public void runSerializerMotor(double power) {
+        serializerMotor.set(ControlMode.PercentOutput, deadband(power));
+    }
+
+    /**
+     * @param power positive = intake
+     */
+    public void runIntakeMotor(double power) {
+        intakeMotor.set(ControlMode.PercentOutput, deadband(power));
+    }
+
+    private double deadband(double power) {
+        if (power < 0.1 && power > -0.1) {
+        return 0;
+        }
+        return power;
+    }
 
     @Override
     public void periodic() {
@@ -100,43 +141,6 @@ public class BallMovementSubsystem extends SubsystemBase {
             feederBallDetected = false;
           }
         
-        /* intake deploy latch switch mode */
-        if (RobotContainer.manipulatorController.getRawButtonPressed(kA)) {
-            intakeLatch = !intakeLatch;
-        }
-        if (intakeLatch) {
-            ballPickupSolenoid.set(DoubleSolenoid.Value.kForward);
-        } else {
-            ballPickupSolenoid.set(DoubleSolenoid.Value.kReverse);
-        }
-        /* intake motor */
-        if (intakeLatch) {
-            intakeMotor.set(ControlMode.PercentOutput,
-                    RobotContainer.manipulatorController.getRawAxis(kRightTrigger));
-        } else {
-            intakeMotor.set(ControlMode.PercentOutput, 0);
-        }
-        /* launcher */
-        if (intakeLatch) {
-            launcherLeadMotor.set(RobotContainer.manipulatorController.getRawAxis(kLeftTrigger));
-        } else {
-            launcherLeadMotor.set(0);
-        }
-        /* serializer manual */
-        if (intakeLatch) {
-            serializerMotor.set(ControlMode.PercentOutput,
-                    RobotContainer.manipulatorController.getRawAxis(kLeftVertical));
-        } else {
-            serializerMotor.set(ControlMode.PercentOutput, 0);
-        }
-        /* feeder manual */
-        if (intakeLatch) {
-            feederMotor.set(ControlMode.PercentOutput,
-                    RobotContainer.manipulatorController.getRawAxis(kRightVertical));
-        } else {
-            feederMotor.set(ControlMode.PercentOutput, 0);
-        }
-
         // Update sensor widgets
         indexWidget.setBoolean(getIndexerSensor());
         entranceWidget.setBoolean(getEntranceSensor());
