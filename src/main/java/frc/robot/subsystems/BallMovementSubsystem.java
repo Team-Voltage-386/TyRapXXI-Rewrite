@@ -34,9 +34,9 @@ public class BallMovementSubsystem extends SubsystemBase {
     public final TalonSRX serializerMotor = new TalonSRX(kSerializerMotor);
     public final TalonSRX feederMotor = new TalonSRX(kFeeder);
     public final DigitalInput indexerSensor = new DigitalInput(kIndexer);
- 
+
     I2C.Port entranceSensorI2CPort = I2C.Port.kOnboard; // Port 0
-    I2C.Port feederSensorI2CPort = I2C.Port.kMXP; // Port 1  
+    I2C.Port feederSensorI2CPort = I2C.Port.kMXP; // Port 1
     /* sensor instantiations */
     public final ColorSensorV3 entranceColorSensor = new ColorSensorV3(entranceSensorI2CPort);;
     public final ColorSensorV3 feederColorSensor = new ColorSensorV3(feederSensorI2CPort);
@@ -52,11 +52,11 @@ public class BallMovementSubsystem extends SubsystemBase {
     private NetworkTableEntry entranceWidget = tab.add("Entrance", false).withPosition(3, 3).withSize(2, 1).getEntry();
 
     private NetworkTableEntry entranceColorSensorProximityWidget = tab.add("Entrance Color Sensor - Proximity", 2048)
-        .withSize(2, 1).getEntry();
- 
+            .withSize(2, 1).getEntry();
+
     private NetworkTableEntry feederColorSensorProximityWidget = tab.add("Feeder Color Sensor - Proximity", 2048)
-        .withSize(2, 1).getEntry();
-        
+            .withSize(2, 1).getEntry();
+
     public BallMovementSubsystem() {
         intakeMotor.configFactoryDefault();
         intakeMotor.configNeutralDeadband(.1);
@@ -71,11 +71,9 @@ public class BallMovementSubsystem extends SubsystemBase {
         feederMotor.configNeutralDeadband(.1);
     }
 
-    protected boolean intakeLatch = false;// intake deployed status
-
     public boolean getEntranceSensor() {
         return entranceBallDetected;
-      }
+    }
 
     public boolean getIndexerSensor() {
         return !indexerSensor.get();
@@ -83,65 +81,16 @@ public class BallMovementSubsystem extends SubsystemBase {
 
     public boolean getFeederSensor() {
         return feederBallDetected;
-      }
+    }
 
     @Override
     public void periodic() {
-
-        if (entranceColorSensor.getProximity() >= kEntranceProximityThreshold) {
-            entranceBallDetected = true;
-          } else {
-            entranceBallDetected = false;
-          }
-          
-        if (feederColorSensor.getProximity() >= kFeederProximityThreshold) {
-            feederBallDetected = true;
-          } else {
-            feederBallDetected = false;
-          }
-        
-        /* intake deploy latch switch mode */
-        if (RobotContainer.manipulatorController.getRawButtonPressed(kA)) {
-            intakeLatch = !intakeLatch;
-        }
-        if (intakeLatch) {
-            ballPickupSolenoid.set(DoubleSolenoid.Value.kForward);
-        } else {
-            ballPickupSolenoid.set(DoubleSolenoid.Value.kReverse);
-        }
-        /* intake motor */
-        if (intakeLatch) {
-            intakeMotor.set(ControlMode.PercentOutput,
-                    RobotContainer.manipulatorController.getRawAxis(kRightTrigger));
-        } else {
-            intakeMotor.set(ControlMode.PercentOutput, 0);
-        }
-        /* launcher */
-        if (intakeLatch) {
-            launcherLeadMotor.set(RobotContainer.manipulatorController.getRawAxis(kLeftTrigger));
-        } else {
-            launcherLeadMotor.set(0);
-        }
-        /* serializer manual */
-        if (intakeLatch) {
-            serializerMotor.set(ControlMode.PercentOutput,
-                    RobotContainer.manipulatorController.getRawAxis(kLeftVertical));
-        } else {
-            serializerMotor.set(ControlMode.PercentOutput, 0);
-        }
-        /* feeder manual */
-        if (intakeLatch) {
-            feederMotor.set(ControlMode.PercentOutput,
-                    RobotContainer.manipulatorController.getRawAxis(kRightVertical));
-        } else {
-            feederMotor.set(ControlMode.PercentOutput, 0);
-        }
 
         // Update sensor widgets
         indexWidget.setBoolean(getIndexerSensor());
         entranceWidget.setBoolean(getEntranceSensor());
         feedWidget.setBoolean(getFeederSensor());
-       
+
         // Update color sensor widgets
         entranceColorSensorProximityWidget.setNumber(entranceColorSensor.getProximity());
         feederColorSensorProximityWidget.setNumber(feederColorSensor.getProximity());

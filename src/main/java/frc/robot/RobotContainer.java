@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.drive.*;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.ControllerConstants.*;
-import frc.robot.subsystems.BallMovementSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -40,13 +39,8 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem driveSubSystem = new DriveSubsystem();
-  private final BallMovementSubsystem BallMovementSubsystem = new BallMovementSubsystem();
-  private final ManualDriveTank manualDriveCommand = new ManualDriveTank(driveSubSystem);
-
-  // Sendable chooser declarations
-  // Shuffleboard declarations
-  public static ShuffleboardTab driverTab;
-  private SendableChooser<Boolean> teleopSendableChooser;
+  private final ManualDriveTank manualDriveTankCommand = new ManualDriveTank(driveSubSystem);
+  private final ManualDriveArcade manualDriveCommand = new ManualDriveArcade(driveSubSystem);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -55,23 +49,17 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    // Instantiate Driver Tab
-    driverTab = Shuffleboard.getTab("Driver Tab");
-
-    // Set up teleop sendable chooser
-    teleopSendableChooser = new SendableChooser<Boolean>();
-    teleopSendableChooser.addOption("Drive Only", false);
-    teleopSendableChooser.setDefaultOption("Drive & Ball Movement", true);
-    driverTab.add(teleopSendableChooser).withSize(2, 1).withPosition(0, 1);
+    // // Instantiate Driver Tab
+    // driverTab = Shuffleboard.getTab("Driver Tab");
 
     // configure default commands
-    driveSubSystem.setDefaultCommand(manualDriveCommand);
+    driveSubSystem.setDefaultCommand(manualDriveTankCommand);
 
   }
 
-  public Boolean getTeleopSendableChooser() {
-    return teleopSendableChooser.getSelected();
-  }
+  // public Boolean getTeleopSendableChooser() {
+  // return teleopSendableChooser.getSelected();
+  // }
 
   /**
    * Use this method to define your button->command mappings. Buttons can be
