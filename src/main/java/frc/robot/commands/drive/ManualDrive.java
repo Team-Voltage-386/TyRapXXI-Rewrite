@@ -30,13 +30,18 @@ public class ManualDrive extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    rootForward = 0;
+    rootTurn = 0;
   }
+
+  private double rootForward, rootTurn;
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.arcadeDrive(RobotContainer.driverController.getRawAxis(kLeftVertical),
-        -1 * RobotContainer.driverController.getRawAxis(kRightHorizontal));
+    rootForward = RobotContainer.driverController.getRawAxis(kLeftVertical);
+    rootTurn = -1 * RobotContainer.driverController.getRawAxis(kRightHorizontal);
+    m_subsystem.arcadeDrive(rootForward, rootTurn);
   }
 
   // Called once the command ends or is interrupted.

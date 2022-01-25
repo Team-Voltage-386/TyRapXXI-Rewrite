@@ -41,7 +41,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem driveSubSystem = new DriveSubsystem();
   private final BallMovementSubsystem BallMovementSubsystem = new BallMovementSubsystem();
-  private final ManualDrive manualDriveCommand = new ManualDrive(driveSubSystem);
+  private final ManualDriveTank manualDriveCommand = new ManualDriveTank(driveSubSystem);
 
   // Sendable chooser declarations
   // Shuffleboard declarations

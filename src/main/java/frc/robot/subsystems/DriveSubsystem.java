@@ -111,6 +111,11 @@ public class DriveSubsystem extends SubsystemBase {
                 driveTrain.arcadeDrive(forwardPower, turnPower);
         }
 
+        //tank drive method to be called by commands
+        public void tankDrive(Double leftPower, Double rightPower) {
+                driveTrain.tankDrive(leftPower, rightPower);
+        }
+
         @Override
         public void simulationPeriodic() {
                 // This method will be called once per scheduler run during simulation
