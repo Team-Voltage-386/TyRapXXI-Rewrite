@@ -83,6 +83,6 @@ public class RobotContainer {
   }
 
   public Command getManualDriveCommand() {
-    return manualDriveCommand;
+    return manualDriveTankCommand;
   }
 }
