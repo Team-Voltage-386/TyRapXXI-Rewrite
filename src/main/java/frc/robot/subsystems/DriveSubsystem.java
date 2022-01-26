@@ -98,7 +98,7 @@ public class DriveSubsystem extends SubsystemBase {
                  frontLeftCurrentWidget.setDouble(frontLeftMotor.getOutputCurrent());
                  frontRightCurrentWidget.setDouble(frontRightMotor.getOutputCurrent());
                  backLeftCurrentWidget.setDouble(rearLeftMotor.getOutputCurrent());
-                // backRightCurrentWidget.setDouble(rearRightMotor.getOutputCurrent());
+                 backRightCurrentWidget.setDouble(rearRightMotor.getOutputCurrent());
 
                  // Update encoder widgets
                  leftEncoderWidget.setDouble(leftEncoder.getPosition());
