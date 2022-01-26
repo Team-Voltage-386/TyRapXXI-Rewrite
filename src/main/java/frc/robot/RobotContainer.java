@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.drive.*;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.ControllerConstants.*;
-import frc.robot.subsystems.BallMovementSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -40,15 +39,10 @@ public class RobotContainer {
   public static final Joystick manipulatorController = new Joystick(1);
 
   // The robot's subsystems and commands are defined here...
-  private final DriveSubsystem driveSubSystem = new DriveSubsystem();
-  private final BallMovementSubsystem BallMovementSubsystem = new BallMovementSubsystem();
+  private final DriveSubsystem driveSubsystem = new DriveSubsystem();
   private final LimelightSubsystem limelightSubsystem = new LimelightSubsystem();
-  private final ManualDrive manualDriveCommand = new ManualDrive(driveSubSystem);
-
-  // Sendable chooser declarations
-  // Shuffleboard declarations
-  public static ShuffleboardTab driverTab;
-  private SendableChooser<Boolean> teleopSendableChooser;
+  private final ManualDriveTank manualDriveTankCommand = new ManualDriveTank(driveSubsystem);
+  private final ManualDriveArcade manualDriveCommand = new ManualDriveArcade(driveSubsystem);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -57,23 +51,17 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    // Instantiate Driver Tab
-    driverTab = Shuffleboard.getTab("Driver Tab");
-
-    // Set up teleop sendable chooser
-    teleopSendableChooser = new SendableChooser<Boolean>();
-    teleopSendableChooser.addOption("Drive Only", false);
-    teleopSendableChooser.setDefaultOption("Drive & Ball Movement", true);
-    driverTab.add(teleopSendableChooser).withSize(2, 1).withPosition(0, 1);
+    // // Instantiate Driver Tab
+    // driverTab = Shuffleboard.getTab("Driver Tab");
 
     // configure default commands
-    driveSubSystem.setDefaultCommand(manualDriveCommand);
+    driveSubsystem.setDefaultCommand(manualDriveTankCommand);
 
   }
 
-  public Boolean getTeleopSendableChooser() {
-    return teleopSendableChooser.getSelected();
-  }
+  // public Boolean getTeleopSendableChooser() {
+  // return teleopSendableChooser.getSelected();
+  // }
 
   /**
    * Use this method to define your button->command mappings. Buttons can be
@@ -97,6 +85,6 @@ public class RobotContainer {
   }
 
   public Command getManualDriveCommand() {
-    return manualDriveCommand;
+    return manualDriveTankCommand;
   }
 }
