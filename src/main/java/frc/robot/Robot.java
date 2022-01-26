@@ -18,10 +18,12 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
-  private Command _teleopCommand;
+  public static Command _autonomousCommand;
+  public static Command _teleopCommand;
 
-  private RobotContainer m_robotContainer;
+  public static RobotContainer m_robotContainer;
+  public static Boolean auto = false;
+  public static Boolean man = false;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -34,6 +36,7 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    Dashboard.init();
   }
 
   /**
@@ -57,12 +60,13 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
 
-    // check for a change in drive mode
-    Command c = m_robotContainer.getManualDriveCommand();
-    if(c != _teleopCommand) {
-      _teleopCommand.cancel();
-      _teleopCommand = c;
-      _teleopCommand.schedule();
+    // update the dashboard:
+    Dashboard.update();
+    // check for and apply command change:
+    if (Dashboard.commandChange) {
+      Dashboard.commandChange = false;
+      _teleopCommand = Dashboard.manualC;
+      if (man) teleopInit();
     }
 
     CommandScheduler.getInstance().run();
@@ -71,6 +75,8 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
+    //reset declarations of mode:
+    auto = false;man = false;
   }
 
   @Override
@@ -83,11 +89,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    // apply declaration of mode:
+    auto = true; if (man) man = false;
+
+    _autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
+    if (_autonomousCommand != null) {
+      _autonomousCommand.schedule();
     }
   }
 
@@ -98,18 +107,16 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    // apply declaration of mode:
+    man = true; if (auto) auto = false;
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
+    if (_autonomousCommand != null)  _autonomousCommand.cancel();
+    if (_teleopCommand.isScheduled()) _teleopCommand.cancel();
+    if (_teleopCommand != null) _teleopCommand.schedule();
     
-    _teleopCommand = m_robotContainer.getManualDriveCommand();
-    if (_teleopCommand != null) { 
-      _teleopCommand.schedule();
-    }
   }
 
   /** This function is called periodically during operator control. */
