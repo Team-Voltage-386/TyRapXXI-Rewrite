@@ -65,6 +65,7 @@ public class Robot extends TimedRobot {
     // check for and apply command change:
     if (Dashboard.commandChange) {
       Dashboard.commandChange = false;
+      _teleopCommand.cancel();
       _teleopCommand = Dashboard.manualC;
       if (man) teleopInit();
     }
@@ -114,7 +115,6 @@ public class Robot extends TimedRobot {
     // continue until interrupted by another command, remove
     // this line or comment it out.
     if (_autonomousCommand != null)  _autonomousCommand.cancel();
-    if (_teleopCommand.isScheduled()) _teleopCommand.cancel();
     if (_teleopCommand != null) _teleopCommand.schedule();
     
   }
