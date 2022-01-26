@@ -56,6 +56,15 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods. This must be called from the
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
+
+    // check for a change in drive mode
+    Command c = m_robotContainer.getManualDriveCommand();
+    if(c != _teleopCommand) {
+      _teleopCommand.cancel();
+      _teleopCommand = c;
+      _teleopCommand.schedule();
+    }
+
     CommandScheduler.getInstance().run();
   }
 
@@ -93,11 +102,12 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    _teleopCommand = m_robotContainer.getManualDriveCommand();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    if (_teleopCommand != null) {
+    
+    _teleopCommand = m_robotContainer.getManualDriveCommand();
+    if (_teleopCommand != null) { 
       _teleopCommand.schedule();
     }
   }
@@ -105,7 +115,6 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    _teleopCommand = m_robotContainer.getManualDriveCommand();
   }
 
   @Override
