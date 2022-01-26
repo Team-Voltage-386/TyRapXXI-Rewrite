@@ -38,7 +38,7 @@ public class DriveSubsystem extends SubsystemBase {
         RelativeEncoder rightEncoder = frontRightMotor.getEncoder();
 
         // Creates a shuffleboard tab for the drive
-        private ShuffleboardTab tab = Shuffleboard.getTab("Drive");
+        private ShuffleboardTab tab = Shuffleboard.getTab("DriveData");
 
         // Create output widgets
         private NetworkTableEntry frontLeftOutputWidget = tab.add("F-L Output", 0).withPosition(0, 0).getEntry();

@@ -36,11 +36,14 @@ public class RobotContainer {
 
   // manipulatorcontroller
   public static final Joystick manipulatorController = new Joystick(1);
+  //Driver Input Tab
+  private ShuffleboardTab driverInputTab;
+  private SendableChooser<Command> driveModeChooser = new SendableChooser();
 
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem driveSubSystem = new DriveSubsystem();
-  private final ManualDriveTank manualDriveTankCommand = new ManualDriveTank(driveSubSystem);
-  private final ManualDriveArcade manualDriveCommand = new ManualDriveArcade(driveSubSystem);
+  private final ManualDriveTank manualDriveTank = new ManualDriveTank(driveSubSystem);
+  private final ManualDriveArcade manualDriveArcade = new ManualDriveArcade(driveSubSystem);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -49,11 +52,15 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    // // Instantiate Driver Tab
-    // driverTab = Shuffleboard.getTab("Driver Tab");
+    // // Instantiate DriverInput Tab
+    driverInputTab = Shuffleboard.getTab("DriverInputTab");
+    //Instantiate DriveModeChooser
+    driveModeChooser.setDefaultOption("ArcadeDrive", manualDriveArcade);
+    driveModeChooser.addOption("TankDrive", manualDriveTank);
+    driverInputTab.add(driveModeChooser);
 
     // configure default commands
-    driveSubSystem.setDefaultCommand(manualDriveTankCommand);
+    driveSubSystem.setDefaultCommand(getManualDriveCommand());
 
   }
 
@@ -83,6 +90,6 @@ public class RobotContainer {
   }
 
   public Command getManualDriveCommand() {
-    return manualDriveTankCommand;
+    return driveModeChooser.getSelected();
   }
 }
