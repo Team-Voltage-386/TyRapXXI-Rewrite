@@ -52,8 +52,8 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    // // Instantiate DriverInput Tab
-    driverInputTab = Shuffleboard.getTab("DriverInputTab");
+    // // Setup the Shuffleboard Tab
+    driverInputTab = Shuffleboard.getTab("Driver Tab");
     //Instantiate DriveModeChooser
     driveModeChooser.setDefaultOption("ArcadeDrive", manualDriveArcade);
     driveModeChooser.addOption("TankDrive", manualDriveTank);
@@ -64,9 +64,6 @@ public class RobotContainer {
 
   }
 
-  // public Boolean getTeleopSendableChooser() {
-  // return teleopSendableChooser.getSelected();
-  // }
 
   /**
    * Use this method to define your button->command mappings. Buttons can be
