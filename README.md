@@ -1,4 +1,4 @@
-# Carl's Messing About
-Carl's branch for testing large code changes that are impractical and weird, but might just be useful.
+# Carl's Branch
+Carl's branch for testing normal adjustments to code
 
 Don't pull this README into master.
