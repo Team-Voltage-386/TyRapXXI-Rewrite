@@ -38,9 +38,6 @@ public class RobotContainer {
 
   // manipulatorcontroller
   public static final Joystick manipulatorController = new Joystick(1);
-  //Driver Input Tab
-  private ShuffleboardTab driverInputTab;
-
   // The robot's subsystems and commands are defined here...
   public final DriveSubsystem driveSubsystem = new DriveSubsystem();
   private final LimelightSubsystem limelightSubsystem = new LimelightSubsystem();
@@ -59,10 +56,6 @@ public class RobotContainer {
 
     driveSubsystem.setDefaultCommand(manualDriveArcade);
   }
-
-  // public Boolean getTeleopSendableChooser() {
-  // return teleopSendableChooser.getSelected();
-  // }
 
   /**
    * Use this method to define your button->command mappings. Buttons can be
