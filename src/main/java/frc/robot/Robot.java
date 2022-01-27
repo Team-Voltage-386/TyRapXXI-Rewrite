@@ -66,7 +66,7 @@ public class Robot extends TimedRobot {
     if (Dashboard.commandChange) {
       Dashboard.commandChange = false;
       _teleopCommand.cancel();
-      _teleopCommand = Dashboard.manualC;
+      _teleopCommand = m_robotContainer.getTeleOpCommand();
       if (man) teleopInit();
     }
 

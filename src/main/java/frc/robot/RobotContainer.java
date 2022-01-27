@@ -80,4 +80,8 @@ public class RobotContainer {
     // An ExampleCommand will run in autonomous
     return null;
   }
+
+  public Command getTeleOpCommand() {
+    return Dashboard.manualC;
+  }
 }
