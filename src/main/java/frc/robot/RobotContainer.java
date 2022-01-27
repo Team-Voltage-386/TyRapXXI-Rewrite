@@ -34,7 +34,6 @@ public class RobotContainer {
 
   // drivecontroller
   public static final Joystick driverController = new Joystick(0);
-  public static final JoystickButton targetingButton = new JoystickButton(driverController, 6);
 
   // manipulatorcontroller
   public static final Joystick manipulatorController = new Joystick(1);
@@ -74,7 +73,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    targetingButton.whenPressed(targetLockonCommand).whenReleased(manualDriveArcadeCommand);
+    // new JoystickButton(driverController, ControllerConstants.kRightBumper).whenPressed(new TargetLockon(driveSubsystem, limelightSubsystem)).whenReleased(new ManualDriveArcade(driveSubsystem));
   }
 
   /**
