@@ -70,7 +70,7 @@ public class C_ManualDriveArcade extends CommandBase {
       if (_lls.targetFound) rootTurn = MathUtil.clamp(-1*pid.calculate(_lls.tx, 0), -1*pidConstants.LLC, pidConstants.LLC);
       else if (_controller.getRawButton(kRightBumper)) rootTurn = -1*_seekTurnSpeed;
       else if (_controller.getRawButton(kLeftBumper)) rootTurn = _seekTurnSpeed;
-    } else if (llaaActive && pid.atSetpoint()) { // if at setpoint stop turning and rumble controller
+    } else if (llaaActive && pid.atSetpoint() && _lls.targetFound) { // if at setpoint stop turning and rumble controller
       rootTurn = 0;
       _controller.setRumble(GenericHID.RumbleType.kRightRumble, 0.7);
     } else {
