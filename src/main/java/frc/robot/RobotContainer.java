@@ -14,8 +14,9 @@ import frc.robot.commands.drive.*;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.ControllerConstants.*;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -33,6 +34,7 @@ public class RobotContainer {
 
   // drivecontroller
   public static final Joystick driverController = new Joystick(0);
+  public static final JoystickButton targetingButton = new JoystickButton(driverController, 6);
 
   // manipulatorcontroller
   public static final Joystick manipulatorController = new Joystick(1);
@@ -40,9 +42,11 @@ public class RobotContainer {
   private ShuffleboardTab driverInputTab;
 
   // The robot's subsystems and commands are defined here...
-  public final DriveSubsystem driveSubSystem = new DriveSubsystem();
-  public final ManualDriveTank manualDriveTank = new ManualDriveTank(driveSubSystem);
-  public final ManualDriveArcade manualDriveArcade = new ManualDriveArcade(driveSubSystem);
+  private final DriveSubsystem driveSubsystem = new DriveSubsystem();
+  private final LimelightSubsystem limelightSubsystem = new LimelightSubsystem();
+  private final ManualDriveTank manualDriveTankCommand = new ManualDriveTank(driveSubsystem);
+  private final ManualDriveArcade manualDriveArcadeCommand = new ManualDriveArcade(driveSubsystem);
+  private final TargetLockon targetLockonCommand = new TargetLockon(driveSubsystem, limelightSubsystem);
   public Command manualCommand;
 
   /**
@@ -52,8 +56,8 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
     // configure default commands
-    driveSubSystem.setDefaultCommand(manualDriveArcade);
 
+    driveSubSystem.setDefaultCommand(manualDriveArcade);
   }
 
   // public Boolean getTeleopSendableChooser() {
@@ -69,6 +73,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    targetingButton.whenPressed(targetLockonCommand).whenReleased(manualDriveArcadeCommand);
   }
 
   /**
