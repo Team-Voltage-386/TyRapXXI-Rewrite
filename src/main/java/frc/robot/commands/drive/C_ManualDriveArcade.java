@@ -8,6 +8,8 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LLSubsystem;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.pidConstants;
 import frc.robot.RobotContainer;
@@ -18,19 +20,22 @@ public class C_ManualDriveArcade extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem _dss;
   private final LLSubsystem _lls;
+  private final Joystick _controller;
   private final PIDController pid = new PIDController(pidConstants.LLP, pidConstants.LLI, pidConstants.LLD);
-  private final int _aimButton;
+  private final double _seekTurnSpeed;
   public Boolean llaaActive = false;
 
   /**ArcadeDrive teleop command with button to enable LL-AutoAim
    * @param DSS The drive subsystem used by this command.
    * @param LLS the LL subsystem used by this command
-   * @param aimButton the controller button used to activate LL-AutoAim
+   * @param seekTurnSpeed The speed at which to seek for a target
    */
-  public C_ManualDriveArcade(DriveSubsystem DSS, LLSubsystem LLS, int aimButton) {
+  public C_ManualDriveArcade(DriveSubsystem DSS, LLSubsystem LLS, double seekTurnSpeed) {
     _dss = DSS;
     _lls = LLS;
-    _aimButton = aimButton;
+    _seekTurnSpeed = seekTurnSpeed;
+    _controller = RobotContainer.driverController;
+    
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(_dss);
@@ -54,19 +59,26 @@ public class C_ManualDriveArcade extends CommandBase {
   public void execute() {
     rootForward = RobotContainer.driverController.getRawAxis(kLeftVertical);
 
-    // if rbumper and target found get and not met target set turn from pid
-    if (RobotContainer.driverController.getRawButton(_aimButton) && _lls.targetFound && !pid.atSetpoint()) {
-      llaaActive = true;
-      if (RobotContainer.driverController.getRawButtonPressed(_aimButton)) {
-        pid.reset(); // if it's the first iteration in this loop reset the pid and disable drivermode
+    if (_controller.getRawButton(kRightBumper) || _controller.getRawButton(kLeftBumper)) llaaActive = true; // if a bumper is pressed, activate LLAA
+    else llaaActive = false;
+
+    if (llaaActive && !pid.atSetpoint()) {
+      if (_controller.getRawButtonPressed(kRightBumper) || _controller.getRawButtonPressed(kLeftBumper)) { 
         _lls.driverMode(false);
+        pid.reset();
       }
-      rootTurn = MathUtil.clamp(-1*pid.calculate(_lls.tx, 0), -1*pidConstants.LLC, pidConstants.LLC) ; // clamps the output of the PID to prevent murder bot
-    }
-    else {
-      llaaActive = false;
+      if (_lls.targetFound) rootTurn = MathUtil.clamp(-1*pid.calculate(_lls.tx, 0), -1*pidConstants.LLC, pidConstants.LLC);
+      else if (_controller.getRawButton(kRightBumper)) rootTurn = -1*_seekTurnSpeed;
+      else if (_controller.getRawButton(kLeftBumper)) rootTurn = _seekTurnSpeed;
+    } else if (llaaActive && pid.atSetpoint()) { // if at setpoint stop turning and rumble controller
+      rootTurn = 0;
+      _controller.setRumble(GenericHID.RumbleType.kRightRumble, 0.7);
+    } else {
       rootTurn = -1 * RobotContainer.driverController.getRawAxis(kRightHorizontal); // else get turn from remote
-      if (RobotContainer.driverController.getRawButtonReleased(_aimButton)) _lls.driverMode(true); // if camera not switched back to driver mode do it
+      if (_controller.getRawButtonReleased(kRightBumper) || _controller.getRawButtonReleased(kLeftBumper)) {
+        _lls.driverMode(true); // if camera not switched back to driver mode do it
+        _controller.setRumble(GenericHID.RumbleType.kRightRumble, 0); // stop the rumble
+      }
     }
     _dss.arcadeDrive(rootForward, rootTurn);
   }
