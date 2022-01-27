@@ -38,6 +38,8 @@ public class RobotContainer {
 
   // manipulatorcontroller
   public static final Joystick manipulatorController = new Joystick(1);
+  //Driver Input Tab
+  private ShuffleboardTab driverInputTab;
 
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
@@ -45,20 +47,17 @@ public class RobotContainer {
   private final ManualDriveTank manualDriveTankCommand = new ManualDriveTank(driveSubsystem);
   private final ManualDriveArcade manualDriveArcadeCommand = new ManualDriveArcade(driveSubsystem);
   private final TargetLockon targetLockonCommand = new TargetLockon(driveSubsystem, limelightSubsystem);
+  public Command manualCommand;
 
   /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
+   * The container for the robot. Contains subsystems, IO devices, and commands.
    */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-
-    // // Instantiate Driver Tab
-    // driverTab = Shuffleboard.getTab("Driver Tab");
-
     // configure default commands
-    driveSubsystem.setDefaultCommand(manualDriveTankCommand);
 
+    driveSubSystem.setDefaultCommand(manualDriveArcade);
   }
 
   // public Boolean getTeleopSendableChooser() {
@@ -85,9 +84,5 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
     return null;
-  }
-
-  public Command getManualDriveCommand() {
-    return manualDriveTankCommand;
   }
 }
