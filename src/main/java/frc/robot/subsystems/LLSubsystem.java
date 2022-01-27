@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.LimeLightConstants;
 
 /**Carl's attempt at making a lime-light subsystem*/
 public class LLSubsystem extends SubsystemBase {
@@ -44,5 +45,12 @@ public class LLSubsystem extends SubsystemBase {
   public void driverMode(Boolean b) {
       if (b) _nt.getEntry("camMode").setNumber(1);
       else _nt.getEntry("camMode").setNumber(0);
+  }
+
+  /**Returns the meters to the target given a known target height from the ground
+   * @param targetHeight The target's height above the ground in meters
+  */
+  public double metersToTarget(double targetHeight) {
+    return (targetHeight-LimeLightConstants.camHeight)/Math.tan(LimeLightConstants.camEleAngle+ty);
   }
 }

@@ -61,6 +61,14 @@ public final class Constants {
         public static final float[] LLT = {3,5}; // tolerance {position,velocity}
     }
 
+    /**Constants for the limelight used for estimating distance*/
+    public static final class LimeLightConstants {
+        /**Camera's height above the grorund in meters*/
+        public static final double camHeight = 0.5;
+        /**Camera's elevation angle above horizon*/
+        public static final double camEleAngle = 20;
+    }
+
     /**Old constants part of the deprecated BallMovementSubsystem (probably not used)*/
     public static final class BallMovementConstants {
         public static final int kPneumaticsModule = 0; // PCM
