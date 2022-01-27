@@ -7,18 +7,11 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.drive.*;
 import frc.robot.Constants.ControllerConstants;
-import frc.robot.Constants.ControllerConstants.*;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.LLSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -36,13 +29,12 @@ public class RobotContainer {
 
   // manipulatorcontroller
   public static final Joystick manipulatorController = new Joystick(1);
-  //Driver Input Tab
-  private ShuffleboardTab driverInputTab;
 
   // The robot's subsystems and commands are defined here...
   public final DriveSubsystem driveSubSystem = new DriveSubsystem();
+  public final LLSubsystem limeLightSubsystem = new LLSubsystem();
   public final ManualDriveTank manualDriveTank = new ManualDriveTank(driveSubSystem);
-  public final ManualDriveArcade manualDriveArcade = new ManualDriveArcade(driveSubSystem);
+  public final C_ManualDriveArcade manualDriveArcade = new C_ManualDriveArcade(driveSubSystem, limeLightSubsystem, ControllerConstants.kRightBumper);
   public Command manualCommand;
 
   /**

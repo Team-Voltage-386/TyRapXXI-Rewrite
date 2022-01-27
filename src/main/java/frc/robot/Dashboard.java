@@ -5,14 +5,19 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.LLSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
+/**Carl's wacky dash*/
 public class Dashboard {
     // Creates a shuffleboard tab
     private static ShuffleboardTab driverTab = Shuffleboard.getTab("Driver Dashboard");
+    private static ShuffleboardTab llTab = Shuffleboard.getTab("LL-AutoAim");
     
     // Diagnostics in:
     private static DriveSubsystem _driveSS;
+    private static LLSubsystem _llSS;
+    private static RobotContainer _rc;
     // Create output widgets
     private static NetworkTableEntry frontLeftOutputWidget = driverTab.add("F-L Output", 0).withPosition(0, 0).getEntry();
     private static NetworkTableEntry frontRightOutputWidget = driverTab.add("F-R Output", 0).withPosition(1, 0).getEntry();
@@ -34,21 +39,34 @@ public class Dashboard {
     //DriveSystemsOut:
     private static SendableChooser<Command> driveModeChooser = new SendableChooser<Command>();
 
+    private static NetworkTableEntry llaWidget = llTab.add("LL-AutoAim Active",false).withSize(2,1).withPosition(0,0).getEntry();
+    private static NetworkTableEntry lltxWidget = llTab.add("Process Variable Error",0).withSize(2,1).withPosition(0,1).getEntry();
+    private static NetworkTableEntry lltoWidget = llTab.add("PID Output",0).withSize(2,1).withPosition(0,2).getEntry();
+
     public static Boolean commandChange = false;
     //Manual Command Selection:
     public static Command manualC;
     //Autonomous Command Selection: 
 
+    /**
+     *  Initialize the dash, customize at will
+     */
     public static void init() {
+        _rc = Robot.m_robotContainer;
+        _llSS = _rc.limeLightSubsystem;
         //Instantiate DriveModeChooser:
-        _driveSS = Robot.m_robotContainer.driveSubSystem;
-        driveModeChooser.setDefaultOption("ArcadeDrive", Robot.m_robotContainer.manualDriveArcade);
-        driveModeChooser.addOption("TankDrive", Robot.m_robotContainer.manualDriveTank);
+        _driveSS = _rc.driveSubSystem;
+        driveModeChooser.setDefaultOption("ArcadeDrive", _rc.manualDriveArcade);
+        driveModeChooser.addOption("TankDrive", _rc.manualDriveTank);
         driverTab.add("Drive Mode", driveModeChooser);
         manualC = driveModeChooser.getSelected();
     }
 
+    /**
+     * Update the dash, customize at will
+     */
     public static void update() {
+        //DriverTab:
         // Update output widgets
         frontLeftOutputWidget.setDouble(_driveSS.frontLeftMotor.get());
         frontRightOutputWidget.setDouble(_driveSS.frontRightMotor.get());
@@ -67,13 +85,16 @@ public class Dashboard {
         // Update encoder widgets
         leftEncoderWidget.setDouble(_driveSS.leftEncoder.getPosition());
         rightEncoderWidget.setDouble(_driveSS.rightEncoder.getPosition());
-
         // Check for and handle change in drive mode selection:
         Command c = driveModeChooser.getSelected();
         if (c != manualC) {
-            Robot._teleopCommand = c;
             manualC = c;
             commandChange = true;
         }
+
+        // LL-AutoAim tab:
+        llaWidget.setBoolean(_rc.manualDriveArcade.llaaActive);
+        lltxWidget.setDouble(_llSS.tx);
+        lltoWidget.setDouble(_rc.manualDriveArcade.rootTurn);
     }
 }
