@@ -16,7 +16,7 @@ import frc.robot.Constants.ControllerConstants.*;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -34,6 +34,7 @@ public class RobotContainer {
 
   // drivecontroller
   public static final Joystick driverController = new Joystick(0);
+  public static final JoystickButton targetingButton = new JoystickButton(driverController, 6);
 
   // manipulatorcontroller
   public static final Joystick manipulatorController = new Joystick(1);
@@ -42,7 +43,8 @@ public class RobotContainer {
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
   private final LimelightSubsystem limelightSubsystem = new LimelightSubsystem();
   private final ManualDriveTank manualDriveTankCommand = new ManualDriveTank(driveSubsystem);
-  private final ManualDriveArcade manualDriveCommand = new ManualDriveArcade(driveSubsystem);
+  private final ManualDriveArcade manualDriveArcadeCommand = new ManualDriveArcade(driveSubsystem);
+  private final TargetLockon targetLockonCommand = new TargetLockon(driveSubsystem, limelightSubsystem);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -72,6 +74,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    targetingButton.whenPressed(targetLockonCommand).whenReleased(manualDriveArcadeCommand);
   }
 
   /**
