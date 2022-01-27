@@ -38,32 +38,27 @@ public class RobotContainer {
   public static final Joystick manipulatorController = new Joystick(1);
   //Driver Input Tab
   private ShuffleboardTab driverInputTab;
-  private SendableChooser<Command> driveModeChooser = new SendableChooser();
 
   // The robot's subsystems and commands are defined here...
-  private final DriveSubsystem driveSubSystem = new DriveSubsystem();
-  private final ManualDriveTank manualDriveTank = new ManualDriveTank(driveSubSystem);
-  private final ManualDriveArcade manualDriveArcade = new ManualDriveArcade(driveSubSystem);
+  public final DriveSubsystem driveSubSystem = new DriveSubsystem();
+  public final ManualDriveTank manualDriveTank = new ManualDriveTank(driveSubSystem);
+  public final ManualDriveArcade manualDriveArcade = new ManualDriveArcade(driveSubSystem);
+  public Command manualCommand;
 
   /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
+   * The container for the robot. Contains subsystems, IO devices, and commands.
    */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-
-    // // Setup the Shuffleboard Tab
-    driverInputTab = Shuffleboard.getTab("Driver Tab");
-    //Instantiate DriveModeChooser
-    driveModeChooser.setDefaultOption("ArcadeDrive", manualDriveArcade);
-    driveModeChooser.addOption("TankDrive", manualDriveTank);
-    driverInputTab.add(driveModeChooser);
-
     // configure default commands
-    driveSubSystem.setDefaultCommand(getManualDriveCommand());
+    driveSubSystem.setDefaultCommand(manualDriveArcade);
 
   }
 
+  // public Boolean getTeleopSendableChooser() {
+  // return teleopSendableChooser.getSelected();
+  // }
 
   /**
    * Use this method to define your button->command mappings. Buttons can be
@@ -84,9 +79,5 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
     return null;
-  }
-
-  public Command getManualDriveCommand() {
-    return driveModeChooser.getSelected();
   }
 }

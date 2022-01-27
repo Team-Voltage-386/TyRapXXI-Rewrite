@@ -34,36 +34,9 @@ public class DriveSubsystem extends SubsystemBase {
         public final DifferentialDrive driveTrain = new DifferentialDrive(rearLeftMotor, frontRightMotor);
 
         // Sensor instantiations
-        RelativeEncoder leftEncoder = rearLeftMotor.getEncoder();
-        RelativeEncoder rightEncoder = frontRightMotor.getEncoder();
-
-        // Creates a shuffleboard tab for the drive
-        private ShuffleboardTab tab = Shuffleboard.getTab("DriveData");
-
-        // Create output widgets
-        private NetworkTableEntry frontLeftOutputWidget = tab.add("F-L Output", 0).withPosition(0, 0).getEntry();
-        private NetworkTableEntry frontRightOutputWidget = tab.add("F-R Output", 0).withPosition(1, 0).getEntry();
-        private NetworkTableEntry backLeftOutputWidget = tab.add("B-L Output", 0).withPosition(0, 1).getEntry();
-        private NetworkTableEntry backRightOutputWidget = tab.add("B-R Output", 0).withPosition(1, 1).getEntry();
-
-        // Create temperature widgets
-        private NetworkTableEntry frontLeftTempWidget = tab.add("F-L Temp", 0).withPosition(3, 0).getEntry();
-        private NetworkTableEntry frontRightTempWidget = tab.add("F-R Temp", 0).withPosition(4, 0).getEntry();
-        private NetworkTableEntry backLeftTempWidget = tab.add("B-L Temp", 0).withPosition(3, 1).getEntry();
-        private NetworkTableEntry backRightTempWidget = tab.add("B-R Temp", 0).withPosition(4, 1).getEntry();
-
-        // Create current widgets
-        private NetworkTableEntry frontLeftCurrentWidget = tab.add("F-L Current", 0).withPosition(6, 0).getEntry();
-        private NetworkTableEntry frontRightCurrentWidget = tab.add("F-R Current", 0).withPosition(7, 0).getEntry();
-        private NetworkTableEntry backLeftCurrentWidget = tab.add("B-L Current", 0).withPosition(6, 1).getEntry();
-        private NetworkTableEntry backRightCurrentWidget = tab.add("B-R Current", 0).withPosition(7, 1).getEntry();
-
-        // Create encoder widgets
-        private NetworkTableEntry leftEncoderWidget = tab.add("Left Encoder", 0).withSize(2, 1).withPosition(2, 2)
-                        .getEntry();
-        private NetworkTableEntry rightEncoderWidget = tab.add("Right Encoder", 0).withSize(2, 1).withPosition(4, 2)
-                        .getEntry();
-
+        public RelativeEncoder leftEncoder = rearLeftMotor.getEncoder();
+        public RelativeEncoder rightEncoder = frontRightMotor.getEncoder();
+        
         public DriveSubsystem() {
                 // drivetrain
                 frontLeftMotor.restoreFactoryDefaults();
@@ -81,7 +54,7 @@ public class DriveSubsystem extends SubsystemBase {
         @Override
         public void periodic() {
                  //This method will be called once per scheduler run
-                
+                /*
                  // Update output widgets
                  frontLeftOutputWidget.setDouble(frontLeftMotor.get());
                  frontRightOutputWidget.setDouble(frontRightMotor.get());
@@ -102,7 +75,7 @@ public class DriveSubsystem extends SubsystemBase {
 
                  // Update encoder widgets
                  leftEncoderWidget.setDouble(leftEncoder.getPosition());
-                 rightEncoderWidget.setDouble(rightEncoder.getPosition());
+                 rightEncoderWidget.setDouble(rightEncoder.getPosition());*/
 
         }
 
