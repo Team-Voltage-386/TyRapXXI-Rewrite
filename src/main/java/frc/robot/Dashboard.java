@@ -41,7 +41,7 @@ public class Dashboard {
 
     public static void init() {
         //Instantiate DriveModeChooser:
-        _driveSS = Robot.m_robotContainer.driveSubSystem;
+        _driveSS = Robot.m_robotContainer.driveSubsystem;
         driveModeChooser.setDefaultOption("ArcadeDrive", Robot.m_robotContainer.manualDriveArcade);
         driveModeChooser.addOption("TankDrive", Robot.m_robotContainer.manualDriveTank);
         driverTab.add("Drive Mode", driveModeChooser);

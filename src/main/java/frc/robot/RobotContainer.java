@@ -42,10 +42,10 @@ public class RobotContainer {
   private ShuffleboardTab driverInputTab;
 
   // The robot's subsystems and commands are defined here...
-  private final DriveSubsystem driveSubsystem = new DriveSubsystem();
+  public final DriveSubsystem driveSubsystem = new DriveSubsystem();
   private final LimelightSubsystem limelightSubsystem = new LimelightSubsystem();
-  private final ManualDriveTank manualDriveTankCommand = new ManualDriveTank(driveSubsystem);
-  private final ManualDriveArcade manualDriveArcadeCommand = new ManualDriveArcade(driveSubsystem);
+  public final ManualDriveTank manualDriveTank = new ManualDriveTank(driveSubsystem);
+  public final ManualDriveArcade manualDriveArcade = new ManualDriveArcade(driveSubsystem);
   private final TargetLockon targetLockonCommand = new TargetLockon(driveSubsystem, limelightSubsystem);
   public Command manualCommand;
 
@@ -57,7 +57,7 @@ public class RobotContainer {
     configureButtonBindings();
     // configure default commands
 
-    driveSubSystem.setDefaultCommand(manualDriveArcade);
+    driveSubsystem.setDefaultCommand(manualDriveArcade);
   }
 
   // public Boolean getTeleopSendableChooser() {
@@ -73,7 +73,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    targetingButton.whenPressed(targetLockonCommand).whenReleased(manualDriveArcadeCommand);
+    targetingButton.whenPressed(targetLockonCommand).whenReleased(manualDriveArcade);
   }
 
   /**
