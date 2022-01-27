@@ -53,30 +53,6 @@ public class DriveSubsystem extends SubsystemBase {
 
         @Override
         public void periodic() {
-                 //This method will be called once per scheduler run
-                /*
-                 // Update output widgets
-                 frontLeftOutputWidget.setDouble(frontLeftMotor.get());
-                 frontRightOutputWidget.setDouble(frontRightMotor.get());
-                 backLeftOutputWidget.setDouble(rearLeftMotor.get());
-                 backRightOutputWidget.setDouble(rearRightMotor.get());
-
-                 // Update temp widgets
-                 frontLeftTempWidget.setDouble(frontLeftMotor.getMotorTemperature());
-                 frontRightTempWidget.setDouble(frontRightMotor.getMotorTemperature());
-                 backLeftTempWidget.setDouble(rearLeftMotor.getMotorTemperature());
-                 backRightTempWidget.setDouble(rearRightMotor.getMotorTemperature());
-
-                 // Update current widgets
-                 frontLeftCurrentWidget.setDouble(frontLeftMotor.getOutputCurrent());
-                 frontRightCurrentWidget.setDouble(frontRightMotor.getOutputCurrent());
-                 backLeftCurrentWidget.setDouble(rearLeftMotor.getOutputCurrent());
-                 backRightCurrentWidget.setDouble(rearRightMotor.getOutputCurrent());
-
-                 // Update encoder widgets
-                 leftEncoderWidget.setDouble(leftEncoder.getPosition());
-                 rightEncoderWidget.setDouble(rightEncoder.getPosition());*/
-
         }
 
         // arcade drive method to be called by commands

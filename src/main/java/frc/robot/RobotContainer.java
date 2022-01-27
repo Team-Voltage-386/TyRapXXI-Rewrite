@@ -14,7 +14,6 @@ import frc.robot.commands.drive.*;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.ControllerConstants.*;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.LimelightSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -40,10 +39,8 @@ public class RobotContainer {
   public static final Joystick manipulatorController = new Joystick(1);
   // The robot's subsystems and commands are defined here...
   public final DriveSubsystem driveSubsystem = new DriveSubsystem();
-  private final LimelightSubsystem limelightSubsystem = new LimelightSubsystem();
   public final ManualDriveTank manualDriveTank = new ManualDriveTank(driveSubsystem);
   public final ManualDriveArcade manualDriveArcade = new ManualDriveArcade(driveSubsystem);
-  private final TargetLockon targetLockonCommand = new TargetLockon(driveSubsystem, limelightSubsystem);
   public Command manualCommand;
 
   /**
@@ -66,7 +63,6 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    targetingButton.whenPressed(targetLockonCommand).whenReleased(manualDriveArcade);
   }
 
   /**
