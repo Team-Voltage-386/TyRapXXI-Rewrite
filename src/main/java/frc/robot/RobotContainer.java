@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.drive.*;
-import frc.robot.Constants.ControllerConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LLSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -34,7 +33,7 @@ public class RobotContainer {
   public final DriveSubsystem driveSubSystem = new DriveSubsystem();
   public final LLSubsystem limeLightSubsystem = new LLSubsystem();
   public final ManualDriveTank manualDriveTank = new ManualDriveTank(driveSubSystem);
-  public final C_ManualDriveArcade manualDriveArcade = new C_ManualDriveArcade(driveSubSystem, limeLightSubsystem, 0.2);
+  public final C_ManualDriveArcade manualDriveArcade = new C_ManualDriveArcade(driveSubSystem, limeLightSubsystem, 0.6);
   public Command manualCommand;
 
   /**

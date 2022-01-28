@@ -45,14 +45,10 @@ public class Dashboard {
     private static NetworkTableEntry lltxWidget = llTab.add("Process Variable Error",0).withSize(2,1).withPosition(0,1).getEntry();
     private static NetworkTableEntry lltoWidget = llTab.add("PID Output",0).withSize(2,1).withPosition(0,2).getEntry();
     private static NetworkTableEntry lltvWidget = llTab.add("Target Found",false).withSize(1,1).withPosition(1, 0).getEntry();
-    private static NetworkTableEntry llpWidget = llTab.add("P: ",Constants.pidConstants.LLP).withSize(1,1).withPosition(0,3).getEntry();
-    private static NetworkTableEntry lldWidget = llTab.add("D: ", Constants.pidConstants.LLD).withSize(1,1).withPosition(1,3).getEntry();
 
     public static Boolean commandChange = false;
     //Manual Command Selection:
     public static Command manualC;
-    private static double LLP = Constants.pidConstants.LLP;
-    private static double LLD = Constants.pidConstants.LLD;
     //Autonomous Command Selection: 
 
     /**
@@ -93,20 +89,10 @@ public class Dashboard {
         leftEncoderWidget.setDouble(_driveSS.leftEncoder.getPosition());
         rightEncoderWidget.setDouble(_driveSS.rightEncoder.getPosition());
         // Check for and handle change in drive mode selection:
-        Command c = driveModeChooser.getSelected();
-        if (c != manualC) {
-            manualC = c;
-            commandChange = true;
-        }
-
         // LL-AutoAim tab:
         llaWidget.setBoolean(_rc.manualDriveArcade.llaaActive);
         lltxWidget.setDouble(_llSS.tx);
         lltoWidget.setDouble(_rc.manualDriveArcade.rootTurn);
         lltvWidget.setBoolean(_llSS.targetFound);
-        if (llpWidget.getDouble(0) != LLP || lldWidget.getDouble(0) != LLD) {
-            _rc.manualDriveArcade.pid = new PIDController(llpWidget.getDouble(0), Constants.pidConstants.LLI, lldWidget.getDouble(0));
-            _rc.manualDriveArcade.pid.reset();
-        }
     }
 }

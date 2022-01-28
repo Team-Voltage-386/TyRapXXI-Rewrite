@@ -51,6 +51,6 @@ public class LLSubsystem extends SubsystemBase {
    * @param targetHeight The target's height above the ground in meters
   */
   public double metersToTarget(double targetHeight) {
-    return (targetHeight-LimeLightConstants.camHeight)/Math.tan(LimeLightConstants.camEleAngle+ty);
+    return (targetHeight-LimeLightConstants.camHeight)/Math.tan(Math.PI*((LimeLightConstants.camEleAngle+ty)/180)));
   }
 }

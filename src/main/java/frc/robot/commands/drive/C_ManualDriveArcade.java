@@ -21,9 +21,7 @@ public class C_ManualDriveArcade extends CommandBase {
   private final DriveSubsystem _dss;
   private final LLSubsystem _lls;
   private final Joystick _controller;
-  public double _p = pidConstants.LLP;
-  public double _d = pidConstants.LLD;
-  public PIDController pid = new PIDController(_p, pidConstants.LLI, _d);
+  public PIDController pid = new PIDController(pidConstants.LLP, pidConstants.LLI, pidConstants.LLD);
   private final double _seekTurnSpeed;
   public Boolean llaaActive = false;
 
@@ -64,17 +62,12 @@ public class C_ManualDriveArcade extends CommandBase {
     else llaaActive = false;
 
     if (llaaActive) {
-      /*if (_controller.getRawButtonPressed(kRightBumper) || _controller.getRawButtonPressed(kLeftBumper)) { 
-        pid.reset();
-      }*/
+      if (_controller.getRawButtonPressed(kRightBumper) || _controller.getRawButtonPressed(kLeftBumper)) pid.reset();
       if (_lls.targetFound) rootTurn = MathUtil.clamp(pid.calculate(_lls.tx, 0), -1*pidConstants.LLC, pidConstants.LLC);
       else if (_controller.getRawButton(kRightBumper)) rootTurn = -1*_seekTurnSpeed;
       else if (_controller.getRawButton(kLeftBumper)) rootTurn = _seekTurnSpeed;
     } else {
       rootTurn = -1 * RobotContainer.driverController.getRawAxis(kRightHorizontal); // else get turn from remote
-      if (_controller.getRawButtonReleased(kRightBumper) || _controller.getRawButtonReleased(kLeftBumper)) {
-        _controller.setRumble(GenericHID.RumbleType.kRightRumble, 0); // stop the rumble
-      }
     }
     _dss.arcadeDrive(rootForward, rootTurn);
   }
