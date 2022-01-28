@@ -11,6 +11,10 @@ import frc.robot.commands.drive.*;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LLSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -25,6 +29,7 @@ public class RobotContainer {
 
   // drivecontroller
   public static final Joystick driverController = new Joystick(0);
+  public static final JoystickButton targetingButton = new JoystickButton(driverController, 6);
 
   // manipulatorcontroller
   public static final Joystick manipulatorController = new Joystick(1);
@@ -43,13 +48,9 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
     // configure default commands
-    driveSubSystem.setDefaultCommand(manualDriveArcade);
 
+    driveSubsystem.setDefaultCommand(manualDriveArcade);
   }
-
-  // public Boolean getTeleopSendableChooser() {
-  // return teleopSendableChooser.getSelected();
-  // }
 
   /**
    * Use this method to define your button->command mappings. Buttons can be
