@@ -67,6 +67,8 @@ public final class Constants {
         public static final double camHeight = 0.63;
         /**Camera's elevation angle above horizon*/
         public static final double camEleAngle = 20;
+        /**Number of seconds to wait after losing target to declare target lost*/
+        public static final double targetLostWaitTime = 0.1;
     }
 
     /**Old constants part of the deprecated BallMovementSubsystem (probably not used)*/

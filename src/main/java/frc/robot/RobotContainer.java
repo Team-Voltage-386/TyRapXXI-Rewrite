@@ -12,9 +12,6 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LLSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -35,10 +32,10 @@ public class RobotContainer {
   public static final Joystick manipulatorController = new Joystick(1);
 
   // The robot's subsystems and commands are defined here...
-  public final DriveSubsystem driveSubSystem = new DriveSubsystem();
+  public final DriveSubsystem driveSubsystem = new DriveSubsystem();
   public final LLSubsystem limeLightSubsystem = new LLSubsystem();
-  public final ManualDriveTank manualDriveTank = new ManualDriveTank(driveSubSystem);
-  public final C_ManualDriveArcade manualDriveArcade = new C_ManualDriveArcade(driveSubSystem, limeLightSubsystem, 0.6);
+  public final ManualDriveTank manualDriveTank = new ManualDriveTank(driveSubsystem);
+  public final C_ManualDriveArcade manualDriveArcade = new C_ManualDriveArcade(driveSubsystem, limeLightSubsystem, 0.6);
   public Command manualCommand;
 
   /**

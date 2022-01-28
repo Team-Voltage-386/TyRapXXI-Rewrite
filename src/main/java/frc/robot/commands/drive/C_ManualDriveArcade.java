@@ -8,14 +8,13 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LLSubsystem;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.pidConstants;
 import frc.robot.RobotContainer;
 import static frc.robot.Constants.ControllerConstants.*;
 
-/**ArcadeDrive teleop command with button to enable LL-AutoAim*/
+/**ArcadeDrive teleop command with bumpers to enable LL-AutoAim*/
 public class C_ManualDriveArcade extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem _dss;
@@ -42,13 +41,13 @@ public class C_ManualDriveArcade extends CommandBase {
     addRequirements(_lls);
   }
 
-  // Called when the command is initially scheduled.
+  /**Called when the command is initially scheduled.*/
   @Override
   public void initialize() {
-    //_lls.driverMode(true);
+    _lls.driverMode(true);
     rootForward = 0;
     rootTurn = 0;
-    pid.setTolerance(4,10);
+    pid.setTolerance(1,3);
   }
 
   public double rootForward, rootTurn;
@@ -58,8 +57,8 @@ public class C_ManualDriveArcade extends CommandBase {
   public void execute() {
     rootForward = RobotContainer.driverController.getRawAxis(kLeftVertical);
 
-    if (_controller.getRawButton(kRightBumper) || _controller.getRawButton(kLeftBumper)) llaaActive = true; // if a bumper is pressed, activate LLAA
-    else llaaActive = false;
+    if (_controller.getRawButton(kRightBumper) || _controller.getRawButton(kLeftBumper)) {llaaActive = true; _lls.driverMode(false);} // if a bumper is pressed, activate LLAA
+    else {llaaActive = false; _lls.driverMode(true);}
 
     if (llaaActive) {
       if (_controller.getRawButtonPressed(kRightBumper) || _controller.getRawButtonPressed(kLeftBumper)) pid.reset();

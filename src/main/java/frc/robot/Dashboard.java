@@ -2,9 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LLSubsystem;
@@ -58,7 +56,7 @@ public class Dashboard {
         _rc = Robot.m_robotContainer;
         _llSS = _rc.limeLightSubsystem;
         //Instantiate DriveModeChooser:
-        _driveSS = _rc.driveSubSystem;
+        _driveSS = _rc.driveSubsystem;
         driveModeChooser.setDefaultOption("ArcadeDrive", _rc.manualDriveArcade);
         driveModeChooser.addOption("TankDrive", _rc.manualDriveTank);
         driverTab.add("Drive Mode", driveModeChooser);
