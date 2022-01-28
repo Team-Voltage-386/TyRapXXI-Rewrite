@@ -68,7 +68,10 @@ public class C_ManualDriveArcade extends CommandBase {
         if (_lls.targetFound) rootTurn = MathUtil.clamp(pid.calculate(_lls.tx, 0), -1*pidConstants.LLC, pidConstants.LLC);
         else if (_controller.getRawButton(kRightBumper)) rootTurn = -1*_seekTurnSpeed;
         else if (_controller.getRawButton(kLeftBumper)) rootTurn = _seekTurnSpeed;
-      } else _controller.setRumble(RumbleType.kRightRumble, 0.5);
+      } else {
+        rootTurn = 0;
+        _controller.setRumble(RumbleType.kRightRumble, 0.5);
+      }
     } else {
       _controller.setRumble(RumbleType.kRightRumble,0);
       rootTurn = -1 * RobotContainer.driverController.getRawAxis(kRightHorizontal); // else get turn from remote
