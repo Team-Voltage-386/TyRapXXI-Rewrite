@@ -71,6 +71,6 @@ public class RobotContainer {
   }
 
   public Command getTeleOpCommand() {
-    return Dashboard.manualC;
+    return manualDriveArcade;
   }
 }

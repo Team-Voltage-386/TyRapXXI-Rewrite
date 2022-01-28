@@ -67,6 +67,8 @@ public final class Constants {
         public static final double camHeight = 0.63;
         /**Camera's elevation angle above horizon*/
         public static final double camEleAngle = 20;
+        /**Target's height off the ground for testing purposes*/
+        public static final float target1Height = 3;
         /**Number of seconds to wait after losing target to declare target lost*/
         public static final double targetLostWaitTime = 0.1;
     }

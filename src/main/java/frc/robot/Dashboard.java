@@ -36,18 +36,13 @@ public class Dashboard {
     // Create encoder widgets
     private static NetworkTableEntry leftEncoderWidget = driverTab.add("Left Encoder", 0).withSize(2, 1).withPosition(2, 2).getEntry();
     private static NetworkTableEntry rightEncoderWidget = driverTab.add("Right Encoder", 0).withSize(2, 1).withPosition(4, 2).getEntry();
-    //DriveSystemsOut:
-    private static SendableChooser<Command> driveModeChooser = new SendableChooser<Command>();
 
-    private static NetworkTableEntry llaWidget = llTab.add("LL-AutoAim Active",false).withSize(1,1).withPosition(0,0).getEntry();
+    private static NetworkTableEntry llaWidget = llTab.add("AutoAim Active",false).withSize(1,1).withPosition(0,0).getEntry();
     private static NetworkTableEntry lltxWidget = llTab.add("Process Variable Error",0).withSize(2,1).withPosition(0,1).getEntry();
     private static NetworkTableEntry lltoWidget = llTab.add("PID Output",0).withSize(2,1).withPosition(0,2).getEntry();
     private static NetworkTableEntry lltvWidget = llTab.add("Target Found",false).withSize(1,1).withPosition(1, 0).getEntry();
-
-    public static Boolean commandChange = false;
-    //Manual Command Selection:
-    public static Command manualC;
-    //Autonomous Command Selection: 
+    private static NetworkTableEntry lltdWidget = llTab.add("Target Distance",0).withSize(1,1).withPosition(4,0).getEntry();
+    public static SendableChooser<Boolean> lltlwSelect = new SendableChooser<Boolean>();
 
     /**
      *  Initialize the dash, customize at will
@@ -55,12 +50,10 @@ public class Dashboard {
     public static void init() {
         _rc = Robot.m_robotContainer;
         _llSS = _rc.limeLightSubsystem;
-        //Instantiate DriveModeChooser:
-        _driveSS = _rc.driveSubsystem;
-        driveModeChooser.setDefaultOption("ArcadeDrive", _rc.manualDriveArcade);
-        driveModeChooser.addOption("TankDrive", _rc.manualDriveTank);
-        driverTab.add("Drive Mode", driveModeChooser);
-        manualC = driveModeChooser.getSelected();
+        //Init LLTLW select:
+        lltlwSelect.setDefaultOption("False", false);
+        lltlwSelect.addOption("True", true);
+        llTab.add("LLTLW",lltlwSelect);
     }
 
     /**
@@ -92,5 +85,6 @@ public class Dashboard {
         lltxWidget.setDouble(_llSS.tx);
         lltoWidget.setDouble(_rc.manualDriveArcade.rootTurn);
         lltvWidget.setBoolean(_llSS.targetFound);
+        lltdWidget.setDouble(_llSS.metersToTarget(Constants.LimeLightConstants.target1Height));
     }
 }

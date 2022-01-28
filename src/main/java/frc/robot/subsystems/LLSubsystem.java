@@ -4,11 +4,13 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LimeLightConstants;
+import frc.robot.Dashboard;
 
 /**Carl's attempt at making a lime-light subsystem*/
 public class LLSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   public NetworkTable _nt;
+  /**Whether or not the LL should wait before declaring target loss to see if it will come back*/
   public Boolean targetLostWait = false;
   public Boolean targetFound = false;
   public float tx;
@@ -27,7 +29,7 @@ public class LLSubsystem extends SubsystemBase {
   /**During periodic this subsystem updates the basic public LL variables*/
   @Override
   public void periodic() {
-
+    targetLostWait = Dashboard.lltlwSelect.getSelected();
     if(_nt.getEntry("tv").getDouble(-1) == 0) {
       if(targetLostWait) targetFound = !timer.hasElapsed(LimeLightConstants.targetLostWaitTime); // if it should wait for target re-acquire, then wait, else declare it lost
       else targetFound = false;
@@ -35,6 +37,7 @@ public class LLSubsystem extends SubsystemBase {
     else {
         targetFound = true;
         timer.reset();
+        timer.start();
         tx = (float)_nt.getEntry("tx").getDouble(0);
         ty = (float)_nt.getEntry("ty").getDouble(0);
         ta = (float)_nt.getEntry("ta").getDouble(0);
