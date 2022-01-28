@@ -8,7 +8,7 @@ import frc.robot.Constants.LimeLightConstants;
 public class LLSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   public NetworkTable _nt;
-  public Boolean targetFound;
+  public Boolean targetFound = false;
   public float tx;
   public float ty;
   public float ta;
@@ -17,7 +17,7 @@ public class LLSubsystem extends SubsystemBase {
   /**Carl's attempt at making a lime-light subsystem*/
   public LLSubsystem() {
       _nt = NetworkTableInstance.getDefault().getTable("limelight");
-      driverMode(true);
+      driverMode(false);
   }
 
   /**During periodic this subsystem updates the basic public LL variables*/

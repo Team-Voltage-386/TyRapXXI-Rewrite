@@ -2,7 +2,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LLSubsystem;
@@ -39,13 +41,18 @@ public class Dashboard {
     //DriveSystemsOut:
     private static SendableChooser<Command> driveModeChooser = new SendableChooser<Command>();
 
-    private static NetworkTableEntry llaWidget = llTab.add("LL-AutoAim Active",false).withSize(2,1).withPosition(0,0).getEntry();
+    private static NetworkTableEntry llaWidget = llTab.add("LL-AutoAim Active",false).withSize(1,1).withPosition(0,0).getEntry();
     private static NetworkTableEntry lltxWidget = llTab.add("Process Variable Error",0).withSize(2,1).withPosition(0,1).getEntry();
     private static NetworkTableEntry lltoWidget = llTab.add("PID Output",0).withSize(2,1).withPosition(0,2).getEntry();
+    private static NetworkTableEntry lltvWidget = llTab.add("Target Found",false).withSize(1,1).withPosition(1, 0).getEntry();
+    private static NetworkTableEntry llpWidget = llTab.add("P: ",Constants.pidConstants.LLP).withSize(1,1).withPosition(0,3).getEntry();
+    private static NetworkTableEntry lldWidget = llTab.add("D: ", Constants.pidConstants.LLD).withSize(1,1).withPosition(1,3).getEntry();
 
     public static Boolean commandChange = false;
     //Manual Command Selection:
     public static Command manualC;
+    private static double LLP = Constants.pidConstants.LLP;
+    private static double LLD = Constants.pidConstants.LLD;
     //Autonomous Command Selection: 
 
     /**
@@ -96,5 +103,10 @@ public class Dashboard {
         llaWidget.setBoolean(_rc.manualDriveArcade.llaaActive);
         lltxWidget.setDouble(_llSS.tx);
         lltoWidget.setDouble(_rc.manualDriveArcade.rootTurn);
+        lltvWidget.setBoolean(_llSS.targetFound);
+        if (llpWidget.getDouble(0) != LLP || lldWidget.getDouble(0) != LLD) {
+            _rc.manualDriveArcade.pid = new PIDController(llpWidget.getDouble(0), Constants.pidConstants.LLI, lldWidget.getDouble(0));
+            _rc.manualDriveArcade.pid.reset();
+        }
     }
 }

@@ -34,7 +34,7 @@ public class RobotContainer {
   public final DriveSubsystem driveSubSystem = new DriveSubsystem();
   public final LLSubsystem limeLightSubsystem = new LLSubsystem();
   public final ManualDriveTank manualDriveTank = new ManualDriveTank(driveSubSystem);
-  public final C_ManualDriveArcade manualDriveArcade = new C_ManualDriveArcade(driveSubSystem, limeLightSubsystem, ControllerConstants.kRightBumper);
+  public final C_ManualDriveArcade manualDriveArcade = new C_ManualDriveArcade(driveSubSystem, limeLightSubsystem, 0.2);
   public Command manualCommand;
 
   /**
