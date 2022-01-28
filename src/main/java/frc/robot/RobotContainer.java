@@ -43,12 +43,13 @@ public class RobotContainer {
   private final DriveSubsystem driveSubSystem = new DriveSubsystem();
   private final BallMovementSubsystem ballMovementSubsystem = new BallMovementSubsystem();
   private final ManualBallMovementCommand ballMovementCommand = new ManualBallMovementCommand(ballMovementSubsystem);
-  private final ManualDrive manualDriveCommand = new ManualDrive(driveSubSystem);
 
   // Sendable chooser declarations
   // Shuffleboard declarations
   public static ShuffleboardTab driverTab;
   private SendableChooser<Boolean> teleopSendableChooser;
+  private final ManualDriveTank manualDriveTankCommand = new ManualDriveTank(driveSubSystem);
+  private final ManualDriveArcade manualDriveCommand = new ManualDriveArcade(driveSubSystem);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -57,25 +58,19 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    // Instantiate Driver Tab
-    driverTab = Shuffleboard.getTab("Driver Tab");
-
-    // Set up teleop sendable chooser
-    teleopSendableChooser = new SendableChooser<Boolean>();
-    teleopSendableChooser.addOption("Drive Only", false);
-    teleopSendableChooser.setDefaultOption("Drive & Ball Movement", true);
-    driverTab.add(teleopSendableChooser).withSize(2, 1).withPosition(0, 1);
+    // // Instantiate Driver Tab
+    // driverTab = Shuffleboard.getTab("Driver Tab");
 
     // configure default commands
-    driveSubSystem.setDefaultCommand(manualDriveCommand);
+    driveSubSystem.setDefaultCommand(manualDriveTankCommand);
 
      // configure default commands
      ballMovementSubsystem.setDefaultCommand(ballMovementCommand);
   }
 
-  public Boolean getTeleopSendableChooser() {
-    return teleopSendableChooser.getSelected();
-  }
+  // public Boolean getTeleopSendableChooser() {
+  // return teleopSendableChooser.getSelected();
+  // }
 
   /**
    * Use this method to define your button->command mappings. Buttons can be
@@ -99,6 +94,6 @@ public class RobotContainer {
   }
 
   public Command getManualDriveCommand() {
-    return manualDriveCommand;
+    return manualDriveTankCommand;
   }
 }
