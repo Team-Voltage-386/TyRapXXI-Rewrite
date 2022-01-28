@@ -66,7 +66,7 @@ public class Robot extends TimedRobot {
     if (Dashboard.commandChange) {
       Dashboard.commandChange = false;
       _teleopCommand.cancel();
-      _teleopCommand = Dashboard.manualC;
+      _teleopCommand = m_robotContainer.getTeleOpCommand();
       if (man) teleopInit();
     }
 
@@ -106,6 +106,7 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
   }
 
+  /**This function is called at the beginning of teleop*/
   @Override
   public void teleopInit() {
     // apply declaration of mode:
@@ -119,7 +120,7 @@ public class Robot extends TimedRobot {
     
   }
 
-  /** This function is called periodically during operator control. */
+  /** This function is called periodically during operator control.*/
   @Override
   public void teleopPeriodic() {
   }

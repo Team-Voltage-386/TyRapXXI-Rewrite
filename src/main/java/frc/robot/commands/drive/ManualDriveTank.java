@@ -11,14 +11,12 @@ import frc.robot.RobotContainer;
 
 import static frc.robot.Constants.ControllerConstants.*;
 
-/** An example command that uses an example subsystem. */
+/**ManualDriveTank teleop Command*/
 public class ManualDriveTank extends CommandBase {
     @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
     private final DriveSubsystem m_subsystem;
 
-    /**
-     * Creates a new ExampleCommand.
-     *
+    /**ManualDriveTank teleop Command
      * @param subsystem The subsystem used by this command.
      */
     public ManualDriveTank(DriveSubsystem subsystem) {

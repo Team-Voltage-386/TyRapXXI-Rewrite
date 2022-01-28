@@ -7,13 +7,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.drive.*;
-import frc.robot.Constants.ControllerConstants;
-import frc.robot.Constants.ControllerConstants.*;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.LLSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -37,10 +33,12 @@ public class RobotContainer {
 
   // manipulatorcontroller
   public static final Joystick manipulatorController = new Joystick(1);
+
   // The robot's subsystems and commands are defined here...
-  public final DriveSubsystem driveSubsystem = new DriveSubsystem();
-  public final ManualDriveTank manualDriveTank = new ManualDriveTank(driveSubsystem);
-  public final ManualDriveArcade manualDriveArcade = new ManualDriveArcade(driveSubsystem);
+  public final DriveSubsystem driveSubSystem = new DriveSubsystem();
+  public final LLSubsystem limeLightSubsystem = new LLSubsystem();
+  public final ManualDriveTank manualDriveTank = new ManualDriveTank(driveSubSystem);
+  public final C_ManualDriveArcade manualDriveArcade = new C_ManualDriveArcade(driveSubSystem, limeLightSubsystem, 0.6);
   public Command manualCommand;
 
   /**
@@ -73,5 +71,9 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
     return null;
+  }
+
+  public Command getTeleOpCommand() {
+    return Dashboard.manualC;
   }
 }
