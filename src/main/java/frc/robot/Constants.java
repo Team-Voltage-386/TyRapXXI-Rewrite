@@ -56,7 +56,7 @@ public final class Constants {
         // LimeLight arcade drive pid constants:
         public static final double LLP = 0.2; // P
         public static final double LLI = 0;  // I
-        public static final double LLD = 2; // D
+        public static final double LLD = 0; // D
         public static final double LLC = 0.5; // Clamp
         public static final float[] LLT = {3,5}; // tolerance {position,velocity}
     }

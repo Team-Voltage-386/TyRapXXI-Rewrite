@@ -21,10 +21,10 @@ public class C_ManualDriveArcade extends CommandBase {
   private final DriveSubsystem _dss;
   private final LLSubsystem _lls;
   private final Joystick _controller;
-  public PIDController pid = new PIDController(_p, pidConstants.LLI, _d);
-  private final double _seekTurnSpeed;
   public double _p = pidConstants.LLP;
   public double _d = pidConstants.LLD;
+  public PIDController pid = new PIDController(_p, pidConstants.LLI, _d);
+  private final double _seekTurnSpeed;
   public Boolean llaaActive = false;
 
   /**ArcadeDrive teleop command with button to enable LL-AutoAim
