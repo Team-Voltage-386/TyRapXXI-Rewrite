@@ -10,9 +10,11 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import frc.robot.commands.ballmovement.ManualBallMovementCommand;
 import frc.robot.commands.drive.*;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.ControllerConstants.*;
+import frc.robot.subsystems.BallMovementSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -39,6 +41,13 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem driveSubSystem = new DriveSubsystem();
+  private final BallMovementSubsystem ballMovementSubsystem = new BallMovementSubsystem();
+  private final ManualBallMovementCommand ballMovementCommand = new ManualBallMovementCommand(ballMovementSubsystem);
+
+  // Sendable chooser declarations
+  // Shuffleboard declarations
+  public static ShuffleboardTab driverTab;
+  private SendableChooser<Boolean> teleopSendableChooser;
   private final ManualDriveTank manualDriveTankCommand = new ManualDriveTank(driveSubSystem);
   private final ManualDriveArcade manualDriveCommand = new ManualDriveArcade(driveSubSystem);
 
@@ -55,6 +64,8 @@ public class RobotContainer {
     // configure default commands
     driveSubSystem.setDefaultCommand(manualDriveTankCommand);
 
+     // configure default commands
+     ballMovementSubsystem.setDefaultCommand(ballMovementCommand);
   }
 
   // public Boolean getTeleopSendableChooser() {
