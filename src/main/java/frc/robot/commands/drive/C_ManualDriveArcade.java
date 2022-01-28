@@ -9,6 +9,7 @@ import frc.robot.subsystems.LLSubsystem;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.pidConstants;
 import frc.robot.RobotContainer;
@@ -47,7 +48,7 @@ public class C_ManualDriveArcade extends CommandBase {
     _lls.driverMode(true);
     rootForward = 0;
     rootTurn = 0;
-    pid.setTolerance(1,3);
+    pid.setTolerance(1,1);
   }
 
   public double rootForward, rootTurn;
@@ -61,11 +62,15 @@ public class C_ManualDriveArcade extends CommandBase {
     else {llaaActive = false; _lls.driverMode(true);}
 
     if (llaaActive) {
-      if (_controller.getRawButtonPressed(kRightBumper) || _controller.getRawButtonPressed(kLeftBumper)) pid.reset();
-      if (_lls.targetFound) rootTurn = MathUtil.clamp(pid.calculate(_lls.tx, 0), -1*pidConstants.LLC, pidConstants.LLC);
-      else if (_controller.getRawButton(kRightBumper)) rootTurn = -1*_seekTurnSpeed;
-      else if (_controller.getRawButton(kLeftBumper)) rootTurn = _seekTurnSpeed;
+      if (!pid.atSetpoint()) {
+        _controller.setRumble(RumbleType.kRightRumble,0);
+        if (_controller.getRawButtonPressed(kRightBumper) || _controller.getRawButtonPressed(kLeftBumper)) pid.reset();
+        if (_lls.targetFound) rootTurn = MathUtil.clamp(pid.calculate(_lls.tx, 0), -1*pidConstants.LLC, pidConstants.LLC);
+        else if (_controller.getRawButton(kRightBumper)) rootTurn = -1*_seekTurnSpeed;
+        else if (_controller.getRawButton(kLeftBumper)) rootTurn = _seekTurnSpeed;
+      } else _controller.setRumble(RumbleType.kRightRumble, 0.5);
     } else {
+      _controller.setRumble(RumbleType.kRightRumble,0);
       rootTurn = -1 * RobotContainer.driverController.getRawAxis(kRightHorizontal); // else get turn from remote
     }
     _dss.arcadeDrive(rootForward, rootTurn);
