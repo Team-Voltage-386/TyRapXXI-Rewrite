@@ -45,10 +45,11 @@ public class C_ManualDriveArcade extends CommandBase {
   /**Called when the command is initially scheduled.*/
   @Override
   public void initialize() {
-    _lls.driverMode(true);
+    _lls.driverMode(false);
     rootForward = 0;
     rootTurn = 0;
     pid.setTolerance(1,1);
+    _lls.targetLostWait = true;
   }
 
   public double rootForward, rootTurn;
@@ -59,18 +60,18 @@ public class C_ManualDriveArcade extends CommandBase {
     rootForward = RobotContainer.driverController.getRawAxis(kLeftVertical);
 
     if (_controller.getRawButton(kRightBumper) || _controller.getRawButton(kLeftBumper) || _controller.getRawButton(kA)) {llaaActive = true; _lls.driverMode(false);} // if a bumper or a is pressed, activate LLAA
-    else {llaaActive = false; _lls.driverMode(true);}
+    else {llaaActive = false; _lls.driverMode(false);}
 
     if (llaaActive) {
-      if (!pid.atSetpoint()) {
+      if ((-0.6 < _lls.tx && _lls.tx < 0.6) && _lls.targetFound) {
+        rootTurn = 0;
+        _controller.setRumble(RumbleType.kRightRumble, 0.5);
+      } else {
         _controller.setRumble(RumbleType.kRightRumble,0);
-        if (_controller.getRawButtonPressed(kRightBumper) || _controller.getRawButtonPressed(kLeftBumper)) pid.reset();
+        if (_controller.getRawButtonPressed(kRightBumper) || _controller.getRawButtonPressed(kLeftBumper) || _controller.getRawButtonPressed(kA)) pid.reset();
         if (_lls.targetFound) rootTurn = MathUtil.clamp(pid.calculate(_lls.tx, 0), -1*pidConstants.LLC, pidConstants.LLC); // clamps the pid output to prevent murderbot
         else if (_controller.getRawButton(kRightBumper) && !_controller.getRawButton(kA)) rootTurn = -1*_seekTurnSpeed; // if target not found and not A then seek
         else if (_controller.getRawButton(kLeftBumper) && !_controller.getRawButton(kA)) rootTurn = _seekTurnSpeed;
-      } else {
-        rootTurn = 0;
-        _controller.setRumble(RumbleType.kRightRumble, 0.5);
       }
     } else {
       _controller.setRumble(RumbleType.kRightRumble,0);

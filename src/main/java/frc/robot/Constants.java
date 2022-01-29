@@ -55,21 +55,20 @@ public final class Constants {
     public static final class pidConstants {
         // LimeLight arcade drive pid constants:
         public static final double LLP = 0.04; // P
-        public static final double LLI = 0.015;  // I
-        public static final double LLD = 0.0002; // D
+        public static final double LLI = 0.025;  // I
+        public static final double LLD = 0.001; // D
         public static final double LLC = 0.5; // Clamp
         public static final float[] LLT = {3,5}; // tolerance {position,velocity}
     }
 
     /**Constants for the limelight used for estimating distance*/
     public static final class LimeLightConstants {
-        /**Camera's height above the grorund in meters*/
-        public static final double camHeight = 0.63;
-        /**Camera's elevation angle above horizon*/
-        public static final double camEleAngle = 20;
-        /**Target's height off the ground for testing purposes*/
-        public static final float target1Height = 3;
-        /**Number of seconds to wait after losing target to declare target lost*/
+        public static final double camHeightHoop = 0.63;
+        public static final double camEleAngleHoop = 20;
+        public static final double targetHeightHoop = 2.6416;
+        public static final double camHeightBall = 0.72;
+        public static final double camEleAngleBall = -13;
+        public static final double targetHeightBall = 0.12065;
         public static final double targetLostWaitTime = 0.1;
     }
 

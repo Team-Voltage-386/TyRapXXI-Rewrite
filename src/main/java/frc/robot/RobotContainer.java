@@ -12,6 +12,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LLSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants.LimeLightConstants;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -33,9 +34,10 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   public final DriveSubsystem driveSubsystem = new DriveSubsystem();
-  public final LLSubsystem limeLightSubsystem = new LLSubsystem();
+  public final LLSubsystem limeLightSubsystemHoop = new LLSubsystem("limelight",LimeLightConstants.targetHeightHoop,LimeLightConstants.camEleAngleBall,LimeLightConstants.camHeightHoop);
+  public final LLSubsystem limeLightSubsystemBall = new LLSubsystem("limelight-ball",LimeLightConstants.targetHeightBall,LimeLightConstants.camEleAngleBall,LimeLightConstants.camHeightBall);
   public final ManualDriveTank manualDriveTank = new ManualDriveTank(driveSubsystem);
-  public final C_ManualDriveArcade manualDriveArcade = new C_ManualDriveArcade(driveSubsystem, limeLightSubsystem, 0.6);
+  public final C_ManualDriveArcade manualDriveArcade = new C_ManualDriveArcade(driveSubsystem, limeLightSubsystemHoop, 0.6);
   public Command manualCommand;
 
   /**
@@ -48,7 +50,6 @@ public class RobotContainer {
 
     driveSubsystem.setDefaultCommand(manualDriveArcade);
   }
-
   /**
    * Use this method to define your button->command mappings. Buttons can be
    * created by

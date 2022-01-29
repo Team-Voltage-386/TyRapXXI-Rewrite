@@ -3,8 +3,8 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.LimeLightConstants;
 import frc.robot.Dashboard;
+import frc.robot.Constants.LimeLightConstants;
 
 /**Carl's attempt at making a lime-light subsystem*/
 public class LLSubsystem extends SubsystemBase {
@@ -12,16 +12,23 @@ public class LLSubsystem extends SubsystemBase {
   public NetworkTable _nt;
   /**Whether or not the LL should wait before declaring target loss to see if it will come back*/
   public Boolean targetLostWait = false;
+  public Boolean dMode = false;
   public Boolean targetFound = false;
   public float tx;
   public float ty;
   public float ta;
   public float ts;
+  private double _TH;
+  private double _MA;
+  private double _MH;
   private Timer timer = new Timer();
 
   /**Carl's attempt at making a lime-light subsystem*/
-  public LLSubsystem() {
-      _nt = NetworkTableInstance.getDefault().getTable("limelight");
+  public LLSubsystem(String hostName, double targetHeight, double mountAngle, double mountHeight) {
+      _nt = NetworkTableInstance.getDefault().getTable(hostName);
+      _TH = targetHeight;
+      _MA = mountAngle;
+      _MH = mountHeight;
       driverMode(false);
       timer.start();
   }
@@ -55,14 +62,14 @@ public class LLSubsystem extends SubsystemBase {
    * @param b whether or not drivermode should be turned on or off
    */
   public void driverMode(Boolean b) {
+      dMode = b;
       if (b) _nt.getEntry("camMode").setNumber(1);
       else _nt.getEntry("camMode").setNumber(0);
   }
 
-  /**Returns the meters to the target given a known target height from the ground
-   * @param targetHeight The target's height above the ground in meters
+  /**Returns the meters to the target given a the target's height from the ground
   */
-  public double metersToTarget(double targetHeight) {
-    return (targetHeight-LimeLightConstants.camHeight)/Math.tan(Math.PI*((LimeLightConstants.camEleAngle+ty)/180));
+  public double metersToTarget() {
+    return (_TH-_MH)/Math.tan(Math.PI*((_MA+ty)/180));
   }
 }
