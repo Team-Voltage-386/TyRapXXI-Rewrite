@@ -37,7 +37,8 @@ public class D_TeleOp extends CommandBase {
     _llss = LLS;
     _llssb = LLSB;
     _controller = RobotContainer.driverController;
-    _llss.driverMode(false);
+    _llss.driverMode(true);
+    _llssb.driverMode(true);
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(_dss);
@@ -90,11 +91,5 @@ public class D_TeleOp extends CommandBase {
   public void end(boolean interrupted) {
     _llss.driverMode(false);
     _llssb.driverMode(false);
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
   }
 }

@@ -42,16 +42,16 @@ public class BallMovementSubsystem extends SubsystemBase {
     /**Creates a BallMovementSubsystem*/
     public BallMovementSubsystem() {
         intakeMotor.configFactoryDefault();
-        intakeMotor.configNeutralDeadband(.1);
+        intakeMotor.configNeutralDeadband(0);
 
         launcherFollowerMotor.restoreFactoryDefaults();
         launcherLeadMotor.restoreFactoryDefaults();
         launcherFollowerMotor.follow(launcherLeadMotor, true);
 
         serializerMotor.configFactoryDefault();
-        serializerMotor.configNeutralDeadband(.1);
+        serializerMotor.configNeutralDeadband(0);
         feederMotor.configFactoryDefault();
-        feederMotor.configNeutralDeadband(.1);
+        feederMotor.configNeutralDeadband(0);
     }
 
     /**Operate Ball Intake
@@ -90,13 +90,5 @@ public class BallMovementSubsystem extends SubsystemBase {
     public void runIntakeMotor(Boolean on) {
         if (on) intakeMotor.set(ControlMode.PercentOutput, intakePower);
         else intakeMotor.set(ControlMode.PercentOutput, 0);
-    }
-
-    @Override
-    public void periodic() {
-    }
-
-    @Override
-    public void simulationPeriodic() {
     }
 }
