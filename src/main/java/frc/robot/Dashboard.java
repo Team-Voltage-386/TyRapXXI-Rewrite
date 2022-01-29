@@ -11,7 +11,7 @@ public class Dashboard {
     // Creates a shuffleboard tab
     private static ShuffleboardTab llTab = Shuffleboard.getTab("LL-AutoAim");
     private static ShuffleboardTab llbTab = Shuffleboard.getTab("LL-ChaseBall");
-    private static ShuffleboardTab bmTab = Shuffleboard.getTab("Ball-Movement")
+    private static ShuffleboardTab bmTab = Shuffleboard.getTab("Ball-Movement");
     
     // Diagnostics in:
     private static LLSubsystem _llSS;
@@ -51,16 +51,16 @@ public class Dashboard {
      */
     public static void update() {
         // LL-AutoAim tab:
-        llaWidget.setBoolean(_rc.teleOpCommand.llaa);
+        llaWidget.setBoolean(_rc.teleOpD.llaa);
         lltxWidget.setDouble(_llSS.tx);
-        lltoWidget.setDouble(_rc.teleOpCommand.rootTurn);
+        lltoWidget.setDouble(_rc.teleOpD.rootTurn);
         lltvWidget.setBoolean(_llSS.targetFound);
         lltdWidget.setDouble(_llSS.metersToTarget());
 
         // LL-ChaseBall tab:
-        llbaWidget.setBoolean(_rc.teleOpCommand.llcb);
+        llbaWidget.setBoolean(_rc.teleOpD.llcb);
         llbtxWidget.setDouble(_llSSB.tx);
-        llbtoWidget.setDouble(_rc.teleOpCommand.rootTurn);
+        llbtoWidget.setDouble(_rc.teleOpD.rootTurn);
         llbtvWidget.setBoolean(_llSSB.targetFound);
         llbtdWidget.setDouble(_llSSB.metersToTarget());
 

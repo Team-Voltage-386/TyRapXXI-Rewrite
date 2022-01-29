@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
-import frc.robot.commands.ballmovement.ManualBallMovementCommand;
 import frc.robot.commands.drive.*;
 import frc.robot.subsystems.BallMovementSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -34,10 +33,9 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final DriveSubsystem driveSubsystem = new DriveSubsystem();
   public final BallMovementSubsystem ballMovementSS = new BallMovementSubsystem();
-  public final ManualBallMovementCommand ballMovementCommand = new ManualBallMovementCommand(ballMovementSS);
   public final LLSubsystem limeLightSubsystemHoop = new LLSubsystem("limelight",LimeLightConstants.targetHeightHoop,LimeLightConstants.camEleAngleBall,LimeLightConstants.camHeightHoop);
   public final LLSubsystem limeLightSubsystemBall = new LLSubsystem("limelight-ball",LimeLightConstants.targetHeightBall,LimeLightConstants.camEleAngleBall,LimeLightConstants.camHeightBall);
-  public final D_TeleOp teleOpCommand = new D_TeleOp(driveSubsystem, limeLightSubsystemHoop, limeLightSubsystemBall);
+  public final D_TeleOp teleOpD = new D_TeleOp(driveSubsystem, limeLightSubsystemHoop, limeLightSubsystemBall);
 
   /**
    * The container for the robot. Contains subsystems, IO devices, and commands.
@@ -48,8 +46,7 @@ public class RobotContainer {
     // configure default commands
 
      // configure default commands
-    ballMovementSS.setDefaultCommand(ballMovementCommand);
-    driveSubsystem.setDefaultCommand(teleOpCommand);
+    driveSubsystem.setDefaultCommand(teleOpD);
   }
   /**
    * Use this method to define your button->command mappings. Buttons can be
@@ -72,8 +69,8 @@ public class RobotContainer {
     return null;
   }
 
-  
+
   public Command getTeleOpCommand() {
-    return teleOpCommand;
+    return teleOpD;
   }
 }
