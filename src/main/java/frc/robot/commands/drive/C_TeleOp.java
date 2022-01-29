@@ -23,20 +23,19 @@ public class C_TeleOp extends CommandBase {
   private final LLSubsystem _llssb;
   private final Joystick _controller;
   public PIDController pid = new PIDController(pidConstants.LLP, pidConstants.LLI, pidConstants.LLD);
-  private final double _seekTurnSpeed;
   public Boolean llaa = false;
   public Boolean llcb = false;
+  public Boolean llso = false;
+  public double soDistance = 3;
 
-  /**ArcadeDrive teleop command with button to enable LL-AutoAim
+  /**ArcadeDrive teleop command with button to enable LL-AutoAim, LL-ChaseBall, and LL-StandOff
    * @param DSS The drive subsystem used by this command.
    * @param LLS the LL subsystem used by this command
-   * @param seekTurnSpeed The speed at which to seek for a target
    */
-  public C_TeleOp(DriveSubsystem DSS, LLSubsystem LLS, LLSubsystem LLSB, double seekTurnSpeed) {
+  public C_TeleOp(DriveSubsystem DSS, LLSubsystem LLS, LLSubsystem LLSB) {
     _dss = DSS;
     _llss = LLS;
     _llssb = LLSB;
-    _seekTurnSpeed = seekTurnSpeed;
     _controller = RobotContainer.driverController;
     _llss.driverMode(false);
 
@@ -63,17 +62,17 @@ public class C_TeleOp extends CommandBase {
   public void execute() {
     rootForward = RobotContainer.driverController.getRawAxis(kLeftVertical);
 
-    if (_controller.getRawButton(kA)) {llaa = true; llcb = false; _llss.driverMode(false);} // if a is pressed, activate LLAA
+    if (_controller.getRawButton(kLeftBumper)) {llaa = true; llcb = false; _llss.driverMode(false);} // if a is pressed, activate LLAA
     else if (_controller.getRawButton(kX)) {llcb = true; llaa = false; _llssb.driverMode(false);}
     else {llaa = false; llcb = false; _llss.driverMode(true); _llssb.driverMode(true);}
 
-    if (llaa) {
-      if ((-0.6 < _llss.tx && _llss.tx < 0.6) && _llss.targetFound) {
+    if (llaa && _llss.targetFound) {
+      if ((-0.6 < _llss.tx && _llss.tx < 0.6)) {
         rootTurn = 0;
         _controller.setRumble(RumbleType.kRightRumble, 0.5);
       } else {
         _controller.setRumble(RumbleType.kRightRumble,0);
-        if (_controller.getRawButtonPressed(kA)) pid.reset();
+        if (_controller.getRawButtonPressed(kLeftBumper)) pid.reset();
         if (_llss.targetFound) rootTurn = MathUtil.clamp(pid.calculate(_llss.tx, 0), -1*pidConstants.LLC, pidConstants.LLC); // clamps the pid output to prevent murderbot
       }
     } else if (llcb && _llssb.targetFound) {
@@ -89,6 +88,8 @@ public class C_TeleOp extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    _llss.driverMode(false);
+    _llssb.driverMode(false);
   }
 
   // Returns true when the command should end.
