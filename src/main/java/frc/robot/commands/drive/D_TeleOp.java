@@ -15,7 +15,7 @@ import frc.robot.Constants.pidConstants;
 import frc.robot.RobotContainer;
 import static frc.robot.Constants.ControllerConstants.*;
 
-/**ArcadeDrive teleop command with bumpers to enable LL-AutoAim*/
+/**Driver TeleOp Command*/
 public class D_TeleOp extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem _dss;
@@ -28,9 +28,10 @@ public class D_TeleOp extends CommandBase {
   public Boolean llso = false;
   public double soDistance = 3;
 
-  /**ArcadeDrive teleop command with button to enable LL-AutoAim, LL-ChaseBall, and LL-StandOff
+  /**Driver TeleOp Command
    * @param DSS The drive subsystem used by this command.
-   * @param LLS the LL subsystem used by this command
+   * @param LLS the hoop LL subsystem used by this command.
+   * @param LLSB the ball LL subsystem used by this command.
    */
   public D_TeleOp(DriveSubsystem DSS, LLSubsystem LLS, LLSubsystem LLSB) {
     _dss = DSS;

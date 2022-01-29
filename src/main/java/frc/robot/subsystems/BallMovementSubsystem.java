@@ -58,28 +58,29 @@ public class BallMovementSubsystem extends SubsystemBase {
      * @param deploy True: deploy, False: retract
     */
     public void deployIntake(Boolean deploy) {
-      if (deploy) ballPickupSolenoid.set(DoubleSolenoid.Value.kReverse);
-      else ballPickupSolenoid.set(DoubleSolenoid.Value.kForward);
+      if (deploy) ballPickupSolenoid.set(kIntakeDeployed);
+      else ballPickupSolenoid.set(kIntakeRetracted);
     }
     
     /** Set launcher power
      * @param power Launching Power
      */
-    public void runLauncher(double power) {
+    public void setLauncherPower(double power) {
         launcherLeadMotor.set(power);
     }
 
     /** set feeder on/off
      * @param on feeder on/off
      */
-    public void runFeeder(double power) {
-        feederMotor.set(ControlMode.PercentOutput, power);
+    public void runFeeder(Boolean on) {
+        if (on) feederMotor.set(ControlMode.PercentOutput, feederPower);
+        else feederMotor.set(ControlMode.PercentOutput, 0);
     }
 
     /** set serializer motor on/off
      *@param on motor on/off
      */
-    public void serializerMotor(Boolean on) {
+    public void runSerializer(Boolean on) {
         if (on) serializerMotor.set(ControlMode.PercentOutput, serializerPower);
         else serializerMotor.set(ControlMode.PercentOutput, 0);
     }
@@ -87,7 +88,7 @@ public class BallMovementSubsystem extends SubsystemBase {
     /** set intake motor on/off
      * @param on motor on/off
      */
-    public void runIntakeMotor(Boolean on) {
+    public void runIntake(Boolean on) {
         if (on) intakeMotor.set(ControlMode.PercentOutput, intakePower);
         else intakeMotor.set(ControlMode.PercentOutput, 0);
     }

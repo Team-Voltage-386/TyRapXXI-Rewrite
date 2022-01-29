@@ -78,7 +78,7 @@ public final class Constants {
         public static final double targetLostWaitTime = 0.1;
     }
 
-    /**Old constants part of the deprecated BallMovementSubsystem (probably not used)*/
+    /**Constants part of the BallMovementSubsystem*/
     public static final class BallMovementConstants {
         public static final int kPneumaticsModule = 0; // PCM
         public static final int kBallPickupForwardChannel = 0; // PCM
