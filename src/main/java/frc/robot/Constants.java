@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
  */
 public final class Constants {
 
+    /**Button number mappings*/
     public static final class ControllerConstants {
 
         public static final int kLeftVertical = 1;
@@ -42,6 +43,7 @@ public final class Constants {
 
     }
 
+    /**Drive motor CAN bus addresses*/
     public static final class DriveConstants {
         public static final int kFrontLeft = 4; // CAN (Spark)
         public static final int kFrontRight = 1; // CAN (Spark)
@@ -49,6 +51,32 @@ public final class Constants {
         public static final int kRearRight = 3; // CAN (Spark)
     }
 
+    /**PID paramaters*/
+    public static final class pidConstants {
+        // LimeLight arcade drive pid constants:
+        public static final double LLP = 0.04; // P
+        public static final double LLI = 0.025;  // I
+        public static final double LLD = 0.001; // D
+        public static final double LLC = 0.5; // Clamp
+        public static final float[] LLT = {3,5}; // tolerance {position,velocity}
+
+        public static final double LLPB = 0.04; // P
+        public static final double LLIB = 0.001;  // I
+        public static final double LLDB = 0.0005; // D
+    }
+
+    /**Constants for the limelight used for estimating distance*/
+    public static final class LimeLightConstants {
+        public static final double camHeightHoop = 0.63;
+        public static final double camEleAngleHoop = 20;
+        public static final double targetHeightHoop = 2.6416;
+        public static final double camHeightBall = 0.72;
+        public static final double camEleAngleBall = -13;
+        public static final double targetHeightBall = 0.12065;
+        public static final double targetLostWaitTime = 0.1;
+    }
+
+    /**Old constants part of the deprecated BallMovementSubsystem (probably not used)*/
     public static final class BallMovementConstants {
         public static final int kPneumaticsModule = 0; // PCM
         public static final int kBallPickupForwardChannel = 0; // PCM

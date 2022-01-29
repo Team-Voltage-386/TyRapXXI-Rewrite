@@ -16,11 +16,10 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.ControllerConstants.*;
 import frc.robot.subsystems.BallMovementSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.LLSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants.LimeLightConstants;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -43,35 +42,23 @@ public class RobotContainer {
   private final DriveSubsystem driveSubSystem = new DriveSubsystem();
   private final BallMovementSubsystem ballMovementSubsystem = new BallMovementSubsystem();
   private final ManualBallMovementCommand ballMovementCommand = new ManualBallMovementCommand(ballMovementSubsystem);
-
-  // Sendable chooser declarations
-  // Shuffleboard declarations
-  public static ShuffleboardTab driverTab;
-  private SendableChooser<Boolean> teleopSendableChooser;
-  private final ManualDriveTank manualDriveTankCommand = new ManualDriveTank(driveSubSystem);
-  private final ManualDriveArcade manualDriveCommand = new ManualDriveArcade(driveSubSystem);
+  public final DriveSubsystem driveSubsystem = new DriveSubsystem();
+  public final LLSubsystem limeLightSubsystemHoop = new LLSubsystem("limelight",LimeLightConstants.targetHeightHoop,LimeLightConstants.camEleAngleBall,LimeLightConstants.camHeightHoop);
+  public final LLSubsystem limeLightSubsystemBall = new LLSubsystem("limelight-ball",LimeLightConstants.targetHeightBall,LimeLightConstants.camEleAngleBall,LimeLightConstants.camHeightBall);
+  public final D_TeleOp teleOpCommand = new D_TeleOp(driveSubsystem, limeLightSubsystemHoop, limeLightSubsystemBall);
 
   /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
+   * The container for the robot. Contains subsystems, IO devices, and commands.
    */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-
-    // // Instantiate Driver Tab
-    // driverTab = Shuffleboard.getTab("Driver Tab");
-
     // configure default commands
-    driveSubSystem.setDefaultCommand(manualDriveTankCommand);
 
      // configure default commands
-     ballMovementSubsystem.setDefaultCommand(ballMovementCommand);
+    ballMovementSubsystem.setDefaultCommand(ballMovementCommand);
+    driveSubsystem.setDefaultCommand(teleOpCommand);
   }
-
-  // public Boolean getTeleopSendableChooser() {
-  // return teleopSendableChooser.getSelected();
-  // }
-
   /**
    * Use this method to define your button->command mappings. Buttons can be
    * created by
@@ -93,7 +80,7 @@ public class RobotContainer {
     return null;
   }
 
-  public Command getManualDriveCommand() {
-    return manualDriveTankCommand;
+  public Command getTeleOpCommand() {
+    return teleOpCommand;
   }
 }
