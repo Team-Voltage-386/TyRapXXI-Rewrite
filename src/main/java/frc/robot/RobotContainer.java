@@ -27,7 +27,6 @@ public class RobotContainer {
 
   // drivecontroller
   public static final Joystick driverController = new Joystick(0);
-  public static final JoystickButton targetingButton = new JoystickButton(driverController, 6);
 
   // manipulatorcontroller
   public static final Joystick manipulatorController = new Joystick(1);
@@ -36,8 +35,7 @@ public class RobotContainer {
   public final DriveSubsystem driveSubsystem = new DriveSubsystem();
   public final LLSubsystem limeLightSubsystemHoop = new LLSubsystem("limelight",LimeLightConstants.targetHeightHoop,LimeLightConstants.camEleAngleBall,LimeLightConstants.camHeightHoop);
   public final LLSubsystem limeLightSubsystemBall = new LLSubsystem("limelight-ball",LimeLightConstants.targetHeightBall,LimeLightConstants.camEleAngleBall,LimeLightConstants.camHeightBall);
-  public final C_TeleOp teleOpCommand = new C_TeleOp(driveSubsystem, limeLightSubsystemHoop, limeLightSubsystemBall);
-  public Command manualCommand;
+  public final D_TeleOp teleOpCommand = new D_TeleOp(driveSubsystem, limeLightSubsystemHoop, limeLightSubsystemBall);
 
   /**
    * The container for the robot. Contains subsystems, IO devices, and commands.
