@@ -3,24 +3,21 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands.ballmovement;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
-
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.BallMovementSubsystem;
-
 import static frc.robot.Constants.ControllerConstants.*;
 
 public class ManualBallMovementCommand extends CommandBase {
 
-  BallMovementSubsystem subsystem;
+  BallMovementSubsystem _BMSS;
 
   protected boolean intakeLatch = false;// intake deployed status
 
   /** Creates a new ManualBallMovementCommand. */
   public ManualBallMovementCommand(BallMovementSubsystem subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.subsystem = subsystem;
+    this._BMSS = subsystem;
     addRequirements(subsystem);
   }
 
@@ -28,7 +25,7 @@ public class ManualBallMovementCommand extends CommandBase {
   @Override
   public void initialize() {
       // Set initial state of intake as retracted
-      subsystem.retractIntake();
+      _BMSS.retractIntake();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -41,16 +38,16 @@ public class ManualBallMovementCommand extends CommandBase {
     }
 
     if (intakeLatch) {
-      subsystem.deployIntake();
+      _BMSS.deployIntake();
     } else {
-      subsystem.retractIntake();
+      _BMSS.retractIntake();
     }
 
     // Manually run motors with joysticks
-    subsystem.runFeeder(RobotContainer.manipulatorController.getRawAxis(kRightVertical));
-    subsystem.runLauncher(RobotContainer.manipulatorController.getRawAxis(kLeftTrigger));
-    subsystem.runSerializerMotor(RobotContainer.manipulatorController.getRawAxis(kLeftVertical));
-    subsystem.runIntakeMotor(RobotContainer.manipulatorController.getRawAxis(kRightTrigger));
+    _BMSS.runFeeder(RobotContainer.manipulatorController.getRawAxis(kRightVertical));
+    _BMSS.runLauncher(RobotContainer.manipulatorController.getRawAxis(kLeftTrigger));
+    _BMSS.runSerializerMotor(RobotContainer.manipulatorController.getRawAxis(kLeftVertical));
+    _BMSS.runIntakeMotor(RobotContainer.manipulatorController.getRawAxis(kRightTrigger));
 
   }
 

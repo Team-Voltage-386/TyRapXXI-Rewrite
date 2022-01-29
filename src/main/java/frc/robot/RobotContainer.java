@@ -39,10 +39,9 @@ public class RobotContainer {
   public static final Joystick manipulatorController = new Joystick(1);
 
   // The robot's subsystems and commands are defined here...
-  private final DriveSubsystem driveSubSystem = new DriveSubsystem();
+  private final DriveSubsystem driveSubsystem = new DriveSubsystem();
   private final BallMovementSubsystem ballMovementSubsystem = new BallMovementSubsystem();
   private final ManualBallMovementCommand ballMovementCommand = new ManualBallMovementCommand(ballMovementSubsystem);
-  public final DriveSubsystem driveSubsystem = new DriveSubsystem();
   public final LLSubsystem limeLightSubsystemHoop = new LLSubsystem("limelight",LimeLightConstants.targetHeightHoop,LimeLightConstants.camEleAngleBall,LimeLightConstants.camHeightHoop);
   public final LLSubsystem limeLightSubsystemBall = new LLSubsystem("limelight-ball",LimeLightConstants.targetHeightBall,LimeLightConstants.camEleAngleBall,LimeLightConstants.camHeightBall);
   public final D_TeleOp teleOpCommand = new D_TeleOp(driveSubsystem, limeLightSubsystemHoop, limeLightSubsystemBall);

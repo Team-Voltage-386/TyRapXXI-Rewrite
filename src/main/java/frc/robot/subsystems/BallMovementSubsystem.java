@@ -2,13 +2,8 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.BallMovementConstants.*;
-import static frc.robot.Constants.ControllerConstants.*;
-
-import frc.robot.RobotContainer;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -16,7 +11,6 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -51,11 +45,9 @@ public class BallMovementSubsystem extends SubsystemBase {
     private NetworkTableEntry indexWidget = tab.add("Indexer", false).withPosition(5, 3).withSize(2, 1).getEntry();
     private NetworkTableEntry entranceWidget = tab.add("Entrance", false).withPosition(3, 3).withSize(2, 1).getEntry();
 
-    private NetworkTableEntry entranceColorSensorProximityWidget = tab.add("Entrance Color Sensor - Proximity", 2048)
-        .withSize(2, 1).getEntry();
+    private NetworkTableEntry entranceColorSensorProximityWidget = tab.add("Entrance Color Sensor - Proximity", 2048).withSize(2, 1).getEntry();
  
-    private NetworkTableEntry feederColorSensorProximityWidget = tab.add("Feeder Color Sensor - Proximity", 2048)
-        .withSize(2, 1).getEntry();
+    private NetworkTableEntry feederColorSensorProximityWidget = tab.add("Feeder Color Sensor - Proximity", 2048).withSize(2, 1).getEntry();
         
     public BallMovementSubsystem() {
         intakeMotor.configFactoryDefault();
