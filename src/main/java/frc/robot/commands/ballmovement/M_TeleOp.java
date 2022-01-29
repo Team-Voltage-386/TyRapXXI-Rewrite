@@ -3,8 +3,10 @@ package frc.robot.commands.ballmovement;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.BallMovementSubsystem;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
-import frc.robot.Constants.ControllerConstants;
+import static frc.robot.Constants.ControllerConstants.*;
+import frc.robot.Constants.BallMovementConstants;
 
 /**Manipulator TeleOp Command*/
 public class M_TeleOp extends CommandBase {
@@ -15,11 +17,14 @@ public class M_TeleOp extends CommandBase {
     private Boolean feederRunning = false;
     private Boolean intakeRunning = false;
     private Boolean serializerRunning = false;
+    private Boolean launcherRunning = false;
+    public double hoodPosition = 0;
     //private int ballCount;
 
     /**Manipulator TeleOp Command*/
     public M_TeleOp(BallMovementSubsystem BMSS) {
         _bmss = BMSS;
+        _bmss.reCalibrate();
         _controller = RobotContainer.manipulatorController;
         addRequirements(_bmss);
         stop();
@@ -27,23 +32,35 @@ public class M_TeleOp extends CommandBase {
 
     @Override
     public void execute() {
-        if (_controller.getRawButtonPressed(ControllerConstants.kY)) {
+        double hs = _controller.getRawAxis(kRightVertical);
+        if (hs > 0.03 || hs < -0.03) {
+            hoodPosition += hs*BallMovementConstants.manHoodSpeed;
+            _bmss.setHoodPosition(hoodPosition);
+        }
+        if (_controller.getRawButton(kLeftBumper)) {
+            Robot.m_robotContainer.limeLightSubsystemHoop.metersToTarget();
+        }
+        if (_controller.getRawButtonPressed(kY)) {
             intakeDeployed = !intakeDeployed;
             _bmss.deployIntake(intakeDeployed);
         }
-        if (_controller.getRawButtonPressed(ControllerConstants.kX)) {
+        if (_controller.getRawButtonPressed(kX)) {
             serializerRunning = !serializerRunning;
             _bmss.runSerializer(serializerRunning);
         }
-        if (_controller.getRawButtonPressed(ControllerConstants.kB)) {
+        if (_controller.getRawButtonPressed(kA)) {
             intakeRunning = !intakeRunning;
             _bmss.runIntake(intakeRunning);
         }
-        if (_controller.getRawButtonPressed(ControllerConstants.kA)) {
+        if (_controller.getRawButtonPressed(kB)) {
             feederRunning = !feederRunning;
             _bmss.runFeeder(feederRunning);
         }
-        _bmss.setLauncherPower(_controller.getRawAxis(ControllerConstants.kRightTrigger));
+        if (_controller.getRawButtonPressed(kRightBumper)) {
+            _bmss.pidL.reset();
+            launcherRunning = !launcherRunning;
+            _bmss.setLauncherOn(launcherRunning);
+        }
     }
 
     @Override

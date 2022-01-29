@@ -1,16 +1,22 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.BallMovementConstants;
+
 import static frc.robot.Constants.BallMovementConstants.*;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Timer;
+
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ColorSensorV3;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import static frc.robot.Constants.pidConstants.*;
 
 public class BallMovementSubsystem extends SubsystemBase {
 
@@ -24,23 +30,32 @@ public class BallMovementSubsystem extends SubsystemBase {
     public final TalonSRX serializerMotor = new TalonSRX(kSerializerMotor);
     public final TalonSRX feederMotor = new TalonSRX(kFeeder);
     public final DigitalInput indexerSensor = new DigitalInput(kIndexer);
- 
-    I2C.Port entranceSensorI2CPort = I2C.Port.kOnboard; // Port 0
-    I2C.Port feederSensorI2CPort = I2C.Port.kMXP; // Port 1  
+      
     // sensor instantiations 
-    private final ColorSensorV3 entranceSensor = new ColorSensorV3(entranceSensorI2CPort);
-    private final ColorSensorV3 feederSensor = new ColorSensorV3(feederSensorI2CPort);
-    public double entranceP = entranceSensor.getProximity();
-    public double feederP = feederSensor.getProximity();
+    public double entranceP = 0;
+    public double feederP = 0;
     /**Entrance sensor is tripped*/
     public Boolean entrance = entranceP >= kEntranceProximityThreshold;
     /**Feeder sensor is tripped*/
     public Boolean feed = feederP >= kFeederProximityThreshold;
     /**Indexer sensor is tripped*/
-    public Boolean index = !indexerSensor.get();
+    public Boolean index = false;
+
+    public Boolean hoodLowLimit = false;
+    public double hoodPosition = 0;
+    public Boolean calibrated = false;
+    public PIDController pidH = new PIDController(HP,HI,HD);
+    public PIDController pidL = new PIDController(LP,LI,LD);
+
+    public double launcherCurrentSpeed = 0;
 
     /**Creates a BallMovementSubsystem*/
     public BallMovementSubsystem() {
+        pidL.reset();
+        pidL.setTolerance(1,1);
+        pidH.reset();
+        pidH.setTolerance(1,1);
+
         intakeMotor.configFactoryDefault();
         intakeMotor.configNeutralDeadband(0);
 
@@ -52,6 +67,10 @@ public class BallMovementSubsystem extends SubsystemBase {
         serializerMotor.configNeutralDeadband(0);
         feederMotor.configFactoryDefault();
         feederMotor.configNeutralDeadband(0);
+
+        hoodMotor.configFactoryDefault();
+        hoodMotor.configNeutralDeadband(0);
+        calibrated = false;
     }
 
     /**Operate Ball Intake
@@ -67,6 +86,11 @@ public class BallMovementSubsystem extends SubsystemBase {
      */
     public void setLauncherPower(double power) {
         launcherLeadMotor.set(power);
+    }
+
+    public void setLauncherOn(Boolean b) {
+        if (b) launcherLeadMotor.set(pidL.calculate(launcherCurrentSpeed,launcherSpeedSet));
+        else  launcherLeadMotor.set(0);
     }
 
     /** set feeder on/off
@@ -91,5 +115,37 @@ public class BallMovementSubsystem extends SubsystemBase {
     public void runIntake(Boolean on) {
         if (on) intakeMotor.set(ControlMode.PercentOutput, intakePower);
         else intakeMotor.set(ControlMode.PercentOutput, 0);
+    }
+
+    public void setHoodPosition(double p) {
+        if (calibrated) {
+            double control = MathUtil.clamp(-1*pidH.calculate(hoodPosition, MathUtil.clamp(p,0,0.7)), -1*HC, HC);
+            if (!hoodLowLimit) hoodMotor.set(ControlMode.PercentOutput, control);
+            else hoodMotor.set(ControlMode.PercentOutput, MathUtil.clamp(control, -1, 0));
+        }
+    }
+
+    public void reCalibrate() {
+        pidH.reset();
+        pidL.reset();
+        calibrated = false;
+    }
+
+    @Override
+    public void periodic() {
+        hoodLowLimit = !hoodLimit.get();
+        if (!calibrated) {
+            hoodMotor.set(ControlMode.PercentOutput, 1);
+            if (hoodLowLimit) {
+                hoodEncoder.reset();
+                calibrated = true;
+            }
+        } else {
+            launcherCurrentSpeed = launcherLeadMotor.getEncoder().getVelocity();
+            entranceP = entranceSensor.getProximity();
+            feederP = feederSensor.getProximity();
+            index = !indexerSensor.get();
+            hoodPosition = hoodEncoder.get();
+        }
     }
 }

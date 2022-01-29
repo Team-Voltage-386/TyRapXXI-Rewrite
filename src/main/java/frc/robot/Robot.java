@@ -22,8 +22,6 @@ public class Robot extends TimedRobot {
   public static Command _teleopCommand;
 
   public static RobotContainer m_robotContainer;
-  public static Boolean auto = false;
-  public static Boolean man = false;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -68,8 +66,6 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    //reset declarations of mode:
-    auto = false;man = false;
   }
 
   @Override
@@ -82,8 +78,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    // apply declaration of mode:
-    auto = true; if (man) man = false;
 
     _autonomousCommand = m_robotContainer.getAutonomousCommand();
 
@@ -102,7 +96,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     // apply declaration of mode:
-    man = true; if (auto) auto = false;
+    _teleopCommand = m_robotContainer.getTeleOpCommands();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

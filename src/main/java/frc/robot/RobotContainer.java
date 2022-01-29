@@ -6,11 +6,13 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import frc.robot.commands.ballmovement.M_TeleOp;
 import frc.robot.commands.drive.*;
 import frc.robot.subsystems.BallMovementSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LLSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Constants.LimeLightConstants;
 
 /**
@@ -33,9 +35,10 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final DriveSubsystem driveSubsystem = new DriveSubsystem();
   public final BallMovementSubsystem ballMovementSS = new BallMovementSubsystem();
-  public final LLSubsystem limeLightSubsystemHoop = new LLSubsystem("limelight",LimeLightConstants.targetHeightHoop,LimeLightConstants.camEleAngleBall,LimeLightConstants.camHeightHoop);
+  public final LLSubsystem limeLightSubsystemHoop = new LLSubsystem("limelight",LimeLightConstants.targetHeightHoop,LimeLightConstants.camEleAngleHoop,LimeLightConstants.camHeightHoop);
   public final LLSubsystem limeLightSubsystemBall = new LLSubsystem("limelight-ball",LimeLightConstants.targetHeightBall,LimeLightConstants.camEleAngleBall,LimeLightConstants.camHeightBall);
   public final D_TeleOp teleOpD = new D_TeleOp(driveSubsystem, limeLightSubsystemHoop, limeLightSubsystemBall);
+  public final M_TeleOp teleOpM = new M_TeleOp(ballMovementSS);
 
   /**
    * The container for the robot. Contains subsystems, IO devices, and commands.
@@ -70,7 +73,7 @@ public class RobotContainer {
   }
 
 
-  public Command getTeleOpCommand() {
-    return teleOpD;
+  public ParallelCommandGroup getTeleOpCommands() {
+    return new ParallelCommandGroup(teleOpD,teleOpM);
   }
 }

@@ -3,10 +3,13 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.ColorSensorV3;
 
-import org.opencv.core.Scalar;
-
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.I2C;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -60,17 +63,25 @@ public final class Constants {
         public static final double LLI = 0.025;  // I
         public static final double LLD = 0.001; // D
         public static final double LLC = 0.5; // Clamp
-        public static final float[] LLT = {3,5}; // tolerance {position,velocity}
 
         public static final double LLPB = 0.04; // P
         public static final double LLIB = 0.001;  // I
         public static final double LLDB = 0.0005; // D
+
+        public static final double HP = 6; // P
+        public static final double HI = 0.5;  // I
+        public static final double HD = 0.5; // D
+        public static final double HC = 1;
+
+        public static final double LP = 0.0002;
+        public static final double LI = 0.000001;
+        public static final double LD = 0;
     }
 
     /**Constants for the limelight used for estimating distance*/
     public static final class LimeLightConstants {
         public static final double camHeightHoop = 0.63;
-        public static final double camEleAngleHoop = 20;
+        public static final double camEleAngleHoop = 12.5;
         public static final double targetHeightHoop = 2.6416;
         public static final double camHeightBall = 0.72;
         public static final double camEleAngleBall = -13;
@@ -95,13 +106,30 @@ public final class Constants {
         public static final int kEntrance = 7; // DIO
         public static final int kFeederSensor = 10; // DIO (MoreBoard Slot 0)
 
+        public static final I2C.Port entranceSensorI2CPort = I2C.Port.kOnboard; // Port 0
+        public static final I2C.Port feederSensorI2CPort = I2C.Port.kMXP; // Port 1
+        public static final ColorSensorV3 entranceSensor = new ColorSensorV3(entranceSensorI2CPort);
+        public static final ColorSensorV3 feederSensor = new ColorSensorV3(feederSensorI2CPort);
+
         public static final int kEntranceProximityThreshold = 100;
         public static final int kFeederProximityThreshold = 100;
 
-        public static final double serializerPower = 0.2;
-        public static final double intakePower = 0.2;
-        public static final double feederPower = 0.2;
+        public static final double serializerPower = 0.8;
+        public static final double intakePower = 1;
+        public static final double feederPower = 0.6;
         public static final int launcherDirection = 1;
-    }
+        public static final int launcherSpeedSet = 3600;
+        public static final double manHoodSpeed = 0.01;
 
+        // ADD 10 FOR DIO ON MORE BOARD
+        public static final int kHoodMotor = 6; // CAN (Talon)
+        public static final int kHoodEncoder = 12; // PWM plugged into DIO (More Board slot 2)
+        public static final int kHoodLimit = 23; // DIO (More Board slot 13)
+        public static final int kTurretMotor = 4; // CAN (Talon)
+        public static final int kTurretEncoder = 21; // DIO
+        public static final int kTurretLimit = 22; // DIO (MoreBoard slot 12)
+        public static final TalonSRX hoodMotor = new TalonSRX(kHoodMotor);
+        public static final DutyCycleEncoder hoodEncoder = new DutyCycleEncoder(kHoodEncoder);
+        public static final DigitalInput hoodLimit = new DigitalInput(kHoodLimit);
+    }
 }

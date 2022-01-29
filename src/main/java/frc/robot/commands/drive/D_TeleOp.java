@@ -38,8 +38,8 @@ public class D_TeleOp extends CommandBase {
     _llss = LLS;
     _llssb = LLSB;
     _controller = RobotContainer.driverController;
-    _llss.driverMode(true);
-    _llssb.driverMode(true);
+    _llss.driverMode(false);
+    _llssb.driverMode(false);
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(_dss);
@@ -50,7 +50,7 @@ public class D_TeleOp extends CommandBase {
   /**Called when the command is initially scheduled.*/
   @Override
   public void initialize() {
-    _llss.driverMode(true);
+    _llss.driverMode(false);
     rootForward = 0;
     rootTurn = 0;
     pid.setTolerance(1,1);
@@ -66,7 +66,7 @@ public class D_TeleOp extends CommandBase {
 
     if (_controller.getRawButton(kLeftBumper)) {llaa = true; llcb = false; _llss.driverMode(false);} // if a is pressed, activate LLAA
     else if (_controller.getRawButton(kX)) {llcb = true; llaa = false; _llssb.driverMode(false);}
-    else {llaa = false; llcb = false; _llss.driverMode(true); _llssb.driverMode(true);}
+    else {llaa = false; llcb = false; _llss.driverMode(false); _llssb.driverMode(false);}
 
     if (llaa && _llss.targetFound) {
       if ((-0.6 < _llss.tx && _llss.tx < 0.6)) {
