@@ -53,12 +53,12 @@ public class C_ManualDriveArcade extends CommandBase {
 
   public double rootForward, rootTurn;
 
-  // Called every time the scheduler runs while the command is scheduled.
+  /**Called every time the scheduler runs while the command is scheduled.*/
   @Override
   public void execute() {
     rootForward = RobotContainer.driverController.getRawAxis(kLeftVertical);
 
-    if (_controller.getRawButton(kRightBumper) || _controller.getRawButton(kLeftBumper)) {llaaActive = true; _lls.driverMode(false);} // if a bumper is pressed, activate LLAA
+    if (_controller.getRawButton(kRightBumper) || _controller.getRawButton(kLeftBumper) || _controller.getRawButton(kA)) {llaaActive = true; _lls.driverMode(false);} // if a bumper or a is pressed, activate LLAA
     else {llaaActive = false; _lls.driverMode(true);}
 
     if (llaaActive) {
@@ -66,8 +66,8 @@ public class C_ManualDriveArcade extends CommandBase {
         _controller.setRumble(RumbleType.kRightRumble,0);
         if (_controller.getRawButtonPressed(kRightBumper) || _controller.getRawButtonPressed(kLeftBumper)) pid.reset();
         if (_lls.targetFound) rootTurn = MathUtil.clamp(pid.calculate(_lls.tx, 0), -1*pidConstants.LLC, pidConstants.LLC); // clamps the pid output to prevent murderbot
-        else if (_controller.getRawButton(kRightBumper)) rootTurn = -1*_seekTurnSpeed;
-        else if (_controller.getRawButton(kLeftBumper)) rootTurn = _seekTurnSpeed;
+        else if (_controller.getRawButton(kRightBumper) && !_controller.getRawButton(kA)) rootTurn = -1*_seekTurnSpeed; // if target not found and not A then seek
+        else if (_controller.getRawButton(kLeftBumper) && !_controller.getRawButton(kA)) rootTurn = _seekTurnSpeed;
       } else {
         rootTurn = 0;
         _controller.setRumble(RumbleType.kRightRumble, 0.5);
