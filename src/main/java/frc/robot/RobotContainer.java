@@ -36,7 +36,7 @@ public class RobotContainer {
   public final DriveSubsystem driveSubsystem = new DriveSubsystem();
   public final LLSubsystem limeLightSubsystemHoop = new LLSubsystem("limelight",LimeLightConstants.targetHeightHoop,LimeLightConstants.camEleAngleBall,LimeLightConstants.camHeightHoop);
   public final LLSubsystem limeLightSubsystemBall = new LLSubsystem("limelight-ball",LimeLightConstants.targetHeightBall,LimeLightConstants.camEleAngleBall,LimeLightConstants.camHeightBall);
-  public final C_TeleOp teleOpCommand = new C_TeleOp(driveSubsystem, limeLightSubsystemHoop, 0.6);
+  public final C_TeleOp teleOpCommand = new C_TeleOp(driveSubsystem, limeLightSubsystemHoop, limeLightSubsystemBall, 0.6);
   public Command manualCommand;
 
   /**

@@ -19,37 +19,41 @@ import static frc.robot.Constants.ControllerConstants.*;
 public class C_TeleOp extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem _dss;
-  private final LLSubsystem _lls;
+  private final LLSubsystem _llss;
+  private final LLSubsystem _llssb;
   private final Joystick _controller;
   public PIDController pid = new PIDController(pidConstants.LLP, pidConstants.LLI, pidConstants.LLD);
   private final double _seekTurnSpeed;
-  public Boolean llaaActive = false;
+  public Boolean llaa = false;
+  public Boolean llcb = false;
 
   /**ArcadeDrive teleop command with button to enable LL-AutoAim
    * @param DSS The drive subsystem used by this command.
    * @param LLS the LL subsystem used by this command
    * @param seekTurnSpeed The speed at which to seek for a target
    */
-  public C_TeleOp(DriveSubsystem DSS, LLSubsystem LLS, double seekTurnSpeed) {
+  public C_TeleOp(DriveSubsystem DSS, LLSubsystem LLS, LLSubsystem LLSB, double seekTurnSpeed) {
     _dss = DSS;
-    _lls = LLS;
+    _llss = LLS;
+    _llssb = LLSB;
     _seekTurnSpeed = seekTurnSpeed;
     _controller = RobotContainer.driverController;
-    _lls.driverMode(false);
+    _llss.driverMode(false);
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(_dss);
-    addRequirements(_lls);
+    addRequirements(_llss);
+    addRequirements(_llssb);
   }
 
   /**Called when the command is initially scheduled.*/
   @Override
   public void initialize() {
-    _lls.driverMode(false);
+    _llss.driverMode(true);
     rootForward = 0;
     rootTurn = 0;
     pid.setTolerance(1,1);
-    _lls.targetLostWait = true;
+    _llss.targetLostWait = true;
   }
 
   public double rootForward, rootTurn;
@@ -58,20 +62,23 @@ public class C_TeleOp extends CommandBase {
   @Override
   public void execute() {
     rootForward = RobotContainer.driverController.getRawAxis(kLeftVertical);
-    if (_controller.getRawButton(kRightBumper) || _controller.getRawButton(kLeftBumper) || _controller.getRawButton(kA)) {llaaActive = true; _lls.driverMode(false);} // if a bumper or a is pressed, activate LLAA
-    else {llaaActive = false; _lls.driverMode(false);}
 
-    if (llaaActive) {
-      if ((-0.6 < _lls.tx && _lls.tx < 0.6) && _lls.targetFound) {
+    if (_controller.getRawButton(kA)) {llaa = true; llcb = false; _llss.driverMode(false);} // if a is pressed, activate LLAA
+    else if (_controller.getRawButton(kX)) {llcb = true; llaa = false; _llssb.driverMode(false);}
+    else {llaa = false; llcb = false; _llss.driverMode(true); _llssb.driverMode(true);}
+
+    if (llaa) {
+      if ((-0.6 < _llss.tx && _llss.tx < 0.6) && _llss.targetFound) {
         rootTurn = 0;
         _controller.setRumble(RumbleType.kRightRumble, 0.5);
       } else {
         _controller.setRumble(RumbleType.kRightRumble,0);
-        if (_controller.getRawButtonPressed(kRightBumper) || _controller.getRawButtonPressed(kLeftBumper) || _controller.getRawButtonPressed(kA)) pid.reset();
-        if (_lls.targetFound) rootTurn = MathUtil.clamp(pid.calculate(_lls.tx, 0), -1*pidConstants.LLC, pidConstants.LLC); // clamps the pid output to prevent murderbot
-        else if (_controller.getRawButton(kRightBumper) && !_controller.getRawButton(kA)) rootTurn = -1*_seekTurnSpeed; // if target not found and not A then seek
-        else if (_controller.getRawButton(kLeftBumper) && !_controller.getRawButton(kA)) rootTurn = _seekTurnSpeed;
+        if (_controller.getRawButtonPressed(kA)) pid.reset();
+        if (_llss.targetFound) rootTurn = MathUtil.clamp(pid.calculate(_llss.tx, 0), -1*pidConstants.LLC, pidConstants.LLC); // clamps the pid output to prevent murderbot
       }
+    } else if (llcb && _llssb.targetFound) {
+      if (_controller.getRawButtonPressed(kX)) pid.reset();
+      rootTurn = MathUtil.clamp(pid.calculate(_llssb.tx, 0), -1*pidConstants.LLC, pidConstants.LLC);
     } else {
       _controller.setRumble(RumbleType.kRightRumble,0);
       rootTurn = -1 * RobotContainer.driverController.getRawAxis(kRightHorizontal); // else get turn from remote

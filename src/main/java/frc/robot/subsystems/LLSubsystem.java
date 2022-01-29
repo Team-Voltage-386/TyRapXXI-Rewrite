@@ -35,7 +35,6 @@ public class LLSubsystem extends SubsystemBase {
   /**During periodic this subsystem updates the basic public LL variables*/
   @Override
   public void periodic() {
-    targetLostWait = Dashboard.lltlwSelect.getSelected();
     if(_nt.getEntry("tv").getDouble(-1) == 0) {
       if(targetLostWait) targetFound = !timer.hasElapsed(LimeLightConstants.targetLostWaitTime); // if it should wait for target re-acquire, then wait, else declare it lost
       else targetFound = false;

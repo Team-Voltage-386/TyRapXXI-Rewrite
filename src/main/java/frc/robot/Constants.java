@@ -59,6 +59,10 @@ public final class Constants {
         public static final double LLD = 0.001; // D
         public static final double LLC = 0.5; // Clamp
         public static final float[] LLT = {3,5}; // tolerance {position,velocity}
+
+        public static final double LLPB = 0.04; // P
+        public static final double LLIB = 0.001;  // I
+        public static final double LLDB = 0.0005; // D
     }
 
     /**Constants for the limelight used for estimating distance*/
