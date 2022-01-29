@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import org.opencv.core.Scalar;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 /**
@@ -95,6 +97,11 @@ public final class Constants {
 
         public static final int kEntranceProximityThreshold = 100;
         public static final int kFeederProximityThreshold = 100;
+
+        public static final double serializerPower = 0.2;
+        public static final double intakePower = 0.2;
+        public static final double feederPower = 0.2;
+        public static final int launcherDirection = 1;
     }
 
 }

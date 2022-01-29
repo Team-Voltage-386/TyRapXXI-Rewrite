@@ -6,19 +6,12 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.ballmovement.ManualBallMovementCommand;
 import frc.robot.commands.drive.*;
-import frc.robot.Constants.ControllerConstants;
-import frc.robot.Constants.ControllerConstants.*;
 import frc.robot.subsystems.BallMovementSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LLSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.LimeLightConstants;
 
 /**
@@ -39,9 +32,9 @@ public class RobotContainer {
   public static final Joystick manipulatorController = new Joystick(1);
 
   // The robot's subsystems and commands are defined here...
-  private final DriveSubsystem driveSubsystem = new DriveSubsystem();
-  private final BallMovementSubsystem ballMovementSubsystem = new BallMovementSubsystem();
-  private final ManualBallMovementCommand ballMovementCommand = new ManualBallMovementCommand(ballMovementSubsystem);
+  public final DriveSubsystem driveSubsystem = new DriveSubsystem();
+  public final BallMovementSubsystem ballMovementSS = new BallMovementSubsystem();
+  public final ManualBallMovementCommand ballMovementCommand = new ManualBallMovementCommand(ballMovementSS);
   public final LLSubsystem limeLightSubsystemHoop = new LLSubsystem("limelight",LimeLightConstants.targetHeightHoop,LimeLightConstants.camEleAngleBall,LimeLightConstants.camHeightHoop);
   public final LLSubsystem limeLightSubsystemBall = new LLSubsystem("limelight-ball",LimeLightConstants.targetHeightBall,LimeLightConstants.camEleAngleBall,LimeLightConstants.camHeightBall);
   public final D_TeleOp teleOpCommand = new D_TeleOp(driveSubsystem, limeLightSubsystemHoop, limeLightSubsystemBall);
@@ -55,7 +48,7 @@ public class RobotContainer {
     // configure default commands
 
      // configure default commands
-    ballMovementSubsystem.setDefaultCommand(ballMovementCommand);
+    ballMovementSS.setDefaultCommand(ballMovementCommand);
     driveSubsystem.setDefaultCommand(teleOpCommand);
   }
   /**

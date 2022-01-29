@@ -4,12 +4,14 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import frc.robot.subsystems.LLSubsystem;
+import frc.robot.subsystems.BallMovementSubsystem;
 
 /**Carl's wacky dash*/
 public class Dashboard {
     // Creates a shuffleboard tab
     private static ShuffleboardTab llTab = Shuffleboard.getTab("LL-AutoAim");
     private static ShuffleboardTab llbTab = Shuffleboard.getTab("LL-ChaseBall");
+    private static ShuffleboardTab bmTab = Shuffleboard.getTab("Ball-Movement")
     
     // Diagnostics in:
     private static LLSubsystem _llSS;
@@ -27,6 +29,13 @@ public class Dashboard {
     private static NetworkTableEntry llbtvWidget = llbTab.add("Target Found",false).withSize(1,1).withPosition(1, 0).getEntry();
     private static NetworkTableEntry llbtdWidget = llbTab.add("Target Distance",0).withSize(1,1).withPosition(1,2).getEntry();
 
+    private static BallMovementSubsystem _bmSS;
+    private static NetworkTableEntry bmfWidget = bmTab.add("Feed",false).withSize(1,1).withPosition(0,0).getEntry();
+    private static NetworkTableEntry bmiWidget = bmTab.add("Index",false).withSize(1,1).withPosition(0,1).getEntry();
+    private static NetworkTableEntry bmeWidget = bmTab.add("Entrance",false).withSize(1,1).withPosition(0,2).getEntry();
+    private static NetworkTableEntry bmfpWidget = bmTab.add("Feed Prox.",0).withSize(1,1).withPosition(1,0).getEntry();
+    private static NetworkTableEntry bmepWidget = bmTab.add("Ent. Prox.",0).withSize(1,1).withPosition(1,1).getEntry();
+
     /**
      *  Initialize the dash, customize at will
      */
@@ -34,6 +43,7 @@ public class Dashboard {
         _rc = Robot.m_robotContainer;
         _llSS = _rc.limeLightSubsystemHoop;
         _llSSB = _rc.limeLightSubsystemBall;
+        _bmSS = _rc.ballMovementSS;
     }
 
     /**
@@ -47,10 +57,18 @@ public class Dashboard {
         lltvWidget.setBoolean(_llSS.targetFound);
         lltdWidget.setDouble(_llSS.metersToTarget());
 
+        // LL-ChaseBall tab:
         llbaWidget.setBoolean(_rc.teleOpCommand.llcb);
         llbtxWidget.setDouble(_llSSB.tx);
         llbtoWidget.setDouble(_rc.teleOpCommand.rootTurn);
         llbtvWidget.setBoolean(_llSSB.targetFound);
         llbtdWidget.setDouble(_llSSB.metersToTarget());
+
+        // BallMovement tab:
+        bmfWidget.setBoolean(_bmSS.feed);
+        bmiWidget.setBoolean(_bmSS.index);
+        bmeWidget.setBoolean(_bmSS.entrance);
+        bmfpWidget.setDouble(_bmSS.feederP);
+        bmepWidget.setDouble(_bmSS.entranceP);
     }
 }

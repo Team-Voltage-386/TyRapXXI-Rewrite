@@ -4,24 +4,20 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.BallMovementConstants.*;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class BallMovementSubsystem extends SubsystemBase {
 
-    /* actuator instantiations */
-    public final DoubleSolenoid ballPickupSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
-            kBallPickupForwardChannel, kBallPickupReverseChannel);
+    // actuator instantiations 
+    public final DoubleSolenoid ballPickupSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, kBallPickupForwardChannel, kBallPickupReverseChannel);
 
-    /* motor instantiations */
+    // motor instantiations 
     public final TalonSRX intakeMotor = new TalonSRX(kIntakeMotor);
     public final CANSparkMax launcherLeadMotor = new CANSparkMax(kLauncherLead, MotorType.kBrushless);
     public final CANSparkMax launcherFollowerMotor = new CANSparkMax(kLauncherFollower, MotorType.kBrushless);
@@ -31,24 +27,19 @@ public class BallMovementSubsystem extends SubsystemBase {
  
     I2C.Port entranceSensorI2CPort = I2C.Port.kOnboard; // Port 0
     I2C.Port feederSensorI2CPort = I2C.Port.kMXP; // Port 1  
-    /* sensor instantiations */
-    public final ColorSensorV3 entranceColorSensor = new ColorSensorV3(entranceSensorI2CPort);;
-    public final ColorSensorV3 feederColorSensor = new ColorSensorV3(feederSensorI2CPort);
-    boolean entranceBallDetected;
-    boolean feederBallDetected;
+    // sensor instantiations 
+    private final ColorSensorV3 entranceSensor = new ColorSensorV3(entranceSensorI2CPort);
+    private final ColorSensorV3 feederSensor = new ColorSensorV3(feederSensorI2CPort);
+    public double entranceP = entranceSensor.getProximity();
+    public double feederP = feederSensor.getProximity();
+    /**Entrance sensor is tripped*/
+    public Boolean entrance = entranceP >= kEntranceProximityThreshold;
+    /**Feeder sensor is tripped*/
+    public Boolean feed = feederP >= kFeederProximityThreshold;
+    /**Indexer sensor is tripped*/
+    public Boolean index = !indexerSensor.get();
 
-    // Creates a Shuffleboard tab for the ball movement subsystem
-    private ShuffleboardTab tab = Shuffleboard.getTab("Ball Movement");
-
-    // Create sensor widgets
-    private NetworkTableEntry feedWidget = tab.add("Feeder Sensor", false).withPosition(7, 3).withSize(2, 1).getEntry();
-    private NetworkTableEntry indexWidget = tab.add("Indexer", false).withPosition(5, 3).withSize(2, 1).getEntry();
-    private NetworkTableEntry entranceWidget = tab.add("Entrance", false).withPosition(3, 3).withSize(2, 1).getEntry();
-
-    private NetworkTableEntry entranceColorSensorProximityWidget = tab.add("Entrance Color Sensor - Proximity", 2048).withSize(2, 1).getEntry();
- 
-    private NetworkTableEntry feederColorSensorProximityWidget = tab.add("Feeder Color Sensor - Proximity", 2048).withSize(2, 1).getEntry();
-        
+    /**Creates a BallMovementSubsystem*/
     public BallMovementSubsystem() {
         intakeMotor.configFactoryDefault();
         intakeMotor.configNeutralDeadband(.1);
@@ -63,89 +54,49 @@ public class BallMovementSubsystem extends SubsystemBase {
         feederMotor.configNeutralDeadband(.1);
     }
 
-    public boolean getEntranceSensor() {
-        return entranceBallDetected;
-      }
-
-    public boolean getIndexerSensor() {
-        return !indexerSensor.get();
+    /**Operate Ball Intake
+     * @param deploy True: deploy, False: retract
+    */
+    public void deployIntake(Boolean deploy) {
+      if (deploy) ballPickupSolenoid.set(DoubleSolenoid.Value.kReverse);
+      else ballPickupSolenoid.set(DoubleSolenoid.Value.kForward);
     }
-
-    public boolean getFeederSensor() {
-        return feederBallDetected;
-      }
-
-      public void retractIntake() {
-        ballPickupSolenoid.set(DoubleSolenoid.Value.kForward);
-      }
     
-      public void deployIntake() {
-        ballPickupSolenoid.set(DoubleSolenoid.Value.kReverse);
-      }
-    
-    /**
-     * @param power positive = launching direction
+    /** Set launcher power
+     * @param power Launching Power
      */
     public void runLauncher(double power) {
-        launcherLeadMotor.set(deadband(power));
+        launcherLeadMotor.set(power);
     }
 
-    /**
-     * @param power positive = launching direction
+    /** set feeder on/off
+     * @param on feeder on/off
      */
     public void runFeeder(double power) {
-        feederMotor.set(ControlMode.PercentOutput, deadband(power));
+        feederMotor.set(ControlMode.PercentOutput, power);
     }
 
-    /***
-     * @param power positive = intake / launching direction
+    /** set serializer motor on/off
+     *@param on motor on/off
      */
-    public void runSerializerMotor(double power) {
-        serializerMotor.set(ControlMode.PercentOutput, deadband(power));
+    public void serializerMotor(Boolean on) {
+        if (on) serializerMotor.set(ControlMode.PercentOutput, serializerPower);
+        else serializerMotor.set(ControlMode.PercentOutput, 0);
     }
 
-    /**
-     * @param power positive = intake
+    /** set intake motor on/off
+     * @param on motor on/off
      */
-    public void runIntakeMotor(double power) {
-        intakeMotor.set(ControlMode.PercentOutput, deadband(power));
-    }
-
-    private double deadband(double power) {
-        if (power < 0.1 && power > -0.1) {
-        return 0;
-        }
-        return power;
+    public void runIntakeMotor(Boolean on) {
+        if (on) intakeMotor.set(ControlMode.PercentOutput, intakePower);
+        else intakeMotor.set(ControlMode.PercentOutput, 0);
     }
 
     @Override
     public void periodic() {
-
-        if (entranceColorSensor.getProximity() >= kEntranceProximityThreshold) {
-            entranceBallDetected = true;
-          } else {
-            entranceBallDetected = false;
-          }
-          
-        if (feederColorSensor.getProximity() >= kFeederProximityThreshold) {
-            feederBallDetected = true;
-          } else {
-            feederBallDetected = false;
-          }
-        
-        // Update sensor widgets
-        indexWidget.setBoolean(getIndexerSensor());
-        entranceWidget.setBoolean(getEntranceSensor());
-        feedWidget.setBoolean(getFeederSensor());
-       
-        // Update color sensor widgets
-        entranceColorSensorProximityWidget.setNumber(entranceColorSensor.getProximity());
-        feederColorSensorProximityWidget.setNumber(feederColorSensor.getProximity());
     }
 
     @Override
     public void simulationPeriodic() {
-        // This method will be called once per scheduler run during simulation
     }
-
 }
