@@ -69,4 +69,12 @@ public final class Constants {
         public static final int kFeederProximityThreshold = 100;
     }
 
+    public static final class HoodConstants {
+        public static final int kHoodMotor = 6; // CAN (Talon)
+        public static final int kHoodEncoder = 12; // PWM plugged into DIO (More Board slot 2)
+        public static final int kHoodLimit = 23; // DIO (More Board slot 13)
+        public static final int kTurretMotor = 4; // CAN (Talon)
+        public static final int kTurretEncoder = 21; // DIO
+        public static final int kTurretLimit = 22; // DIO (MoreBoard slot 12)
+    }
 }

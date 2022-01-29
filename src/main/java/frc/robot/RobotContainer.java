@@ -12,10 +12,12 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.ballmovement.ManualBallMovementCommand;
 import frc.robot.commands.drive.*;
+import frc.robot.commands.hood.ManualHoodCommand;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.ControllerConstants.*;
 import frc.robot.subsystems.BallMovementSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.HoodSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -41,8 +43,10 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem driveSubSystem = new DriveSubsystem();
-  private final BallMovementSubsystem ballMovementSubsystem = new BallMovementSubsystem();
-  private final ManualBallMovementCommand ballMovementCommand = new ManualBallMovementCommand(ballMovementSubsystem);
+  // private final BallMovementSubsystem ballMovementSubsystem = new BallMovementSubsystem();
+  private final HoodSubsystem hoodSubsystem = new HoodSubsystem();
+  // private final ManualBallMovementCommand ballMovementCommand = new ManualBallMovementCommand(ballMovementSubsystem);
+  private final ManualHoodCommand hoodCommand = new ManualHoodCommand(hoodSubsystem);
 
   // Sendable chooser declarations
   // Shuffleboard declarations
@@ -64,8 +68,10 @@ public class RobotContainer {
     // configure default commands
     driveSubSystem.setDefaultCommand(manualDriveTankCommand);
 
-     // configure default commands
-     ballMovementSubsystem.setDefaultCommand(ballMovementCommand);
+    // configure default commands
+    // ballMovementSubsystem.setDefaultCommand(ballMovementCommand);
+
+    hoodSubsystem.setDefaultCommand(hoodCommand);
   }
 
   // public Boolean getTeleopSendableChooser() {
