@@ -36,8 +36,7 @@ public class RobotContainer {
   public final DriveSubsystem driveSubsystem = new DriveSubsystem();
   public final LLSubsystem limeLightSubsystemHoop = new LLSubsystem("limelight",LimeLightConstants.targetHeightHoop,LimeLightConstants.camEleAngleBall,LimeLightConstants.camHeightHoop);
   public final LLSubsystem limeLightSubsystemBall = new LLSubsystem("limelight-ball",LimeLightConstants.targetHeightBall,LimeLightConstants.camEleAngleBall,LimeLightConstants.camHeightBall);
-  public final ManualDriveTank manualDriveTank = new ManualDriveTank(driveSubsystem);
-  public final C_ManualDriveArcade manualDriveArcade = new C_ManualDriveArcade(driveSubsystem, limeLightSubsystemHoop, 0.6);
+  public final C_TeleOp teleOpCommand = new C_TeleOp(driveSubsystem, limeLightSubsystemHoop, 0.6);
   public Command manualCommand;
 
   /**
@@ -48,7 +47,7 @@ public class RobotContainer {
     configureButtonBindings();
     // configure default commands
 
-    driveSubsystem.setDefaultCommand(manualDriveArcade);
+    driveSubsystem.setDefaultCommand(teleOpCommand);
   }
   /**
    * Use this method to define your button->command mappings. Buttons can be
@@ -72,6 +71,6 @@ public class RobotContainer {
   }
 
   public Command getTeleOpCommand() {
-    return manualDriveArcade;
+    return teleOpCommand;
   }
 }

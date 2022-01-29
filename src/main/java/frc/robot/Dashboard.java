@@ -10,7 +10,6 @@ import frc.robot.subsystems.LLSubsystem;
 /**Carl's wacky dash*/
 public class Dashboard {
     // Creates a shuffleboard tab
-    private static ShuffleboardTab driverTab = Shuffleboard.getTab("Driver Dashboard");
     private static ShuffleboardTab llTab = Shuffleboard.getTab("LL-AutoAim");
     
     // Diagnostics in:

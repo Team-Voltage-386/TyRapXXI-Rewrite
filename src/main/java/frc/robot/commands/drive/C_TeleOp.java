@@ -16,7 +16,7 @@ import frc.robot.RobotContainer;
 import static frc.robot.Constants.ControllerConstants.*;
 
 /**ArcadeDrive teleop command with bumpers to enable LL-AutoAim*/
-public class C_ManualDriveArcade extends CommandBase {
+public class C_TeleOp extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem _dss;
   private final LLSubsystem _lls;
@@ -30,7 +30,7 @@ public class C_ManualDriveArcade extends CommandBase {
    * @param LLS the LL subsystem used by this command
    * @param seekTurnSpeed The speed at which to seek for a target
    */
-  public C_ManualDriveArcade(DriveSubsystem DSS, LLSubsystem LLS, double seekTurnSpeed) {
+  public C_TeleOp(DriveSubsystem DSS, LLSubsystem LLS, double seekTurnSpeed) {
     _dss = DSS;
     _lls = LLS;
     _seekTurnSpeed = seekTurnSpeed;
@@ -58,7 +58,6 @@ public class C_ManualDriveArcade extends CommandBase {
   @Override
   public void execute() {
     rootForward = RobotContainer.driverController.getRawAxis(kLeftVertical);
-
     if (_controller.getRawButton(kRightBumper) || _controller.getRawButton(kLeftBumper) || _controller.getRawButton(kA)) {llaaActive = true; _lls.driverMode(false);} // if a bumper or a is pressed, activate LLAA
     else {llaaActive = false; _lls.driverMode(false);}
 

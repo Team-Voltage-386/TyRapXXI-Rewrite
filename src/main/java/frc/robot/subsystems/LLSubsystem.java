@@ -8,7 +8,6 @@ import frc.robot.Constants.LimeLightConstants;
 
 /**Carl's attempt at making a lime-light subsystem*/
 public class LLSubsystem extends SubsystemBase {
-  /** Creates a new ExampleSubsystem. */
   public NetworkTable _nt;
   /**Whether or not the LL should wait before declaring target loss to see if it will come back*/
   public Boolean targetLostWait = false;
@@ -18,10 +17,10 @@ public class LLSubsystem extends SubsystemBase {
   public float ty;
   public float ta;
   public float ts;
-  private double _TH;
-  private double _MA;
-  private double _MH;
-  private Timer timer = new Timer();
+  private final double _TH;
+  private final double _MA;
+  private final double _MH;
+  private final  Timer timer = new Timer();
 
   /**Carl's attempt at making a lime-light subsystem*/
   public LLSubsystem(String hostName, double targetHeight, double mountAngle, double mountHeight) {
