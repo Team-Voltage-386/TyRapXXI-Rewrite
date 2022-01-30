@@ -68,9 +68,9 @@ public final class Constants {
         public static final double LLIB = 0.001;  // I
         public static final double LLDB = 0.0005; // D
 
-        public static final double HP = 6; // P
+        public static final double HP = 10; // P
         public static final double HI = 0.5;  // I
-        public static final double HD = 0.5; // D
+        public static final double HD = 0; // D
         public static final double HC = 1;
 
         public static final double LP = 0.0002;
@@ -106,10 +106,8 @@ public final class Constants {
         public static final int kEntrance = 7; // DIO
         public static final int kFeederSensor = 10; // DIO (MoreBoard Slot 0)
 
-        public static final I2C.Port entranceSensorI2CPort = I2C.Port.kOnboard; // Port 0
-        public static final I2C.Port feederSensorI2CPort = I2C.Port.kMXP; // Port 1
-        public static final ColorSensorV3 entranceSensor = new ColorSensorV3(entranceSensorI2CPort);
-        public static final ColorSensorV3 feederSensor = new ColorSensorV3(feederSensorI2CPort);
+        public static final ColorSensorV3 entranceSensor = new ColorSensorV3(I2C.Port.kOnboard);
+        public static final ColorSensorV3 feederSensor = new ColorSensorV3(I2C.Port.kMXP);
 
         public static final int kEntranceProximityThreshold = 100;
         public static final int kFeederProximityThreshold = 100;
@@ -119,7 +117,7 @@ public final class Constants {
         public static final double feederPower = 0.6;
         public static final int launcherDirection = 1;
         public static final int launcherSpeedSet = 3600;
-        public static final double manHoodSpeed = 0.01;
+        public static final double manHoodSpeed = -0.01;
 
         // ADD 10 FOR DIO ON MORE BOARD
         public static final int kHoodMotor = 6; // CAN (Talon)

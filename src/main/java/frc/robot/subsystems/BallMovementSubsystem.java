@@ -1,18 +1,18 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.BallMovementConstants;
+import frc.robot.Robot;
 
 import static frc.robot.Constants.BallMovementConstants.*;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -21,36 +21,45 @@ import static frc.robot.Constants.pidConstants.*;
 public class BallMovementSubsystem extends SubsystemBase {
 
     // actuator instantiations 
-    public final DoubleSolenoid ballPickupSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, kBallPickupForwardChannel, kBallPickupReverseChannel);
+    private final DoubleSolenoid ballPickupSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, kBallPickupForwardChannel, kBallPickupReverseChannel);
 
     // motor instantiations 
-    public final TalonSRX intakeMotor = new TalonSRX(kIntakeMotor);
-    public final CANSparkMax launcherLeadMotor = new CANSparkMax(kLauncherLead, MotorType.kBrushless);
-    public final CANSparkMax launcherFollowerMotor = new CANSparkMax(kLauncherFollower, MotorType.kBrushless);
-    public final TalonSRX serializerMotor = new TalonSRX(kSerializerMotor);
-    public final TalonSRX feederMotor = new TalonSRX(kFeeder);
-    public final DigitalInput indexerSensor = new DigitalInput(kIndexer);
+    private final TalonSRX intakeMotor = new TalonSRX(kIntakeMotor);
+    private final CANSparkMax launcherLeadMotor = new CANSparkMax(kLauncherLead, MotorType.kBrushless);
+    private final CANSparkMax launcherFollowerMotor = new CANSparkMax(kLauncherFollower, MotorType.kBrushless);
+    private final TalonSRX serializerMotor = new TalonSRX(kSerializerMotor);
+    private final TalonSRX feederMotor = new TalonSRX(kFeeder);
+    private final DigitalInput indexerSensor = new DigitalInput(kIndexer);
       
     // sensor instantiations 
-    public double entranceP = 0;
-    public double feederP = 0;
+    private double entranceP = 0;
+    private double feederP = 0;
     /**Entrance sensor is tripped*/
     public Boolean entrance = entranceP >= kEntranceProximityThreshold;
     /**Feeder sensor is tripped*/
-    public Boolean feed = feederP >= kFeederProximityThreshold;
+    public Boolean feed = false;
     /**Indexer sensor is tripped*/
     public Boolean index = false;
+    public Boolean launcherControllerOn = false;
 
-    public Boolean hoodLowLimit = false;
-    public double hoodPosition = 0;
-    public Boolean calibrated = false;
-    public PIDController pidH = new PIDController(HP,HI,HD);
-    public PIDController pidL = new PIDController(LP,LI,LD);
+    private Boolean hoodLowLimit = false;
+    private double hoodPosition = 0;
+    public double hoodSet = 0;
+    private Boolean calibrated = false;
+    private PIDController pidH = new PIDController(HP,HI,HD);
+    private PIDController pidL = new PIDController(LP,LI,LD);
+    private double launcherCurrentSpeed = 0;
+    private Boolean launcherPIDRunning = false;
+    public int launcherSP;
 
-    public double launcherCurrentSpeed = 0;
+    private final ShuffleboardTab _tab = Robot.m_robotContainer.sbTab;
+    private final NetworkTableEntry hpWidget = _tab.add("HoodPosition",0).withSize(1, 1).withPosition(0, 0).getEntry();
+    private final NetworkTableEntry hsWidget = _tab.add("HoodSet",0).withSize(1,1).withPosition(1, 0).getEntry();
+    private final NetworkTableEntry lvWidget = _tab.add("DrumSpeed",0).withSize(1,1).withPosition(0,1).getEntry();
 
     /**Creates a BallMovementSubsystem*/
     public BallMovementSubsystem() {
+        launcherSP = launcherSpeedSet;
         pidL.reset();
         pidL.setTolerance(1,1);
         pidH.reset();
@@ -71,6 +80,7 @@ public class BallMovementSubsystem extends SubsystemBase {
         hoodMotor.configFactoryDefault();
         hoodMotor.configNeutralDeadband(0);
         calibrated = false;
+        
     }
 
     /**Operate Ball Intake
@@ -81,16 +91,11 @@ public class BallMovementSubsystem extends SubsystemBase {
       else ballPickupSolenoid.set(kIntakeRetracted);
     }
     
-    /** Set launcher power
+    /** Directly set launcher power
      * @param power Launching Power
      */
     public void setLauncherPower(double power) {
         launcherLeadMotor.set(power);
-    }
-
-    public void setLauncherOn(Boolean b) {
-        if (b) launcherLeadMotor.set(pidL.calculate(launcherCurrentSpeed,launcherSpeedSet));
-        else  launcherLeadMotor.set(0);
     }
 
     /** set feeder on/off
@@ -117,14 +122,16 @@ public class BallMovementSubsystem extends SubsystemBase {
         else intakeMotor.set(ControlMode.PercentOutput, 0);
     }
 
-    public void setHoodPosition(double p) {
+    /**run the hood control system*/
+    public void runHood() {
         if (calibrated) {
-            double control = MathUtil.clamp(-1*pidH.calculate(hoodPosition, MathUtil.clamp(p,0,0.7)), -1*HC, HC);
+            double control = MathUtil.clamp(-1*pidH.calculate(hoodPosition, hoodSet), -1*HC, HC);
             if (!hoodLowLimit) hoodMotor.set(ControlMode.PercentOutput, control);
             else hoodMotor.set(ControlMode.PercentOutput, MathUtil.clamp(control, -1, 0));
         }
     }
 
+    /**recalibrate pids and hood*/
     public void reCalibrate() {
         pidH.reset();
         pidL.reset();
@@ -141,11 +148,26 @@ public class BallMovementSubsystem extends SubsystemBase {
                 calibrated = true;
             }
         } else {
+            runHood();
+            entrance = entranceP >= kEntranceProximityThreshold;
+            feed = feederP >= kFeederProximityThreshold;
             launcherCurrentSpeed = launcherLeadMotor.getEncoder().getVelocity();
             entranceP = entranceSensor.getProximity();
             feederP = feederSensor.getProximity();
             index = !indexerSensor.get();
             hoodPosition = hoodEncoder.get();
         }
+
+        if (launcherControllerOn) {
+            launcherPIDRunning = true;
+            setLauncherPower(pidL.calculate(launcherCurrentSpeed, launcherSpeedSet));
+        } else if (launcherPIDRunning) {
+            launcherPIDRunning = false;
+            pidL.reset();
+        }
+
+        hpWidget.setDouble(hoodPosition);
+        hsWidget.setDouble(hoodSet);
+        lvWidget.setDouble(launcherCurrentSpeed);
     }
 }

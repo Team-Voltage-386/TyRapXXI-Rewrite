@@ -6,6 +6,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.commands.ballmovement.M_TeleOp;
 import frc.robot.commands.drive.*;
 import frc.robot.subsystems.BallMovementSubsystem;
@@ -39,6 +41,7 @@ public class RobotContainer {
   public final LLSubsystem limeLightSubsystemBall = new LLSubsystem("limelight-ball",LimeLightConstants.targetHeightBall,LimeLightConstants.camEleAngleBall,LimeLightConstants.camHeightBall);
   public final D_TeleOp teleOpD = new D_TeleOp(driveSubsystem, limeLightSubsystemHoop, limeLightSubsystemBall);
   public final M_TeleOp teleOpM = new M_TeleOp(ballMovementSS);
+  public final ShuffleboardTab sbTab;
 
   /**
    * The container for the robot. Contains subsystems, IO devices, and commands.
@@ -46,10 +49,9 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-    // configure default commands
-
-     // configure default commands
+    sbTab = Shuffleboard.getTab("The One Tab to Rule Them All");
     driveSubsystem.setDefaultCommand(teleOpD);
+    ballMovementSS.setDefaultCommand(teleOpM);
   }
   /**
    * Use this method to define your button->command mappings. Buttons can be
@@ -71,7 +73,6 @@ public class RobotContainer {
     // An ExampleCommand will run in autonomous
     return null;
   }
-
 
   public ParallelCommandGroup getTeleOpCommands() {
     return new ParallelCommandGroup(teleOpD,teleOpM);

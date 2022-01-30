@@ -1,3 +1,4 @@
+
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -18,8 +19,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
-  public static Command _autonomousCommand;
-  public static Command _teleopCommand;
+  private Command m_autonomousCommand;
 
   public static RobotContainer m_robotContainer;
 
@@ -34,7 +34,6 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    Dashboard.init();
   }
 
   /**
@@ -57,9 +56,6 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods. This must be called from the
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
-
-    // update the dashboard:
-    Dashboard.update();
     CommandScheduler.getInstance().run();
   }
 
@@ -78,12 +74,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-
-    _autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
-    if (_autonomousCommand != null) {
-      _autonomousCommand.schedule();
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.schedule();
     }
   }
 
@@ -92,21 +87,18 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
   }
 
-  /**This function is called at the beginning of teleop*/
   @Override
   public void teleopInit() {
-    // apply declaration of mode:
-    _teleopCommand = m_robotContainer.getTeleOpCommands();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    if (_autonomousCommand != null)  _autonomousCommand.cancel();
-    if (_teleopCommand != null) _teleopCommand.schedule();
-    
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.cancel();
+    }
   }
 
-  /** This function is called periodically during operator control.*/
+  /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
   }
