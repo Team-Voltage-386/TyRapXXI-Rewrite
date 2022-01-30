@@ -23,7 +23,7 @@ public class AutoBallMovementCommand  extends CommandBase {
     addRequirements(subsystem);
   }
 
-  // Called when the command is initially scheduled.
+  // Called when the command is initially scheduled
   @Override
   public void initialize() {
       // Set initial state of intake as retracted
@@ -51,6 +51,26 @@ public class AutoBallMovementCommand  extends CommandBase {
     subsystem.runSerializerMotor(RobotContainer.manipulatorController.getRawAxis(kLeftVertical));
     subsystem.runIntakeMotor(RobotContainer.manipulatorController.getRawAxis(kRightTrigger));
 
+    if (RobotContainer.manipulatorController.getRawButtonPressed(kB)) {
+        //Run feeder motor and serializer motor for set time to shoot 3 balls
+    }
+    else {
+        if (subsystem.getEntranceSensor() == true && subsystem.getIndexerSensor() == false && subsystem.getFeederSensor() == false) {
+            //Make serializer run
+        }
+        else if (subsystem.getEntranceSensor() == false && subsystem.getIndexerSensor() == true && subsystem.getFeederSensor() == false) {
+            //Make serializer false
+        }
+        else if (subsystem.getEntranceSensor() == true && subsystem.getIndexerSensor() == true && subsystem.getFeederSensor() == false) {
+            //Make serializer run
+        }
+        else if (subsystem.getEntranceSensor() == false && subsystem.getIndexerSensor() == true && subsystem.getFeederSensor() == true) {
+            //Make serializer false
+        }
+        else if (subsystem.getEntranceSensor() == true && subsystem.getIndexerSensor() == true && subsystem.getFeederSensor() == true) {
+            //Run serializer for short period of time to have all balls in serializer
+        }
+    }
   }
 
   // Called once the command ends or is interrupted.
