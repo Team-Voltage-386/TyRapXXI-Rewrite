@@ -63,7 +63,7 @@ public class M_TeleOp extends CommandBase {
         if (driver.hoopTargeted) {
             _bmss.runSerializer(!_bmss.feed);
             _bmss.launcherControllerOn = true;
-            if (driver.hoopLocked){
+            if (driver.hoopLocked && _bmss.launcherAtSpeed()){
                 if(_controller.getRawButton(kA)) _bmss.runFeeder(true);
                 else {
                     _bmss.runFeeder(false);

@@ -138,6 +138,10 @@ public class BallMovementSubsystem extends SubsystemBase {
         calibrated = false;
     }
 
+    public Boolean launcherAtSpeed() {
+        return (launcherCurrentSpeed > launcherSP-launcherSpeedTolerances && launcherCurrentSpeed < launcherSP+launcherSpeedTolerances);
+    }
+
     @Override
     public void periodic() {
         hoodLowLimit = !hoodLimit.get();

@@ -115,8 +115,8 @@ public final class Constants {
         public static final double serializerPower = 0.8;
         public static final double intakePower = 1;
         public static final double feederPower = 0.6;
-        public static final int launcherDirection = 1;
         public static final int launcherSpeedSet = 3600;
+        public static final int launcherSpeedTolerances = 100;
         public static final double manHoodSpeed = -0.01;
 
         // ADD 10 FOR DIO ON MORE BOARD
