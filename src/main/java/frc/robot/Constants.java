@@ -5,6 +5,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -47,6 +49,7 @@ public final class Constants {
         public static final int kFrontRight = 1; // CAN (Spark)
         public static final int kRearLeft = 5; // CAN (Spark)
         public static final int kRearRight = 3; // CAN (Spark)
+        public static final double kPositionFactor = 0.4788; //meters per rotation
     }
 
     public static final class BallMovementConstants {
@@ -69,4 +72,21 @@ public final class Constants {
         public static final int kFeederProximityThreshold = 100;
     }
 
+    public static final class AutonomousConstants {
+        public static final TalonSRX kGyro = new TalonSRX(BallMovementConstants.kFeeder); // Location of gyro
+        /** from drive characterization */
+        public static final double ksVolts = 0.2403;
+        /** from drive characterization */
+        public static final double kvVoltSecondsPerMeter = 2.7629;
+        /** from drive characterization */
+        public static final double kaVoltSecondsSquaredPerMeter = 0.64821;
+        public static final double kPDriveVel = 3.9081; // volt m/s
+
+        //reasonable baseline Ramsete follower values in units meters and seconds
+        public static final double kRamseteB = 2;
+        public static final double kRamseteZeta = 0.7;
+
+        public static final double kTrackWidthMeters = .6024; // Distance between L/R wheels of the robot
+
+    }
 }

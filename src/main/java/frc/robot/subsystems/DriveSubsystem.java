@@ -13,12 +13,21 @@ import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
+import com.ctre.phoenix.sensors.PigeonIMU;
+// import com.ctre.phoenix.sensors.PigeonIMU.*;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax.ExternalFollower;
 
 import static frc.robot.Constants.DriveConstants.*;
+import static frc.robot.Constants.AutonomousConstants.*;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 
 public class DriveSubsystem extends SubsystemBase {
 
@@ -36,6 +45,12 @@ public class DriveSubsystem extends SubsystemBase {
         // Sensor instantiations
         RelativeEncoder leftEncoder = rearLeftMotor.getEncoder();
         RelativeEncoder rightEncoder = frontRightMotor.getEncoder();
+        PigeonIMU _pigeon;
+        PigeonIMU.GeneralStatus genStatus = new PigeonIMU.GeneralStatus();
+        double[] ypr = new double[3];
+
+        // Odometry class for tracking robot pose
+        private final DifferentialDriveOdometry odometry;
 
         // Creates a shuffleboard tab for the drive
         private ShuffleboardTab tab = Shuffleboard.getTab("Drive");
@@ -76,33 +91,43 @@ public class DriveSubsystem extends SubsystemBase {
                 frontLeftMotor.follow(rearLeftMotor);// front left yields faulty encoder values so that set follower
                 rearRightMotor.follow(frontRightMotor);
 
+                _pigeon = new PigeonIMU(kGyro);
+                odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(ypr[0]));
+                // rotations to meters
+                leftEncoder.setPositionConversionFactor(kPositionFactor);
+                rightEncoder.setPositionConversionFactor(kPositionFactor);
+
         }
 
         @Override
         public void periodic() {
-                 //This method will be called once per scheduler run
-                
-                 // Update output widgets
-                 frontLeftOutputWidget.setDouble(frontLeftMotor.get());
-                 frontRightOutputWidget.setDouble(frontRightMotor.get());
-                 backLeftOutputWidget.setDouble(rearLeftMotor.get());
-                 backRightOutputWidget.setDouble(rearRightMotor.get());
+                // This method will be called once per scheduler run
+                _pigeon.getGeneralStatus(genStatus);
 
-                 // Update temp widgets
-                 frontLeftTempWidget.setDouble(frontLeftMotor.getMotorTemperature());
-                 frontRightTempWidget.setDouble(frontRightMotor.getMotorTemperature());
-                 backLeftTempWidget.setDouble(rearLeftMotor.getMotorTemperature());
-                 backRightTempWidget.setDouble(rearRightMotor.getMotorTemperature());
+                _pigeon.getYawPitchRoll(ypr);
+                System.out.println("Yaw:" + ypr[0]);
 
-                 // Update current widgets
-                 frontLeftCurrentWidget.setDouble(frontLeftMotor.getOutputCurrent());
-                 frontRightCurrentWidget.setDouble(frontRightMotor.getOutputCurrent());
-                 backLeftCurrentWidget.setDouble(rearLeftMotor.getOutputCurrent());
-                 backRightCurrentWidget.setDouble(rearRightMotor.getOutputCurrent());
+                // Update output widgets
+                frontLeftOutputWidget.setDouble(frontLeftMotor.get());
+                frontRightOutputWidget.setDouble(frontRightMotor.get());
+                backLeftOutputWidget.setDouble(rearLeftMotor.get());
+                backRightOutputWidget.setDouble(rearRightMotor.get());
 
-                 // Update encoder widgets
-                 leftEncoderWidget.setDouble(leftEncoder.getPosition());
-                 rightEncoderWidget.setDouble(rightEncoder.getPosition());
+                // Update temp widgets
+                frontLeftTempWidget.setDouble(frontLeftMotor.getMotorTemperature());
+                frontRightTempWidget.setDouble(frontRightMotor.getMotorTemperature());
+                backLeftTempWidget.setDouble(rearLeftMotor.getMotorTemperature());
+                backRightTempWidget.setDouble(rearRightMotor.getMotorTemperature());
+
+                // Update current widgets
+                frontLeftCurrentWidget.setDouble(frontLeftMotor.getOutputCurrent());
+                frontRightCurrentWidget.setDouble(frontRightMotor.getOutputCurrent());
+                backLeftCurrentWidget.setDouble(rearLeftMotor.getOutputCurrent());
+                backRightCurrentWidget.setDouble(rearRightMotor.getOutputCurrent());
+
+                // Update encoder widgets
+                leftEncoderWidget.setDouble(leftEncoder.getPosition());
+                rightEncoderWidget.setDouble(rightEncoder.getPosition());
 
         }
 
@@ -111,9 +136,13 @@ public class DriveSubsystem extends SubsystemBase {
                 driveTrain.arcadeDrive(forwardPower, turnPower);
         }
 
-        //tank drive method to be called by commands
+        // tank drive method to be called by commands
         public void tankDrive(Double leftPower, Double rightPower) {
                 driveTrain.tankDrive(leftPower, rightPower);
+        }
+
+        public void resetEncoders() {
+                leftEncoder.setPosition(0.0);
         }
 
         @Override
