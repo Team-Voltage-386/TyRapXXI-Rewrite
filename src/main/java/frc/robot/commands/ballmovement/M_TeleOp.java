@@ -4,6 +4,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.BallMovementSubsystem;
 import frc.robot.Robot;
@@ -21,17 +22,21 @@ public class M_TeleOp extends CommandBase {
     private double hoodPosition = 0;
     private final D_TeleOp driver;
     private final Timer ballCatchTimer = new Timer();
-    private final NetworkTableEntry rtfWidget = Robot.m_robotContainer.sbTab.add("Ready To Fire",false).withSize(1,2).withPosition(3,0).getEntry();
+    private final ShuffleboardTab _tab;
+    private final NetworkTableEntry rtfWidget;
+    private Boolean serializer = false;
     
 
     /**Manipulator TeleOp Command*/
-    public M_TeleOp(BallMovementSubsystem BMSS) {
+    public M_TeleOp(BallMovementSubsystem BMSS, ShuffleboardTab t,D_TeleOp d) {
+        _tab = t;
+        rtfWidget = _tab.add("Ready To Fire",false).withSize(1,2).withPosition(3,0).getEntry();
         _bmss = BMSS;
         _bmss.reCalibrate();
         _controller = RobotContainer.manipulatorController;
         addRequirements(_bmss);
         stop();
-        driver = Robot.m_robotContainer.teleOpD;
+        driver = d;
     }
 
     @Override
@@ -46,7 +51,7 @@ public class M_TeleOp extends CommandBase {
 
         if(_controller.getRawButtonPressed(kY)) {
             intakeDeployed = !intakeDeployed;
-            _bmss.runIntake(intakeDeployed);
+            _bmss.deployIntake(intakeDeployed);
         }
 
         double hs = _controller.getRawAxis(kRightVertical);
@@ -54,14 +59,15 @@ public class M_TeleOp extends CommandBase {
             hoodPosition += hs*BallMovementConstants.manHoodSpeed;
             _bmss.hoodSet = hoodPosition;
         }
-        if (driver.ballFound) {
-            ballCatchTimer.reset();
-            ballCatchTimer.start();
+
+        if (_controller.getRawButtonPressed(kX)) {
+            serializer = !serializer;
+            _bmss.runSerializer(serializer);
         }
+
         if (!ballCatchTimer.hasElapsed(1) || _controller.getRawButton(kLeftBumper)) _bmss.runIntake(true);
         else _bmss.runIntake(false);
         if (driver.hoopTargeted) {
-            _bmss.runSerializer(!_bmss.feed);
             _bmss.launcherControllerOn = true;
             if (driver.hoopLocked && _bmss.launcherAtSpeed()){
                 if(_controller.getRawButton(kA)) _bmss.runFeeder(true);
@@ -76,6 +82,7 @@ public class M_TeleOp extends CommandBase {
                 rtfWidget.setBoolean(false);
             }
         } else {
+            _bmss.launcherControllerOn = false;
             _bmss.runFeeder(false);
             _controller.setRumble(RumbleType.kRightRumble,0);
             rtfWidget.setBoolean(false);

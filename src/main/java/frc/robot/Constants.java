@@ -54,6 +54,8 @@ public final class Constants {
         public static final int kFrontRight = 1; // CAN (Spark)
         public static final int kRearLeft = 5; // CAN (Spark)
         public static final int kRearRight = 3; // CAN (Spark)
+        public static final double kMPR = 0.4788;
+        public static final TalonSRX kGyro = new TalonSRX(BallMovementConstants.kFeeder);
     }
 
     /**PID paramaters*/
@@ -73,9 +75,9 @@ public final class Constants {
         public static final double HD = 0; // D
         public static final double HC = 1;
 
-        public static final double LP = 0.0002;
-        public static final double LI = 0.000001;
-        public static final double LD = 0;
+        public static final double LP = 0.00045;
+        public static final double LI = 0.0003;
+        public static final double LD = 0.00002;
     }
 
     /**Constants for the limelight used for estimating distance*/
@@ -115,7 +117,7 @@ public final class Constants {
         public static final double serializerPower = 0.8;
         public static final double intakePower = 1;
         public static final double feederPower = 0.6;
-        public static final int launcherSpeedSet = 3600;
+        public static final int launcherSpeedSet = 2800;
         public static final int launcherSpeedTolerances = 100;
         public static final double manHoodSpeed = -0.01;
 

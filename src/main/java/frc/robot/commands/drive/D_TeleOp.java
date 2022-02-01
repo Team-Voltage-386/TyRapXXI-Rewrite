@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.pidConstants;
-import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import static frc.robot.Constants.ControllerConstants.*;
 
@@ -33,9 +32,9 @@ public class D_TeleOp extends CommandBase {
   public Boolean hoopTargeted = false;
   public Boolean hoopLocked = false;
 
-  private final ShuffleboardTab _tab = Robot.m_robotContainer.sbTab;
-  private final NetworkTableEntry hfWidget = _tab.add("HoopFound",false).withSize(1,1).withPosition(0,2).getEntry();
-  private final NetworkTableEntry bfWidget = _tab.add("BallFound",false).withSize(1,1).withPosition(1,2).getEntry();
+  private final ShuffleboardTab _tab;
+  private final NetworkTableEntry hfWidget;
+  private final NetworkTableEntry bfWidget;
   private final SendableChooser<Integer> ballColorSelect = new SendableChooser<Integer>();
 
   /**Driver TeleOp Command
@@ -43,7 +42,10 @@ public class D_TeleOp extends CommandBase {
    * @param LLS the hoop LL subsystem used by this command.
    * @param LLSB the ball LL subsystem used by this command.
    */
-  public D_TeleOp(DriveSubsystem DSS, LLSubsystem LLS, LLSubsystem LLSB) {
+  public D_TeleOp(DriveSubsystem DSS, LLSubsystem LLS, LLSubsystem LLSB, ShuffleboardTab t) {
+    _tab = t;
+    hfWidget = _tab.add("HoopFound",false).withSize(1,1).withPosition(0,2).getEntry();
+    bfWidget = _tab.add("BallFound",false).withSize(1,1).withPosition(1,2).getEntry();
     _dss = DSS;
     _llss = LLS;
     _llssb = LLSB;
@@ -87,7 +89,7 @@ public class D_TeleOp extends CommandBase {
     else {llaa = false; llcb = false;}
     if (llaa && _llss.targetFound) {
       ht = true;
-      if ((-0.8 < _llss.tx && _llss.tx < 0.8)) {
+      if ((-1 < _llss.tx && _llss.tx < 1)) {
         hl = true;
         rootTurn = 0;
         rumble = (float)0.5;

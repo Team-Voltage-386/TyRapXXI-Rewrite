@@ -52,13 +52,17 @@ public class BallMovementSubsystem extends SubsystemBase {
     private Boolean launcherPIDRunning = false;
     public int launcherSP;
 
-    private final ShuffleboardTab _tab = Robot.m_robotContainer.sbTab;
-    private final NetworkTableEntry hpWidget = _tab.add("HoodPosition",0).withSize(1, 1).withPosition(0, 0).getEntry();
-    private final NetworkTableEntry hsWidget = _tab.add("HoodSet",0).withSize(1,1).withPosition(1, 0).getEntry();
-    private final NetworkTableEntry lvWidget = _tab.add("DrumSpeed",0).withSize(1,1).withPosition(0,1).getEntry();
+    private final ShuffleboardTab _tab;
+    private final NetworkTableEntry hpWidget;
+    private final NetworkTableEntry hsWidget;
+    private final NetworkTableEntry dSWidget;
 
     /**Creates a BallMovementSubsystem*/
-    public BallMovementSubsystem() {
+    public BallMovementSubsystem(ShuffleboardTab t) {
+        _tab = t;
+        hpWidget = _tab.add("HoodPosition",0).withSize(1, 1).withPosition(0, 0).getEntry();
+        hsWidget = _tab.add("HoodSet",0).withSize(1,1).withPosition(1, 0).getEntry();
+        dSWidget = _tab.add("DrumSpeed",0).withSize(2,1).withPosition(3, 3).getEntry();
         launcherSP = launcherSpeedSet;
         pidL.reset();
         pidL.setTolerance(1,1);
@@ -155,7 +159,7 @@ public class BallMovementSubsystem extends SubsystemBase {
             runHood();
             entrance = entranceP >= kEntranceProximityThreshold;
             feed = feederP >= kFeederProximityThreshold;
-            launcherCurrentSpeed = launcherLeadMotor.getEncoder().getVelocity();
+            
             entranceP = entranceSensor.getProximity();
             feederP = feederSensor.getProximity();
             index = !indexerSensor.get();
@@ -166,12 +170,14 @@ public class BallMovementSubsystem extends SubsystemBase {
             launcherPIDRunning = true;
             setLauncherPower(pidL.calculate(launcherCurrentSpeed, launcherSpeedSet));
         } else if (launcherPIDRunning) {
+            setLauncherPower(0);
             launcherPIDRunning = false;
             pidL.reset();
         }
 
+        launcherCurrentSpeed = launcherLeadMotor.getEncoder().getVelocity();
         hpWidget.setDouble(hoodPosition);
         hsWidget.setDouble(hoodSet);
-        lvWidget.setDouble(launcherCurrentSpeed);
+        dSWidget.setDouble(launcherCurrentSpeed);
     }
 }
