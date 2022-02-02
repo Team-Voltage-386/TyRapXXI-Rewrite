@@ -118,9 +118,9 @@ public final class Constants {
         public static final double serializerPower = 0.8;
         public static final double intakePower = 1;
         public static final double feederPower = 0.6;
-        public static final int launcherSpeedSet = 2800;
         public static final int launcherSpeedTolerances = 75;
-        public static final double manHoodSpeed = -0.01;
+        public static final double hoodTolerance = 0.01;
+        public static final int drumIdleSpeed = 2000;
 
         // ADD 10 FOR DIO ON MORE BOARD
         public static final int kHoodMotor = 6; // CAN (Talon)
@@ -132,5 +132,17 @@ public final class Constants {
         public static final TalonSRX hoodMotor = new TalonSRX(kHoodMotor);
         public static final DutyCycleEncoder hoodEncoder = new DutyCycleEncoder(kHoodEncoder);
         public static final DigitalInput hoodLimit = new DigitalInput(kHoodLimit);
+    }
+
+    public static final class ShooterData {
+        /*
+        The distance MUST be greater at higher indexes, and by GOD 
+        don't make neighboring distance values the same, or Java
+        Satan himself will reject you to be abandoned in the Endless Sea
+        of DBZ, aboard a raft equipped with nothing but a Chromebook.
+        */
+        public static final double[] distances = {4.06,5.03,5.97};
+        public static final int[] drumSpeeds = {3500,3600,3950};
+        public static final double[] hoodPositions = {0.1,0.1,0.1};
     }
 }

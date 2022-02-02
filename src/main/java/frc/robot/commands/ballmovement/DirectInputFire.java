@@ -14,10 +14,10 @@ public class DirectInputFire extends CommandBase {
     private final NetworkTableEntry dsWidget;
     private final NetworkTableEntry hpWidget;
     private final NetworkTableEntry fsWidget;
-    private Boolean finished = false;
     private final double hoodSet;
     private final int drumSet;
     private final Timer finTimer = new Timer();
+    
     
 
     /**Manipulator TeleOp Command*/
@@ -39,10 +39,10 @@ public class DirectInputFire extends CommandBase {
         _bmss.reCalibrate();
         _bmss.stop();
         _bmss.deployIntake(true);
-        _bmss.setLauncherPower(drumSet);
-        _bmss.launcherControllerOn = true;
+        _bmss.setDrumPower(drumSet);
+        _bmss.drumControllerOn = true;
         _bmss.hoodSet = hoodSet;
-        _bmss.launcherSP = drumSet;
+        _bmss.drumSP = drumSet;
     } 
 
     @Override
@@ -53,8 +53,7 @@ public class DirectInputFire extends CommandBase {
             _bmss.runSerializer(true);
         } else {
             _bmss.runSerializer(false);
-            double hError = Math.abs(hoodSet - _bmss.hoodPosition);
-            if (_bmss.launcherAtSpeed() &&  hError < 0.01) {
+            if (_bmss.RTF()) {
                 _bmss.runFeeder(true);
                 finTimer.start();
             } else {
@@ -65,7 +64,7 @@ public class DirectInputFire extends CommandBase {
     }
 
     private void updateWidgets() {
-        dsWidget.setDouble(_bmss.launcherCurrentSpeed);
+        dsWidget.setDouble(_bmss.drumCurrentSpeed);
         hpWidget.setDouble(_bmss.hoodPosition);
         fsWidget.setBoolean(_bmss.feed);
     }

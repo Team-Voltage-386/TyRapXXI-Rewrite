@@ -21,7 +21,7 @@ import static frc.robot.Constants.ControllerConstants.*;
 /**Driver TeleOp Command*/
 public class D_TeleOp extends CommandBase {
   private final DriveSubsystem _dss;
-  private final LLSubsystem _llss;
+  public final LLSubsystem _llss;
   private final LLSubsystem _llssb;
   private final Joystick _controller;
   private final PIDController pid = new PIDController(pidConstants.LLP, pidConstants.LLI, pidConstants.LLD);

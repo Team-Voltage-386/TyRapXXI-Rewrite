@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 
 import static frc.robot.Constants.BallMovementConstants.*;
+import frc.robot.Constants.ShooterData;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.math.MathUtil;
@@ -12,6 +13,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 import com.revrobotics.CANSparkMax;
@@ -40,7 +42,7 @@ public class BallMovementSubsystem extends SubsystemBase {
     public Boolean feed = false;
     /**Indexer sensor is tripped*/
     public Boolean index = false;
-    public Boolean launcherControllerOn = false;
+    public Boolean drumControllerOn = false;
 
     private Boolean hoodLowLimit = false;
     public double hoodPosition = 0;
@@ -48,9 +50,11 @@ public class BallMovementSubsystem extends SubsystemBase {
     private Boolean calibrated = false;
     private PIDController pidH = new PIDController(HP,HI,HD);
     private PIDController pidL = new PIDController(LP,LI,LD);
-    public double launcherCurrentSpeed = 0;
-    private Boolean launcherPIDRunning = false;
-    public int launcherSP;
+    public double drumCurrentSpeed = 0;
+    public Boolean drumIdle = false;
+    private Boolean drumPIDRunning = false;
+    public int drumSP = 0;
+    public Boolean autoSF = false;
 
     private final ShuffleboardTab _tab;
     private final NetworkTableEntry hpWidget;
@@ -63,7 +67,6 @@ public class BallMovementSubsystem extends SubsystemBase {
         hpWidget = _tab.add("HoodPosition",0).withSize(1, 1).withPosition(0, 0).getEntry();
         hsWidget = _tab.add("HoodSet",0).withSize(1,1).withPosition(1, 0).getEntry();
         dSWidget = _tab.add("DrumSpeed",0).withSize(2,1).withPosition(3, 3).getEntry();
-        launcherSP = launcherSpeedSet;
         pidL.reset();
         pidL.setTolerance(1,1);
         pidH.reset();
@@ -98,7 +101,7 @@ public class BallMovementSubsystem extends SubsystemBase {
     /** Directly set launcher power
      * @param power Launching Power
      */
-    public void setLauncherPower(double power) {
+    public void setDrumPower(double power) {
         launcherLeadMotor.set(power);
     }
 
@@ -147,9 +150,10 @@ public class BallMovementSubsystem extends SubsystemBase {
         calibrated = false;
     }
 
-    public Boolean launcherAtSpeed() {
-        double diff = Math.abs(launcherSP - launcherCurrentSpeed);
-        return (diff < launcherSpeedTolerances);
+    public Boolean RTF() {
+        double Hdiff = Math.abs(hoodSet - hoodPosition);
+        double Ddiff = Math.abs(drumSP - drumCurrentSpeed);
+        return (Ddiff < launcherSpeedTolerances) && (Hdiff < hoodTolerance);
     }
 
     @Override
@@ -166,19 +170,32 @@ public class BallMovementSubsystem extends SubsystemBase {
             hoodPosition = hoodEncoder.get();
         }
 
-        if (launcherControllerOn) {
-            launcherPIDRunning = true;
-            setLauncherPower(pidL.calculate(launcherCurrentSpeed, launcherSP));
-        } else if (launcherPIDRunning) {
-            setLauncherPower(0);
-            launcherPIDRunning = false;
-            pidL.reset();
+        if (drumControllerOn) {
+            drumPIDRunning = true;
+            setDrumPower(pidL.calculate(drumCurrentSpeed, drumSP));
+        } else if (drumIdle) {
+            drumPIDRunning = true;
+            setDrumPower(pidL.calculate(drumCurrentSpeed,drumIdleSpeed));
+        }else {
+            setDrumPower(0);
+            if (drumPIDRunning) {
+                drumPIDRunning = false;
+                pidL.reset();
+            }
         }
 
-        launcherCurrentSpeed = launcherLeadMotor.getEncoder().getVelocity();
+        if (!feed && autoSF) {
+            runSerializer(true);
+            runFeedSlow(true);
+        } else if (autoSF) {
+            runSerializer(false);
+            runFeeder(false);
+        }
+
+        drumCurrentSpeed = launcherLeadMotor.getEncoder().getVelocity();
         hpWidget.setDouble(hoodPosition);
         hsWidget.setDouble(hoodSet);
-        dSWidget.setDouble(launcherCurrentSpeed);
+        dSWidget.setDouble(drumCurrentSpeed);
         entranceP = entranceSensor.getProximity();
         feederP = feederSensor.getProximity();
         index = !indexerSensor.get();
@@ -187,11 +204,30 @@ public class BallMovementSubsystem extends SubsystemBase {
     }
 
     public void stop() {
-        setLauncherPower(0);
-        launcherControllerOn = false;
-        launcherPIDRunning = false;
+        setDrumPower(0);
+        drumControllerOn = false;
+        drumPIDRunning = false;
         runFeeder(false);
         runIntake(false);
         runSerializer(false);
+    }
+
+    public void setAimDistance(double m) {
+        int i = -1;
+        for (int j = 0; j < ShooterData.distances.length; j++) {
+            if (m < ShooterData.distances[j]) {
+                i = j;
+                return;
+            }
+        }
+        double upper = ShooterData.distances[i];
+        double lower = ShooterData.distances[i-1];
+        double lerpFactor = (m-lower)/(upper-lower);
+        upper = ShooterData.drumSpeeds[i];
+        lower = ShooterData.drumSpeeds[i-1];
+        drumSP = (int)(lower + ((upper-lower)*lerpFactor));
+        upper = ShooterData.hoodPositions[i];
+        lower = ShooterData.hoodPositions[i-1];
+        hoodSet = lower + ((upper-lower)*lerpFactor);
     }
 }
