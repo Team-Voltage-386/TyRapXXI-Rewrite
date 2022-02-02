@@ -50,6 +50,7 @@ public final class Constants {
 
     /**Drive motor CAN bus addresses*/
     public static final class DriveConstants {
+        public static final double kSpeedLimit = 0.5;
         public static final int kFrontLeft = 4; // CAN (Spark)
         public static final int kFrontRight = 1; // CAN (Spark)
         public static final int kRearLeft = 5; // CAN (Spark)
@@ -77,7 +78,7 @@ public final class Constants {
 
         public static final double LP = 0.00045;
         public static final double LI = 0.0003;
-        public static final double LD = 0.00002;
+        public static final double LD = 0.000025;
     }
 
     /**Constants for the limelight used for estimating distance*/
@@ -112,13 +113,13 @@ public final class Constants {
         public static final ColorSensorV3 feederSensor = new ColorSensorV3(I2C.Port.kMXP);
 
         public static final int kEntranceProximityThreshold = 100;
-        public static final int kFeederProximityThreshold = 100;
+        public static final int kFeederProximityThreshold = 150;
 
         public static final double serializerPower = 0.8;
         public static final double intakePower = 1;
         public static final double feederPower = 0.6;
         public static final int launcherSpeedSet = 2800;
-        public static final int launcherSpeedTolerances = 100;
+        public static final int launcherSpeedTolerances = 75;
         public static final double manHoodSpeed = -0.01;
 
         // ADD 10 FOR DIO ON MORE BOARD

@@ -35,6 +35,7 @@ public class D_TeleOp extends CommandBase {
   private final ShuffleboardTab _tab;
   private final NetworkTableEntry hfWidget;
   private final NetworkTableEntry bfWidget;
+  private final NetworkTableEntry hdWidget;
   private final SendableChooser<Integer> ballColorSelect = new SendableChooser<Integer>();
 
   /**Driver TeleOp Command
@@ -44,6 +45,7 @@ public class D_TeleOp extends CommandBase {
    */
   public D_TeleOp(DriveSubsystem DSS, LLSubsystem LLS, LLSubsystem LLSB, ShuffleboardTab t) {
     _tab = t;
+    hdWidget = _tab.add("HoopDistance",0).withSize(1,1).withPosition(4,3).getEntry();
     hfWidget = _tab.add("HoopFound",false).withSize(1,1).withPosition(0,2).getEntry();
     bfWidget = _tab.add("BallFound",false).withSize(1,1).withPosition(1,2).getEntry();
     _dss = DSS;
@@ -116,6 +118,7 @@ public class D_TeleOp extends CommandBase {
   }
 
   private void updateWidgets() {
+    hdWidget.setDouble(_llss.metersToTarget());
     hfWidget.setBoolean(_llss.targetFound);
     bfWidget.setBoolean(_llssb.targetFound);
   }

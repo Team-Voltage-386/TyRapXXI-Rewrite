@@ -32,10 +32,10 @@ public class BallMovementSubsystem extends SubsystemBase {
     private final DigitalInput indexerSensor = new DigitalInput(kIndexer);
       
     // sensor instantiations 
-    private double entranceP = 0;
-    private double feederP = 0;
+    public double entranceP = 0;
+    public double feederP = 0;
     /**Entrance sensor is tripped*/
-    public Boolean entrance = entranceP >= kEntranceProximityThreshold;
+    public Boolean entrance;
     /**Feeder sensor is tripped*/
     public Boolean feed = false;
     /**Indexer sensor is tripped*/
@@ -43,12 +43,12 @@ public class BallMovementSubsystem extends SubsystemBase {
     public Boolean launcherControllerOn = false;
 
     private Boolean hoodLowLimit = false;
-    private double hoodPosition = 0;
+    public double hoodPosition = 0;
     public double hoodSet = 0;
     private Boolean calibrated = false;
     private PIDController pidH = new PIDController(HP,HI,HD);
     private PIDController pidL = new PIDController(LP,LI,LD);
-    private double launcherCurrentSpeed = 0;
+    public double launcherCurrentSpeed = 0;
     private Boolean launcherPIDRunning = false;
     public int launcherSP;
 
@@ -110,6 +110,11 @@ public class BallMovementSubsystem extends SubsystemBase {
         else feederMotor.set(ControlMode.PercentOutput, 0);
     }
 
+    public void runFeedSlow(Boolean on) {
+        if (on) feederMotor.set(ControlMode.PercentOutput, 0.2);
+        else feederMotor.set(ControlMode.PercentOutput, 0);
+    }
+
     /** set serializer motor on/off
      *@param on motor on/off
      */
@@ -127,7 +132,7 @@ public class BallMovementSubsystem extends SubsystemBase {
     }
 
     /**run the hood control system*/
-    public void runHood() {
+    private void runHood() {
         if (calibrated) {
             double control = MathUtil.clamp(-1*pidH.calculate(hoodPosition, hoodSet), -1*HC, HC);
             if (!hoodLowLimit) hoodMotor.set(ControlMode.PercentOutput, control);
@@ -143,7 +148,8 @@ public class BallMovementSubsystem extends SubsystemBase {
     }
 
     public Boolean launcherAtSpeed() {
-        return (launcherCurrentSpeed > launcherSP-launcherSpeedTolerances && launcherCurrentSpeed < launcherSP+launcherSpeedTolerances);
+        double diff = Math.abs(launcherSP - launcherCurrentSpeed);
+        return (diff < launcherSpeedTolerances);
     }
 
     @Override
@@ -157,18 +163,12 @@ public class BallMovementSubsystem extends SubsystemBase {
             }
         } else {
             runHood();
-            entrance = entranceP >= kEntranceProximityThreshold;
-            feed = feederP >= kFeederProximityThreshold;
-            
-            entranceP = entranceSensor.getProximity();
-            feederP = feederSensor.getProximity();
-            index = !indexerSensor.get();
             hoodPosition = hoodEncoder.get();
         }
 
         if (launcherControllerOn) {
             launcherPIDRunning = true;
-            setLauncherPower(pidL.calculate(launcherCurrentSpeed, launcherSpeedSet));
+            setLauncherPower(pidL.calculate(launcherCurrentSpeed, launcherSP));
         } else if (launcherPIDRunning) {
             setLauncherPower(0);
             launcherPIDRunning = false;
@@ -179,5 +179,19 @@ public class BallMovementSubsystem extends SubsystemBase {
         hpWidget.setDouble(hoodPosition);
         hsWidget.setDouble(hoodSet);
         dSWidget.setDouble(launcherCurrentSpeed);
+        entranceP = entranceSensor.getProximity();
+        feederP = feederSensor.getProximity();
+        index = !indexerSensor.get();
+        feed = feederP >= kFeederProximityThreshold;
+        entrance = entranceP >= kEntranceProximityThreshold;
+    }
+
+    public void stop() {
+        setLauncherPower(0);
+        launcherControllerOn = false;
+        launcherPIDRunning = false;
+        runFeeder(false);
+        runIntake(false);
+        runSerializer(false);
     }
 }

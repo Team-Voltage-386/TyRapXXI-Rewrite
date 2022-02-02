@@ -4,15 +4,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import static frc.robot.Constants.DriveConstants.*;
-import com.ctre.phoenix.sensors.PigeonIMU;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-
 public class DriveSubsystem extends SubsystemBase {
 
         // initialize motors and drivetrain
@@ -38,17 +32,16 @@ public class DriveSubsystem extends SubsystemBase {
         }
 
         public void linearDrive(double meters) {
-                
         }
 
         // arcade drive method to be called by commands
         public void arcadeDrive(Double forwardPower, Double turnPower) {
-                driveTrain.arcadeDrive(forwardPower, turnPower);
+                driveTrain.arcadeDrive(forwardPower*kSpeedLimit, turnPower*kSpeedLimit);
         }
 
         //tank drive method to be called by commands
         public void tankDrive(Double leftPower, Double rightPower) {
-                driveTrain.tankDrive(leftPower, rightPower);
+                driveTrain.tankDrive(leftPower*kSpeedLimit, rightPower*kSpeedLimit);
         }
 
         public void resetEncoders() {

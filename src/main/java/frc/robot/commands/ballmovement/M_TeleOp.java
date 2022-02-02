@@ -35,7 +35,7 @@ public class M_TeleOp extends CommandBase {
         _bmss.reCalibrate();
         _controller = RobotContainer.manipulatorController;
         addRequirements(_bmss);
-        stop();
+        _bmss.stop();
         driver = d;
     }
 
@@ -91,14 +91,8 @@ public class M_TeleOp extends CommandBase {
 
     @Override
     public void end(boolean interuppted) {
-        stop();
+        _bmss.stop();
     }
 
-    public void stop() {
-        _bmss.setLauncherPower(0);
-        _bmss.deployIntake(false);
-        _bmss.runFeeder(false);
-        _bmss.runIntake(false);
-        _bmss.runSerializer(false);
-    }
+    
 }
