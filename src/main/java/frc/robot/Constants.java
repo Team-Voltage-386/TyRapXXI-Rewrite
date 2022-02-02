@@ -50,10 +50,13 @@ public final class Constants {
 
     /**Drive motor CAN bus addresses*/
     public static final class DriveConstants {
+        public static final double kSpeedLimit = 0.5;
         public static final int kFrontLeft = 4; // CAN (Spark)
         public static final int kFrontRight = 1; // CAN (Spark)
         public static final int kRearLeft = 5; // CAN (Spark)
         public static final int kRearRight = 3; // CAN (Spark)
+        public static final double kMPR = 0.4788;
+        public static final TalonSRX kGyro = new TalonSRX(BallMovementConstants.kFeeder);
     }
 
     /**PID paramaters*/
@@ -68,14 +71,14 @@ public final class Constants {
         public static final double LLIB = 0.001;  // I
         public static final double LLDB = 0.0005; // D
 
-        public static final double HP = 6; // P
+        public static final double HP = 10; // P
         public static final double HI = 0.5;  // I
-        public static final double HD = 0.5; // D
+        public static final double HD = 0; // D
         public static final double HC = 1;
 
-        public static final double LP = 0.0002;
-        public static final double LI = 0.000001;
-        public static final double LD = 0;
+        public static final double LP = 0.00045;
+        public static final double LI = 0.0003;
+        public static final double LD = 0.000025;
     }
 
     /**Constants for the limelight used for estimating distance*/
@@ -106,20 +109,18 @@ public final class Constants {
         public static final int kEntrance = 7; // DIO
         public static final int kFeederSensor = 10; // DIO (MoreBoard Slot 0)
 
-        public static final I2C.Port entranceSensorI2CPort = I2C.Port.kOnboard; // Port 0
-        public static final I2C.Port feederSensorI2CPort = I2C.Port.kMXP; // Port 1
-        public static final ColorSensorV3 entranceSensor = new ColorSensorV3(entranceSensorI2CPort);
-        public static final ColorSensorV3 feederSensor = new ColorSensorV3(feederSensorI2CPort);
+        public static final ColorSensorV3 entranceSensor = new ColorSensorV3(I2C.Port.kOnboard);
+        public static final ColorSensorV3 feederSensor = new ColorSensorV3(I2C.Port.kMXP);
 
         public static final int kEntranceProximityThreshold = 100;
-        public static final int kFeederProximityThreshold = 100;
+        public static final int kFeederProximityThreshold = 150;
 
         public static final double serializerPower = 0.8;
         public static final double intakePower = 1;
         public static final double feederPower = 0.6;
-        public static final int launcherDirection = 1;
-        public static final int launcherSpeedSet = 3600;
-        public static final double manHoodSpeed = 0.01;
+        public static final int launcherSpeedTolerances = 75;
+        public static final double hoodTolerance = 0.01;
+        public static final int drumIdleSpeed = 2000;
 
         // ADD 10 FOR DIO ON MORE BOARD
         public static final int kHoodMotor = 6; // CAN (Talon)
@@ -131,5 +132,17 @@ public final class Constants {
         public static final TalonSRX hoodMotor = new TalonSRX(kHoodMotor);
         public static final DutyCycleEncoder hoodEncoder = new DutyCycleEncoder(kHoodEncoder);
         public static final DigitalInput hoodLimit = new DigitalInput(kHoodLimit);
+    }
+
+    public static final class ShooterData {
+        /*
+        The distance MUST be greater at higher indexes, and by GOD 
+        don't make neighboring distance values the same, or Java
+        Satan himself will reject you to be abandoned in the Endless Sea
+        of DBZ, aboard a raft equipped with nothing but a Chromebook.
+        */
+        public static final double[] distances = {4.06,5.03,5.97};
+        public static final int[] drumSpeeds = {3500,3600,3950};
+        public static final double[] hoodPositions = {0.1,0.1,0.1};
     }
 }

@@ -6,6 +6,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import frc.robot.commands.ballmovement.DirectInputFire;
 import frc.robot.commands.ballmovement.M_TeleOp;
 import frc.robot.commands.drive.*;
 import frc.robot.subsystems.BallMovementSubsystem;
@@ -33,23 +36,25 @@ public class RobotContainer {
   public static final Joystick manipulatorController = new Joystick(1);
 
   // The robot's subsystems and commands are defined here...
+  public final ShuffleboardTab sbTab = Shuffleboard.getTab("The One Tab to Rule Them All");
+  public final ShuffleboardTab aTab = Shuffleboard.getTab("AutoTab");
   public final DriveSubsystem driveSubsystem = new DriveSubsystem();
-  public final BallMovementSubsystem ballMovementSS = new BallMovementSubsystem();
+  public final BallMovementSubsystem ballMovementSS = new BallMovementSubsystem(sbTab);
   public final LLSubsystem limeLightSubsystemHoop = new LLSubsystem("limelight",LimeLightConstants.targetHeightHoop,LimeLightConstants.camEleAngleHoop,LimeLightConstants.camHeightHoop);
   public final LLSubsystem limeLightSubsystemBall = new LLSubsystem("limelight-ball",LimeLightConstants.targetHeightBall,LimeLightConstants.camEleAngleBall,LimeLightConstants.camHeightBall);
-  public final D_TeleOp teleOpD = new D_TeleOp(driveSubsystem, limeLightSubsystemHoop, limeLightSubsystemBall);
-  public final M_TeleOp teleOpM = new M_TeleOp(ballMovementSS);
+  public final D_TeleOp teleOpD = new D_TeleOp(driveSubsystem, limeLightSubsystemHoop, limeLightSubsystemBall, sbTab);
+  public final DirectInputFire autoCommand = new DirectInputFire(ballMovementSS, aTab, 3300, 0.07);
+  //public final M_TeleOp teleOpM;
 
   /**
    * The container for the robot. Contains subsystems, IO devices, and commands.
    */
   public RobotContainer() {
     // Configure the button bindings
+    //teleOpM = new M_TeleOp(ballMovementSS, sbTab, teleOpD);
     configureButtonBindings();
-    // configure default commands
-
-     // configure default commands
     driveSubsystem.setDefaultCommand(teleOpD);
+    //ballMovementSS.setDefaultCommand(teleOpM);
   }
   /**
    * Use this method to define your button->command mappings. Buttons can be
@@ -69,11 +74,10 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return null;
+    return autoCommand;
   }
 
-
-  public ParallelCommandGroup getTeleOpCommands() {
-    return new ParallelCommandGroup(teleOpD,teleOpM);
+  public Command getTeleOpCommands() {
+    return teleOpD;//new ParallelCommandGroup(teleOpD,teleOpM);
   }
 }

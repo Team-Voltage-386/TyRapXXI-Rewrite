@@ -9,13 +9,11 @@ import frc.robot.Constants.LimeLightConstants;
 public class LLSubsystem extends SubsystemBase {
   public NetworkTable _nt;
   /**Whether or not the LL should wait before declaring target loss to see if it will come back*/
-  public Boolean targetLostWait = false;
+  public Boolean targetLostWait = true;
   public Boolean dMode = false;
   public Boolean targetFound = false;
-  public float tx;
-  public float ty;
-  public float ta;
-  public float ts;
+  public float tx = 0;
+  public float ty = 0;
   private final double _TH;
   private final double _MA;
   private final double _MH;
@@ -45,8 +43,6 @@ public class LLSubsystem extends SubsystemBase {
         timer.start();
         tx = (float)_nt.getEntry("tx").getDouble(0);
         ty = (float)_nt.getEntry("ty").getDouble(0);
-        ta = (float)_nt.getEntry("ta").getDouble(0);
-        ts = (float)_nt.getEntry("ts").getDouble(0);
     }
   }
 
@@ -65,8 +61,11 @@ public class LLSubsystem extends SubsystemBase {
       else _nt.getEntry("camMode").setNumber(0);
   }
 
-  /**Returns the meters to the target given a the target's height from the ground
-  */
+  public void setPipeLine(Integer p) {
+    _nt.getEntry("pipeline").setNumber(p);
+  }
+
+  /**Returns the meters to the target given the target's height from the ground*/
   public double metersToTarget() {
     return (_TH-_MH)/Math.tan(Math.PI*((_MA+ty)/180));
   }
