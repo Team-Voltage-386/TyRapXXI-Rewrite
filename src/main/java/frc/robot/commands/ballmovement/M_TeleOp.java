@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.BallMovementSubsystem;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import static frc.robot.Constants.ControllerConstants.*;
 import frc.robot.commands.drive.D_TeleOp;
@@ -35,21 +36,17 @@ public class M_TeleOp extends CommandBase {
 
     @Override
     public void initialize() {
+        _bmss.hoodSet = 0.61;
         _bmss.reCalibrate();
     }
 
     @Override
     public void execute() {
-        if(_controller.getRawButtonPressed(kY)) {
-            intakeDeployed = !intakeDeployed;
-            _bmss.deployIntake(intakeDeployed);
-        }
+        _bmss.deployIntake(_controller.getRawButton(kY));
 
+        _bmss.runIntake(_controller.getRawButton(kLeftBumper));
         if (_controller.getRawButtonPressed(kX)) _bmss.autoSF = !_bmss.autoSF;
         if (_controller.getRawButtonPressed(kB)) _bmss.drumIdle = !_bmss.drumIdle;
-
-        if (_controller.getRawButton(kLeftBumper)) _bmss.runIntake(true);
-        else _bmss.runIntake(false);
         if (driver.hoopTargeted) {
             _bmss.setAimDistance(driver._llss.metersToTarget());
             _bmss.drumControllerOn = true;

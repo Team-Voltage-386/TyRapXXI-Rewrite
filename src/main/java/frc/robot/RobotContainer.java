@@ -44,17 +44,17 @@ public class RobotContainer {
   public final LLSubsystem limeLightSubsystemBall = new LLSubsystem("limelight-ball",LimeLightConstants.targetHeightBall,LimeLightConstants.camEleAngleBall,LimeLightConstants.camHeightBall);
   public final D_TeleOp teleOpD = new D_TeleOp(driveSubsystem, limeLightSubsystemHoop, limeLightSubsystemBall, sbTab);
   public final DirectInputFire autoCommand = new DirectInputFire(ballMovementSS, aTab, 3300, 0.07);
-  //public final M_TeleOp teleOpM;
+  public final M_TeleOp teleOpM;
 
   /**
    * The container for the robot. Contains subsystems, IO devices, and commands.
    */
   public RobotContainer() {
     // Configure the button bindings
-    //teleOpM = new M_TeleOp(ballMovementSS, sbTab, teleOpD);
+    teleOpM = new M_TeleOp(ballMovementSS, sbTab, teleOpD);
     configureButtonBindings();
     driveSubsystem.setDefaultCommand(teleOpD);
-    //ballMovementSS.setDefaultCommand(teleOpM);
+    ballMovementSS.setDefaultCommand(teleOpM);
   }
   /**
    * Use this method to define your button->command mappings. Buttons can be
@@ -77,7 +77,7 @@ public class RobotContainer {
     return autoCommand;
   }
 
-  public Command getTeleOpCommands() {
-    return teleOpD;//new ParallelCommandGroup(teleOpD,teleOpM);
+  public ParallelCommandGroup getTeleOpCommands() {
+    return new ParallelCommandGroup(teleOpD,teleOpM);
   }
 }

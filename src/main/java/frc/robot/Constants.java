@@ -50,7 +50,7 @@ public final class Constants {
 
     /**Drive motor CAN bus addresses*/
     public static final class DriveConstants {
-        public static final double kSpeedLimit = 0.5;
+        public static final double kSpeedLimit = 1;
         public static final int kFrontLeft = 4; // CAN (Spark)
         public static final int kFrontRight = 1; // CAN (Spark)
         public static final int kRearLeft = 5; // CAN (Spark)
@@ -113,7 +113,7 @@ public final class Constants {
         public static final ColorSensorV3 feederSensor = new ColorSensorV3(I2C.Port.kMXP);
 
         public static final int kEntranceProximityThreshold = 100;
-        public static final int kFeederProximityThreshold = 150;
+        public static final int kFeederProximityThreshold = 110;
 
         public static final double serializerPower = 0.8;
         public static final double intakePower = 1;
@@ -121,6 +121,8 @@ public final class Constants {
         public static final int launcherSpeedTolerances = 75;
         public static final double hoodTolerance = 0.01;
         public static final int drumIdleSpeed = 2000;
+
+        public static final double manHoodSpeed = 0.05;
 
         // ADD 10 FOR DIO ON MORE BOARD
         public static final int kHoodMotor = 6; // CAN (Talon)
