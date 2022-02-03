@@ -29,6 +29,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 
+import java.lang.Math;
+
 public class DriveSubsystem extends SubsystemBase {
 
         // initialize motors and drivetrain
@@ -92,10 +94,12 @@ public class DriveSubsystem extends SubsystemBase {
                 rearRightMotor.follow(frontRightMotor);
 
                 _pigeon = new PigeonIMU(kGyro);
-                odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(ypr[0]));
+                odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
                 // rotations to meters
                 leftEncoder.setPositionConversionFactor(kPositionFactor);
                 rightEncoder.setPositionConversionFactor(kPositionFactor);
+
+                resetEncoders();
 
         }
 
@@ -105,7 +109,8 @@ public class DriveSubsystem extends SubsystemBase {
                 _pigeon.getGeneralStatus(genStatus);
 
                 _pigeon.getYawPitchRoll(ypr);
-                System.out.println("Yaw:" + ypr[0]);
+                System.out.println("Yaw:" + getYaw());
+                System.out.println("Heading:" + getHeading());
 
                 // Update output widgets
                 frontLeftOutputWidget.setDouble(frontLeftMotor.get());
@@ -129,6 +134,9 @@ public class DriveSubsystem extends SubsystemBase {
                 leftEncoderWidget.setDouble(leftEncoder.getPosition());
                 rightEncoderWidget.setDouble(rightEncoder.getPosition());
 
+                odometry.update(Rotation2d.fromDegrees(getHeading()), leftEncoder.getPosition(),
+                                rightEncoder.getPosition());
+
         }
 
         // arcade drive method to be called by commands
@@ -141,8 +149,99 @@ public class DriveSubsystem extends SubsystemBase {
                 driveTrain.tankDrive(leftPower, rightPower);
         }
 
+        public double getYaw() {
+                return ypr[0];
+        }
+
+        public double getHeading() {
+                return Math.IEEEremainder(getYaw(), 360.0);
+        }
+
         public void resetEncoders() {
                 leftEncoder.setPosition(0.0);
+                rightEncoder.setPosition(0.0);
+        }
+
+        /**
+         * Returns the currently-estimated pose of the robot.
+         *
+         * @return The pose.
+         */
+        public Pose2d getPose() {
+                return odometry.getPoseMeters();
+        }
+
+        /**
+         * Resets the odometry to the specified pose.
+         *
+         * @param pose The pose to which to set the odometry.
+         */
+        public void resetOdometry(Pose2d pose) {
+                resetEncoders();
+                odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
+        }
+
+        /**
+         * Returns the current wheel speeds of the robot.
+         *
+         * @return The current wheel speeds.
+         */
+        public DifferentialDriveWheelSpeeds getDifferentialDriveWheelSpeeds() {
+                return new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity(), rightEncoder.getVelocity());
+        }
+
+        /**
+         * Controls the left and right sides of the drive directly with voltages.
+         *
+         * @param leftVolts  the commanded left output
+         * @param rightVolts the commanded right output
+         */
+        public void tankDriveVolts(double leftVolts, double rightVolts) {
+                frontLeftMotor.setVoltage(leftVolts);
+                frontRightMotor.setVoltage(rightVolts);
+                driveTrain.feed();
+        }
+
+        /**
+         * Gets the average distance of the two encoders.
+         *
+         * @return the average of the two encoder readings
+         */
+        public double getAverageEncoderDistance() {
+                return (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2.0;
+        }
+
+        /**
+         * Gets the left drive encoder.
+         *
+         * @return the left drive encoder
+         */
+        public RelativeEncoder getLeftEncoder() {
+                return leftEncoder;
+        }
+
+        /**
+         * Gets the right drive encoder.
+         *
+         * @return the right drive encoder
+         */
+        public RelativeEncoder getRightEncoder() {
+                return rightEncoder;
+        }
+
+        /**
+         * Sets the max output of the drive. Useful for scaling the drive to drive more
+         * slowly.
+         *
+         * @param maxOutput the maximum output to which the drive will be constrained
+         */
+        public void setMaxOutput(double maxOutput) {
+                driveTrain.setMaxOutput(maxOutput);
+        }
+
+        /** Zeroes the heading of the robot. */
+        public void zeroHeading() {
+                _pigeon.setYaw(0.0);
         }
 
         @Override
