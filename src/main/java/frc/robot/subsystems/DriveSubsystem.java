@@ -83,11 +83,6 @@ public class DriveSubsystem extends SubsystemBase {
 
         public DriveSubsystem() {
                 // drivetrain
-                frontLeftMotor.restoreFactoryDefaults();
-                frontRightMotor.restoreFactoryDefaults();
-                rearLeftMotor.restoreFactoryDefaults();
-                rearRightMotor.restoreFactoryDefaults();
-
                 rearLeftMotor.setInverted(true);
                 frontRightMotor.setInverted(false);
                 frontLeftMotor.follow(rearLeftMotor);// front left yields faulty encoder values so that set follower
@@ -96,8 +91,10 @@ public class DriveSubsystem extends SubsystemBase {
                 _pigeon = new PigeonIMU(kGyro);
                 odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
                 // rotations to meters
-                leftEncoder.setPositionConversionFactor(kPositionFactor);
-                rightEncoder.setPositionConversionFactor(kPositionFactor);
+                leftEncoder.setPositionConversionFactor(kMetersConversionFactor);
+                rightEncoder.setPositionConversionFactor(kMetersConversionFactor);
+                leftEncoder.setVelocityConversionFactor(kMetersConversionFactor / 60);
+                rightEncoder.setVelocityConversionFactor(kMetersConversionFactor / 60);
 
                 resetEncoders();
 
@@ -197,7 +194,7 @@ public class DriveSubsystem extends SubsystemBase {
          * @param rightVolts the commanded right output
          */
         public void tankDriveVolts(double leftVolts, double rightVolts) {
-                frontLeftMotor.setVoltage(leftVolts);
+                rearLeftMotor.setVoltage(leftVolts);
                 frontRightMotor.setVoltage(rightVolts);
                 driveTrain.feed();
         }

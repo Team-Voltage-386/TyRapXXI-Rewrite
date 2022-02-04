@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.Constants.AutonomousConstants;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Translation2d;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.revrobotics.CANSparkMax;
@@ -83,7 +84,7 @@ public class RobotContainer {
   }
 
   public Boolean getTeleopSendableChooser() {
-  return teleopSendableChooser.getSelected();
+    return teleopSendableChooser.getSelected();
   }
 
   /**
@@ -118,10 +119,8 @@ public class RobotContainer {
 
     // make trajectory
     Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(new Pose2d(0, 0, new Rotation2d(0)),
-        List.of(), new Pose2d(1, 0, new Rotation2d(0)), config);
-
-    // reset odometry
-    driveSubSystem.resetOdometry(exampleTrajectory.getInitialPose());
+        List.of(),
+        new Pose2d(0, 3, new Rotation2d(0)), config);
 
     // make Ramsete Command
     RamseteCommand ramseteCommand = new RamseteCommand(exampleTrajectory, driveSubSystem::getPose,
@@ -131,7 +130,7 @@ public class RobotContainer {
         DriveConstants.kDriveKinematics, driveSubSystem::getDifferentialDriveWheelSpeeds,
         new PIDController(AutonomousConstants.kPDriveVel, 0, 0),
         new PIDController(AutonomousConstants.kPDriveVel, 0, 0),
-        driveSubSystem::tankDrive, driveSubSystem);
+        driveSubSystem::tankDriveVolts, driveSubSystem);
 
     // Run path following command, then stop at the end.
     return ramseteCommand.andThen(() -> driveSubSystem.tankDriveVolts(0, 0));
