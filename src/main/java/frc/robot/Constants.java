@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -49,7 +50,10 @@ public final class Constants {
         public static final int kFrontRight = 1; // CAN (Spark)
         public static final int kRearLeft = 5; // CAN (Spark)
         public static final int kRearRight = 3; // CAN (Spark)
-        public static final double kPositionFactor = 0.4788; //meters per rotation
+        public static final double kPositionFactor = 0.4788; // meters per rotation
+        public static final double kTrackWidthMeters = .6024; // Distance between L/R wheels of the robot
+        public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(
+                kTrackWidthMeters);
     }
 
     public static final class BallMovementConstants {
@@ -82,11 +86,12 @@ public final class Constants {
         public static final double kaVoltSecondsSquaredPerMeter = 0.64821;
         public static final double kPDriveVel = 3.9081; // volt m/s
 
-        //reasonable baseline Ramsete follower values in units meters and seconds
+        public static final double kMaxSpeedMetersPerSecond = 3;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+
+        // reasonable baseline Ramsete follower values in units meters and seconds
         public static final double kRamseteB = 2;
         public static final double kRamseteZeta = 0.7;
-
-        public static final double kTrackWidthMeters = .6024; // Distance between L/R wheels of the robot
 
     }
 }

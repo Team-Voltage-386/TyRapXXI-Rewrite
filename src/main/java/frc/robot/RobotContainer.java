@@ -4,6 +4,14 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -13,14 +21,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.ballmovement.ManualBallMovementCommand;
 import frc.robot.commands.drive.*;
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ControllerConstants.*;
 import frc.robot.subsystems.BallMovementSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import frc.robot.Constants.AutonomousConstants;
+import edu.wpi.first.math.controller.PIDController;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import java.util.List;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -64,13 +78,13 @@ public class RobotContainer {
     // configure default commands
     driveSubSystem.setDefaultCommand(manualDriveTankCommand);
 
-     // configure default commands
-     ballMovementSubsystem.setDefaultCommand(ballMovementCommand);
+    // configure default commands
+    ballMovementSubsystem.setDefaultCommand(ballMovementCommand);
   }
 
-  // public Boolean getTeleopSendableChooser() {
-  // return teleopSendableChooser.getSelected();
-  // }
+  public Boolean getTeleopSendableChooser() {
+  return teleopSendableChooser.getSelected();
+  }
 
   /**
    * Use this method to define your button->command mappings. Buttons can be
@@ -90,7 +104,37 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return null;
+
+    // create voltage constraint so we do not go too fast
+    var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
+        new SimpleMotorFeedforward(AutonomousConstants.ksVolts, AutonomousConstants.kvVoltSecondsPerMeter,
+            AutonomousConstants.kaVoltSecondsSquaredPerMeter),
+        DriveConstants.kDriveKinematics, 10.0);
+
+    // create config for trajectory
+    TrajectoryConfig config = new TrajectoryConfig(AutonomousConstants.kMaxSpeedMetersPerSecond,
+        AutonomousConstants.kMaxAccelerationMetersPerSecondSquared).setKinematics(DriveConstants.kDriveKinematics)
+            .addConstraint(autoVoltageConstraint);
+
+    // make trajectory
+    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(new Pose2d(0, 0, new Rotation2d(0)),
+        List.of(), new Pose2d(1, 0, new Rotation2d(0)), config);
+
+    // reset odometry
+    driveSubSystem.resetOdometry(exampleTrajectory.getInitialPose());
+
+    // make Ramsete Command
+    RamseteCommand ramseteCommand = new RamseteCommand(exampleTrajectory, driveSubSystem::getPose,
+        new RamseteController(AutonomousConstants.kRamseteB, AutonomousConstants.kRamseteZeta),
+        new SimpleMotorFeedforward(AutonomousConstants.ksVolts, AutonomousConstants.kvVoltSecondsPerMeter,
+            AutonomousConstants.kaVoltSecondsSquaredPerMeter),
+        DriveConstants.kDriveKinematics, driveSubSystem::getDifferentialDriveWheelSpeeds,
+        new PIDController(AutonomousConstants.kPDriveVel, 0, 0),
+        new PIDController(AutonomousConstants.kPDriveVel, 0, 0),
+        driveSubSystem::tankDrive, driveSubSystem);
+
+    // Run path following command, then stop at the end.
+    return ramseteCommand.andThen(() -> driveSubSystem.tankDriveVolts(0, 0));
   }
 
   public Command getManualDriveCommand() {
