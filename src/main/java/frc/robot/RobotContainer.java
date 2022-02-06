@@ -38,12 +38,12 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final ShuffleboardTab sbTab = Shuffleboard.getTab("The One Tab to Rule Them All");
   public final ShuffleboardTab aTab = Shuffleboard.getTab("AutoTab");
-  public final DriveSubsystem driveSubsystem = new DriveSubsystem();
+  public final DriveSubsystem driveSubsystem;
   public final BallMovementSubsystem ballMovementSS = new BallMovementSubsystem(sbTab);
   public final LLSubsystem limeLightSubsystemHoop = new LLSubsystem("limelight",LimeLightConstants.targetHeightHoop,LimeLightConstants.camEleAngleHoop,LimeLightConstants.camHeightHoop);
   public final LLSubsystem limeLightSubsystemBall = new LLSubsystem("limelight-ball",LimeLightConstants.targetHeightBall,LimeLightConstants.camEleAngleBall,LimeLightConstants.camHeightBall);
-  public final D_TeleOp teleOpD = new D_TeleOp(driveSubsystem, limeLightSubsystemHoop, limeLightSubsystemBall, sbTab);
-  public final DirectInputFire autoCommand = new DirectInputFire(ballMovementSS, aTab, 3300, 0.07);
+  public final D_TeleOp teleOpD;
+  public final LinearDrive autoCommand;
   public final M_TeleOp teleOpM;
 
   /**
@@ -51,7 +51,10 @@ public class RobotContainer {
    */
   public RobotContainer() {
     // Configure the button bindings
+    driveSubsystem = new DriveSubsystem(aTab);
+    teleOpD = new D_TeleOp(driveSubsystem, limeLightSubsystemHoop, limeLightSubsystemBall, sbTab);
     teleOpM = new M_TeleOp(ballMovementSS, sbTab, teleOpD);
+    autoCommand = new LinearDrive(driveSubsystem, aTab, 5);
     configureButtonBindings();
     driveSubsystem.setDefaultCommand(teleOpD);
     ballMovementSS.setDefaultCommand(teleOpM);

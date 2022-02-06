@@ -1,8 +1,6 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Robot;
-
 import static frc.robot.Constants.BallMovementConstants.*;
 import frc.robot.Constants.ShooterData;
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -13,7 +11,6 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 import com.revrobotics.CANSparkMax;
@@ -184,13 +181,8 @@ public class BallMovementSubsystem extends SubsystemBase {
             }
         }
 
-        if (!feed && autoSF) {
-            runSerializer(true);
-            runFeedSlow(true);
-        } else if (autoSF) {
-            runSerializer(false);
-            runFeeder(false);
-        }
+        runSerializer(!feed && autoSF);
+        runFeedSlow(!feed && autoSF);
 
         drumCurrentSpeed = launcherLeadMotor.getEncoder().getVelocity();
         hpWidget.setDouble(hoodPosition);

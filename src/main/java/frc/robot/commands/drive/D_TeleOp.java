@@ -24,7 +24,7 @@ public class D_TeleOp extends CommandBase {
   public final LLSubsystem _llss;
   private final LLSubsystem _llssb;
   private final Joystick _controller;
-  private final PIDController pid = new PIDController(pidConstants.LLP, pidConstants.LLI, pidConstants.LLD);
+  private final PIDController pid = new PIDController(pidConstants.TP, pidConstants.TI, pidConstants.TD);
   private Boolean llaa = false;
   private Boolean llcb = false;
   private double rootForward, rootTurn;
@@ -98,12 +98,12 @@ public class D_TeleOp extends CommandBase {
       } else {
         hl = false;
         if (_controller.getRawButtonPressed(kLeftBumper)) pid.reset();
-        if (_llss.targetFound) rootTurn = MathUtil.clamp(pid.calculate(_llss.tx, 0), -1*pidConstants.LLC, pidConstants.LLC); // clamps the pid output to prevent murderbot
+        if (_llss.targetFound) rootTurn = MathUtil.clamp(pid.calculate(_llss.tx, 0), -1*pidConstants.TC, pidConstants.TC); // clamps the pid output to prevent murderbot
       }
     } else if (llcb && _llssb.targetFound) {
       bf = true;
       if (_controller.getRawButtonPressed(kRightJoystickPressed)) pid.reset();
-      rootTurn = MathUtil.clamp(pid.calculate(_llssb.tx, 0), -1*pidConstants.LLC, pidConstants.LLC);
+      rootTurn = MathUtil.clamp(pid.calculate(_llssb.tx, 0), -1*pidConstants.TC, pidConstants.TC);
     } else {
       rootTurn = -1 * RobotContainer.driverController.getRawAxis(kRightHorizontal); // else get turn from remote
     }

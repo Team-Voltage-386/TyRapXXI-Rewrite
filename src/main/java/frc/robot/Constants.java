@@ -55,17 +55,22 @@ public final class Constants {
         public static final int kFrontRight = 1; // CAN (Spark)
         public static final int kRearLeft = 5; // CAN (Spark)
         public static final int kRearRight = 3; // CAN (Spark)
-        public static final double kMPR = 0.4788;
+        public static final double kMPR = 0.0437;
         public static final TalonSRX kGyro = new TalonSRX(BallMovementConstants.kFeeder);
     }
 
     /**PID paramaters*/
     public static final class pidConstants {
         // LimeLight arcade drive pid constants:
-        public static final double LLP = 0.04; // P
-        public static final double LLI = 0.025;  // I
-        public static final double LLD = 0.001; // D
-        public static final double LLC = 0.5; // Clamp
+        public static final double TP = 0.043; // P
+        public static final double TI = 0.027;  // I
+        public static final double TD = 0.001; // D
+        public static final double TC = 0.6; // Clamp
+
+        public static final double DP = 0.05;
+        public static final double DI = 0.05;
+        public static final double DD = 0.15;
+        public static final double DC = 1;
 
         public static final double LLPB = 0.04; // P
         public static final double LLIB = 0.001;  // I
