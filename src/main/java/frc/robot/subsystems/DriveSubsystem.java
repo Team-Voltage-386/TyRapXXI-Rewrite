@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 import static frc.robot.Constants.DriveConstants.*;
 
@@ -11,11 +13,18 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.networktables.NetworkTableEntry;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class DriveSubsystem extends SubsystemBase {
+
+        private final ShuffleboardTab _tab = Shuffleboard.getTab("DriveSubsystem");
+        private final NetworkTableEntry xWidget = _tab.add("X_Pos",0).withPosition(0, 0).withSize(1, 1).getEntry();
+        private final NetworkTableEntry yWidget = _tab.add("Y_Pos",0).withPosition(1, 0).withSize(1, 1).getEntry();
+        private final NetworkTableEntry rhWidget = _tab.add("Raw_Heading",0).withPosition(0, 1).withSize(1, 1).getEntry();
+        private final NetworkTableEntry ohWidget = _tab.add("Odom_Heading",0).withPosition(1, 1).withSize(1, 1).getEntry();
 
         // initialize motors and drivetrain
         private final CANSparkMax frontLeftMotor = new CANSparkMax(Constants.DriveConstants.kFrontLeft,MotorType.kBrushless);
@@ -39,7 +48,7 @@ public class DriveSubsystem extends SubsystemBase {
         public DriveSubsystem() {
                 rearLeftMotor.setInverted(true);
                 frontRightMotor.setInverted(false);
-                frontLeftMotor.follow(rearLeftMotor);// front left yields faulty encoder values so that set follower
+                frontLeftMotor.follow(rearLeftMotor);
                 rearRightMotor.follow(frontRightMotor);
                 leftEncoder.setPositionConversionFactor(kMPR);
                 rightEncoder.setPositionConversionFactor(kMPR);
@@ -48,10 +57,18 @@ public class DriveSubsystem extends SubsystemBase {
                 resetOdometery(new Pose2d(new Translation2d(0,0), new Rotation2d(0)));
         }
 
+        public void updateWidgets() {
+                xWidget.setDouble(getPose().getX());
+                yWidget.setDouble(getPose().getY());
+                rhWidget.setDouble(getRawHeading());
+                ohWidget.setDouble(getPose().getRotation().getDegrees());
+        }
+
         @Override
         public void periodic() {
                 updateIMU();
                 updateOdometery();
+                updateWidgets();
         }
 
         public Pose2d getPose() {

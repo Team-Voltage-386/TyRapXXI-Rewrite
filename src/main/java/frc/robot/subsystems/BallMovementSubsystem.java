@@ -7,11 +7,9 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -53,17 +51,9 @@ public class BallMovementSubsystem extends SubsystemBase {
     public int drumSP = 0;
     public Boolean autoSF = false;
 
-    private final ShuffleboardTab _tab;
-    private final NetworkTableEntry hpWidget;
-    private final NetworkTableEntry hsWidget;
-    private final NetworkTableEntry dSWidget;
 
     /**Creates a BallMovementSubsystem*/
-    public BallMovementSubsystem(ShuffleboardTab t) {
-        _tab = t;
-        hpWidget = _tab.add("HoodPosition",0).withSize(1, 1).withPosition(0, 0).getEntry();
-        hsWidget = _tab.add("HoodSet",0).withSize(1,1).withPosition(1, 0).getEntry();
-        dSWidget = _tab.add("DrumSpeed",0).withSize(2,1).withPosition(3, 3).getEntry();
+    public BallMovementSubsystem() {
         pidL.reset();
         pidL.setTolerance(1,1);
         pidH.reset();
@@ -185,9 +175,6 @@ public class BallMovementSubsystem extends SubsystemBase {
         runFeedSlow(!feed && autoSF);
 
         drumCurrentSpeed = launcherLeadMotor.getEncoder().getVelocity();
-        hpWidget.setDouble(hoodPosition);
-        hsWidget.setDouble(hoodSet);
-        dSWidget.setDouble(drumCurrentSpeed);
         entranceP = entranceSensor.getProximity();
         feederP = feederSensor.getProximity();
         index = !indexerSensor.get();

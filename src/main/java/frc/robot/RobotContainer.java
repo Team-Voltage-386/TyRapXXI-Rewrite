@@ -6,9 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.robot.commands.ballmovement.DirectInputFire;
 import frc.robot.commands.ballmovement.M_TeleOp;
 import frc.robot.commands.drive.*;
 import frc.robot.subsystems.BallMovementSubsystem;
@@ -16,6 +13,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LLSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.LimeLightConstants;
 
 /**
@@ -35,26 +33,23 @@ public class RobotContainer {
   // manipulatorcontroller
   public static final Joystick manipulatorController = new Joystick(1);
 
+  public Boolean hoopTargeted = false;
+  public Boolean hoopLocked = false;
+  public double metersToTarget = 0;
+
   // The robot's subsystems and commands are defined here...
-  public final ShuffleboardTab sbTab = Shuffleboard.getTab("The One Tab to Rule Them All");
-  public final ShuffleboardTab aTab = Shuffleboard.getTab("AutoTab");
-  public final DriveSubsystem driveSubsystem;
-  public final BallMovementSubsystem ballMovementSS = new BallMovementSubsystem(sbTab);
+  public final BallMovementSubsystem ballMovementSS = new BallMovementSubsystem();
   public final LLSubsystem limeLightSubsystemHoop = new LLSubsystem("limelight",LimeLightConstants.targetHeightHoop,LimeLightConstants.camEleAngleHoop,LimeLightConstants.camHeightHoop);
   public final LLSubsystem limeLightSubsystemBall = new LLSubsystem("limelight-ball",LimeLightConstants.targetHeightBall,LimeLightConstants.camEleAngleBall,LimeLightConstants.camHeightBall);
-  public final D_TeleOp teleOpD;
-  public final LinearDrive autoCommand;
-  public final M_TeleOp teleOpM;
+  public final DriveSubsystem driveSubsystem = new DriveSubsystem();
+  public final D_TeleOp teleOpD = new D_TeleOp(driveSubsystem, limeLightSubsystemHoop, limeLightSubsystemBall);
+  public final M_TeleOp teleOpM = new M_TeleOp(ballMovementSS);
 
   /**
    * The container for the robot. Contains subsystems, IO devices, and commands.
    */
   public RobotContainer() {
     // Configure the button bindings
-    driveSubsystem = new DriveSubsystem(aTab);
-    teleOpD = new D_TeleOp(driveSubsystem, limeLightSubsystemHoop, limeLightSubsystemBall, sbTab);
-    teleOpM = new M_TeleOp(ballMovementSS, sbTab, teleOpD);
-    autoCommand = new LinearDrive(driveSubsystem, aTab, 5);
     configureButtonBindings();
     driveSubsystem.setDefaultCommand(teleOpD);
     ballMovementSS.setDefaultCommand(teleOpM);
@@ -77,7 +72,13 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return autoCommand;
+    return new SequentialCommandGroup(  new LinearDrive(driveSubsystem, 1, 0, true),
+                                        new StationaryTurn(driveSubsystem, -170, true),
+                                        new StationaryTurn(driveSubsystem, -78, true),
+                                        new LinearDrive(driveSubsystem, 2.65, 0, true),
+                                        new StationaryTurn(driveSubsystem, -37, true),
+                                        new LinearDrive(driveSubsystem, 3.5, 0, true),
+                                        new StationaryTurn(driveSubsystem, 167.5, true));
   }
 
   public ParallelCommandGroup getTeleOpCommands() {

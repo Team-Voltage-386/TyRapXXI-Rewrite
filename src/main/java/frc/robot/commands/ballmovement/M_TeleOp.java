@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.BallMovementSubsystem;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import static frc.robot.Constants.ControllerConstants.*;
 import frc.robot.commands.drive.D_TeleOp;
@@ -17,21 +18,15 @@ public class M_TeleOp extends CommandBase {
     private final BallMovementSubsystem _bmss;
     private final Joystick _controller;
     private Boolean intakeDeployed = false;
-    private final D_TeleOp driver;
-    private final ShuffleboardTab _tab;
-    private final NetworkTableEntry rtfWidget;
     
 
     /**Manipulator TeleOp Command*/
-    public M_TeleOp(BallMovementSubsystem BMSS, ShuffleboardTab t,D_TeleOp d) {
-        _tab = t;
-        rtfWidget = _tab.add("Ready To Fire",false).withSize(1,2).withPosition(3,0).getEntry();
+    public M_TeleOp(BallMovementSubsystem BMSS) {
         _bmss = BMSS;
         _bmss.reCalibrate();
         _controller = RobotContainer.manipulatorController;
         addRequirements(_bmss);
         _bmss.stop();
-        driver = d;
     }
 
     @Override
@@ -42,31 +37,31 @@ public class M_TeleOp extends CommandBase {
 
     @Override
     public void execute() {
-        _bmss.deployIntake(_controller.getRawButton(kY));
+        if (_controller.getRawButtonPressed(kY)) {
+            intakeDeployed = !intakeDeployed;
+            _bmss.deployIntake(intakeDeployed);
+        }
 
         _bmss.runIntake(_controller.getRawButton(kLeftBumper));
         if (_controller.getRawButtonPressed(kX)) _bmss.autoSF = !_bmss.autoSF;
         if (_controller.getRawButtonPressed(kB)) _bmss.drumIdle = !_bmss.drumIdle;
-        if (driver.hoopTargeted) {
-            _bmss.setAimDistance(driver._llss.metersToTarget());
+        if (Robot.m_robotContainer.hoopTargeted) {
+            _bmss.setAimDistance(Robot.m_robotContainer.metersToTarget);
             _bmss.drumControllerOn = true;
-            if (driver.hoopLocked && _bmss.RTF()){
+            if (Robot.m_robotContainer.hoopLocked && _bmss.RTF()){
                 if(_controller.getRawButton(kA)) _bmss.runFeeder(true);
                 else {
                     _bmss.runFeeder(false);
                     _controller.setRumble(RumbleType.kRightRumble,0.5);
-                    rtfWidget.setBoolean(true);
                 }
             } else {
                 _bmss.runFeeder(false);
                 _controller.setRumble(RumbleType.kRightRumble,0);
-                rtfWidget.setBoolean(false);
             }
         } else {
             _bmss.drumControllerOn = false;
             _bmss.runFeeder(false);
             _controller.setRumble(RumbleType.kRightRumble,0);
-            rtfWidget.setBoolean(false);
         }
     }
 

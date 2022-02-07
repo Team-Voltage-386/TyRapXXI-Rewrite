@@ -16,9 +16,14 @@ public class LinearDrive extends CommandBase {
     private double headingHold = 0;
     private double distanceFromStart = 0;
     private final double targetDistance;
+    private final Boolean angRel;
     
-
-    public LinearDrive(DriveSubsystem DSS,double distance) {
+    /**@param angle angle set
+     * @param rel if true, angle set is relative
+    */
+    public LinearDrive(DriveSubsystem DSS,double distance,double angle,Boolean rel) {
+        angRel = rel;
+        headingHold = angle;
         targetDistance = distance;
         _dss = DSS;
         addRequirements(_dss);
@@ -29,13 +34,17 @@ public class LinearDrive extends CommandBase {
         pidt.reset();
         pidd.reset();
         startPose = _dss.getPose();
-        headingHold = startPose.getRotation().getDegrees();
+        if (angRel) {
+            headingHold += startPose.getRotation().getDegrees();
+            while (headingHold > 360) headingHold -= 360;
+            while (headingHold < 0) headingHold += 360;
+        }
     } 
 
     @Override
     public void execute() {
         distanceFromStart = startPose.getTranslation().getDistance(_dss.getPose().getTranslation());
-        _dss.arcadeDrive(MathUtil.clamp(pidd.calculate(distanceFromStart,targetDistance),-1*DC,DC), MathUtil.clamp(pidt.calculate(_dss.getHeadingError(headingHold),0), -1*TC,TC));
+        _dss.arcadeDrive(-1*MathUtil.clamp(pidd.calculate(distanceFromStart,targetDistance),-1*DC,DC), MathUtil.clamp(pidt.calculate(_dss.getHeadingError(headingHold),0), -1*TC,TC));
     }
 
     @Override
