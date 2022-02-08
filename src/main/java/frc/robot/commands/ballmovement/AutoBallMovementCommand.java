@@ -69,6 +69,8 @@ public class AutoBallMovementCommand extends CommandBase {
       }
     } else {
       if (subsystem.getIndexerSensor() == false && subsystem.getFeederSensor() == true) {
+        subsystem.runSerializerMotor(1); 
+        subsystem.runFeeder(1);
         // make serializer and feeder (motor) run
       } else if (subsystem.getEntranceSensor() == false && subsystem.getIndexerSensor() == false
           && subsystem.getFeederSensor() == false) {
@@ -77,13 +79,17 @@ public class AutoBallMovementCommand extends CommandBase {
           && subsystem.getFeederSensor() == true) {
         motorTimer.start();
         if (motorTimer.get() <= 1) {
+
           // run serializer for short period of time to have all balls in serializer
           // dont actually know how long  it should take, assuming 1 second for ability to test code
         }
       } else if (subsystem.getEntranceSensor() == true) {
+        subsystem.runSerializerMotor(1);
         // make serializer run
       } else { // entrance senor is false
+        subsystem.runSerializerMotor(0);
         // make serializer false
+        //not sure if power 0 will make serializer motor stop running
       }
     }
   }
