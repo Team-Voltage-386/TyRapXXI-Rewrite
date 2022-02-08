@@ -76,7 +76,7 @@ public class AutoBallMovementCommand extends CommandBase {
         motorTimer.start();
         if (motorTimer.get() <= 1) {
           // run serializer for short period of time to have all balls in serializer
-          // dont actually know how long  it should take, assuming 1 second   for ability to test code
+          // dont actually know how long  it should take, assuming 1 second for ability to test code
         }
       } else if (subsystem.getEntranceSensor() == true) {
         // make serializer run
