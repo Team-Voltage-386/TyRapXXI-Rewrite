@@ -55,11 +55,13 @@ public class AutoBallMovementCommand extends CommandBase {
     boolean launch = false;
     if (RobotContainer.manipulatorController.getRawButtonPressed(kB) == true) {
       launch = true;
-      overallMotorTimer.start();
+      overallMotorTimer.start(); 
       if (overallMotorTimer.get() <= 5) { // dont actually know what the set time set is, assuming 5 seconds for ability to test code 
         // run feeder motor and serializer motor for set time to shoot 3 balls
+        // the run function for the motor's parameter is power
+        // power is from -1.0 (for reverse) to 1.0 (for forward)
       } else {
-        // stop running feeder and serializer
+        // stop running feeder and serializer 
       }
     } else if (launch == true) {
       if (overallMotorTimer.get() <= 5) {
