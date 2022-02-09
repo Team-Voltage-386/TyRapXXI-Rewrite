@@ -106,8 +106,8 @@ public class DriveSubsystem extends SubsystemBase {
                 _pigeon.getGeneralStatus(genStatus);
 
                 _pigeon.getYawPitchRoll(ypr);
-                System.out.println("Yaw:" + getYaw());
-                System.out.println("Heading:" + getHeading());
+                // System.out.println("Yaw:" + getYaw());
+                // System.out.println("Heading:" + getHeading());
 
                 // Update output widgets
                 frontLeftOutputWidget.setDouble(frontLeftMotor.get());

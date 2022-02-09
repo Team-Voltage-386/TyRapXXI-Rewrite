@@ -56,8 +56,10 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem driveSubSystem = new DriveSubsystem();
-  private final BallMovementSubsystem ballMovementSubsystem = new BallMovementSubsystem();
-  private final ManualBallMovementCommand ballMovementCommand = new ManualBallMovementCommand(ballMovementSubsystem);
+  // private final BallMovementSubsystem ballMovementSubsystem = new
+  // BallMovementSubsystem();
+  // private final ManualBallMovementCommand ballMovementCommand = new
+  // ManualBallMovementCommand(ballMovementSubsystem);
 
   // Sendable chooser declarations
   // Shuffleboard declarations
@@ -80,7 +82,7 @@ public class RobotContainer {
     driveSubSystem.setDefaultCommand(manualDriveTankCommand);
 
     // configure default commands
-    ballMovementSubsystem.setDefaultCommand(ballMovementCommand);
+    // ballMovementSubsystem.setDefaultCommand(ballMovementCommand);
   }
 
   public Boolean getTeleopSendableChooser() {
@@ -114,13 +116,16 @@ public class RobotContainer {
 
     // create config for trajectory
     TrajectoryConfig config = new TrajectoryConfig(AutonomousConstants.kMaxSpeedMetersPerSecond,
-        AutonomousConstants.kMaxAccelerationMetersPerSecondSquared).setKinematics(DriveConstants.kDriveKinematics)
-            .addConstraint(autoVoltageConstraint);
+        AutonomousConstants.kMaxAccelerationMetersPerSecondSquared).setKinematics(DriveConstants.kDriveKinematics);
 
     // make trajectory
-    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(new Pose2d(0, 0, new Rotation2d(0)),
-        List.of(),
-        new Pose2d(0, 3, new Rotation2d(0)), config);
+    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(// Start at the origin facing the +X direction
+        new Pose2d(0, 0, new Rotation2d(0)),
+        // Pass through these two interior waypoints, making an 's' curve path
+        List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+        // End 3 meters straight ahead of where we started, facing forward
+        new Pose2d(3, 0, new Rotation2d(0)),
+        config);
 
     // make Ramsete Command
     RamseteCommand ramseteCommand = new RamseteCommand(exampleTrajectory, driveSubSystem::getPose,
@@ -128,9 +133,12 @@ public class RobotContainer {
         new SimpleMotorFeedforward(AutonomousConstants.ksVolts, AutonomousConstants.kvVoltSecondsPerMeter,
             AutonomousConstants.kaVoltSecondsSquaredPerMeter),
         DriveConstants.kDriveKinematics, driveSubSystem::getDifferentialDriveWheelSpeeds,
-        new PIDController(AutonomousConstants.kPDriveVel, 0, 0),
-        new PIDController(AutonomousConstants.kPDriveVel, 0, 0),
+        new PIDController(AutonomousConstants.kPDriveVel, AutonomousConstants.kPDriveI, AutonomousConstants.kPDriveD),
+        new PIDController(AutonomousConstants.kPDriveVel, AutonomousConstants.kPDriveI, AutonomousConstants.kPDriveD),
         driveSubSystem::tankDriveVolts, driveSubSystem);
+
+    // reset odometry to starting pose
+    driveSubSystem.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
 
     // Run path following command, then stop at the end.
     return ramseteCommand.andThen(() -> driveSubSystem.tankDriveVolts(0, 0));
