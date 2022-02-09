@@ -57,38 +57,33 @@ public class AutoBallMovementCommand extends CommandBase {
       launch = true;
       overallMotorTimer.start(); 
       if (overallMotorTimer.get() <= 5) { // dont actually know what the set time set is, assuming 5 seconds for ability to test code 
-        // run feeder motor and serializer motor for set time to shoot 3 balls
-        // the run function for the motor's parameter is power
+        subsystem.runFeeder(1);// run feeder motor and serializer motor for set time to shoot 3 balls
+        subsystem.runSerializerMotor(1);// the run function for the motor's parameter is power
         // power is from -1.0 (for reverse) to 1.0 (for forward)
       } else {
         // stop running feeder and serializer 
       }
     } else if (launch == true) {
       if (overallMotorTimer.get() <= 5) {
-        // continue running feeder and serializer motor for the set amount of time
+        subsystem.runSerializerMotor(1); // continue running feeder and serializer motor for the set amount of time (assuming 5 seconds for now)
+        subsystem.runFeeder(1);
       }
     } else {
       if (subsystem.getIndexerSensor() == false && subsystem.getFeederSensor() == true) {
-        subsystem.runSerializerMotor(1); 
-        subsystem.runFeeder(1);
-        // make serializer and feeder (motor) run
-      } else if (subsystem.getEntranceSensor() == false && subsystem.getIndexerSensor() == false
-          && subsystem.getFeederSensor() == false) {
+        subsystem.runSerializerMotor(1); // make serializer and feeder (motor) run
+        subsystem.runFeeder(1); 
+      } else if (subsystem.getEntranceSensor() == false && subsystem.getIndexerSensor() == false && subsystem.getFeederSensor() == false) {
         // do nothing (new)
-      } else if (subsystem.getEntranceSensor() == true && subsystem.getIndexerSensor() == true
-          && subsystem.getFeederSensor() == true) {
+      } else if (subsystem.getEntranceSensor() == true && subsystem.getIndexerSensor() == true && subsystem.getFeederSensor() == true) {
         motorTimer.start();
         if (motorTimer.get() <= 1) {
-
-          // run serializer for short period of time to have all balls in serializer
+          subsystem.runSerializerMotor(1); // run serializer for short period of time to have all balls in serializer
           // dont actually know how long  it should take, assuming 1 second for ability to test code
         }
       } else if (subsystem.getEntranceSensor() == true) {
-        subsystem.runSerializerMotor(1);
-        // make serializer run
+        subsystem.runSerializerMotor(1); // make serializer run
       } else { // entrance senor is false
-        subsystem.runSerializerMotor(0);
-        // make serializer false
+        subsystem.runSerializerMotor(0); // make serializer false
         //not sure if power 0 will make serializer motor stop running
       }
     }
