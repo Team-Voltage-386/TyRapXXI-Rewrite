@@ -11,11 +11,14 @@ import frc.robot.subsystems.BallMovementSubsystem;
 
 import static frc.robot.Constants.ControllerConstants.*;
 
+import javax.lang.model.util.ElementScanner6;
+
 public class ManualBallMovementCommand extends CommandBase {
 
   BallMovementSubsystem subsystem;
 
   protected boolean intakeLatch = false;// intake deployed status
+  protected int intakeState = 0;
 
   /** Creates a new ManualBallMovementCommand. */
   public ManualBallMovementCommand(BallMovementSubsystem subsystem) {
@@ -27,24 +30,38 @@ public class ManualBallMovementCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-      // Set initial state of intake as retracted
-      subsystem.retractIntake();
+    // Set initial state of intake as retracted
+    subsystem.retractIntake();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    /* intake deploy latch switch mode */
-    if (RobotContainer.manipulatorController.getRawButtonPressed(kA)) {
-      intakeLatch = !intakeLatch;
-    }
+    // /* intake deploy latch switch mode */
+    // if (RobotContainer.manipulatorController.getRawButtonPressed(kA)) {
+    // intakeLatch = !intakeLatch;
+    // }
+    // if (intakeLatch) {
+    // subsystem.deployIntake();
+    // } else {
+    // subsystem.retractIntake();
+    // }
 
-    if (intakeLatch) {
-      subsystem.deployIntake();
-    } else {
-      subsystem.retractIntake();
+    if (RobotContainer.manipulatorController.getRawButtonPressed(kA)) {
+      intakeState++;
     }
+    if (intakeState >= 3) {
+      intakeState = 0;
+    }
+    if (intakeState == 1) {
+      subsystem.retractIntake();
+    } else if (intakeState == 0) {
+      subsystem.deployIntake();
+    } else if (intakeState == 2) {
+      subsystem.offIntake();
+    }
+    System.out.println(intakeState);
 
     // Manually run motors with joysticks
     subsystem.runFeeder(RobotContainer.manipulatorController.getRawAxis(kRightVertical));
@@ -56,7 +73,8 @@ public class ManualBallMovementCommand extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override

@@ -56,10 +56,10 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem driveSubSystem = new DriveSubsystem();
-  // private final BallMovementSubsystem ballMovementSubsystem = new
-  // BallMovementSubsystem();
-  // private final ManualBallMovementCommand ballMovementCommand = new
-  // ManualBallMovementCommand(ballMovementSubsystem);
+  private final BallMovementSubsystem ballMovementSubsystem = new
+  BallMovementSubsystem();
+  private final ManualBallMovementCommand ballMovementCommand = new
+  ManualBallMovementCommand(ballMovementSubsystem);
 
   // Sendable chooser declarations
   // Shuffleboard declarations
@@ -76,13 +76,13 @@ public class RobotContainer {
     configureButtonBindings();
 
     // // Instantiate Driver Tab
-    // driverTab = Shuffleboard.getTab("Driver Tab");
+    driverTab = Shuffleboard.getTab("Driver Tab");
 
     // configure default commands
     driveSubSystem.setDefaultCommand(manualDriveTankCommand);
 
     // configure default commands
-    // ballMovementSubsystem.setDefaultCommand(ballMovementCommand);
+    ballMovementSubsystem.setDefaultCommand(ballMovementCommand);
   }
 
   public Boolean getTeleopSendableChooser() {

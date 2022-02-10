@@ -90,6 +90,9 @@ public class BallMovementSubsystem extends SubsystemBase {
       public void deployIntake() {
         ballPickupSolenoid.set(DoubleSolenoid.Value.kReverse);
       }
+      public void offIntake(){
+        ballPickupSolenoid.set(DoubleSolenoid.Value.kOff);
+      }
     
     /**
      * @param power positive = launching direction
