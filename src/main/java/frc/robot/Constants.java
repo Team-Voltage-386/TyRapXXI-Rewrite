@@ -50,10 +50,7 @@ public final class Constants {
         public static final int kFrontRight = 1; // CAN (Spark)
         public static final int kRearLeft = 5; // CAN (Spark)
         public static final int kRearRight = 3; // CAN (Spark)
-        public static final double kMetersConversionFactor = 0.04381; // meters per rotation
-        public static final double kTrackWidthMeters = .6024; // Distance between L/R wheels of the robot
-        public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(
-                kTrackWidthMeters);
+
     }
 
     public static final class BallMovementConstants {
@@ -84,12 +81,12 @@ public final class Constants {
         public static final double kvVoltSecondsPerMeter = 2.7629;
         /** from drive characterization */
         public static final double kaVoltSecondsSquaredPerMeter = 0.64821;
-        // public static final double kPDriveVel = 2.8; // volt m/s
-        // public static final double kPDriveI = 1.5;
-        // public static final double kPDriveD = 0.5;
-        public static final double kPDriveVel = 1.0;
-        public static final double kPDriveI = .25;
-        public static final double kPDriveD = .0;
+        public static final double kPDriveVel = 2.8; // volt m/s
+        public static final double kPDriveI = 1.5;
+        public static final double kPDriveD = 0.5;
+        // public static final double kPDriveVel = 1.0;
+        // public static final double kPDriveI = 0.25;
+        // public static final double kPDriveD = 0.0;
 
         public static final double kMaxSpeedMetersPerSecond = .15;
         public static final double kMaxAccelerationMetersPerSecondSquared = 0.10;
@@ -98,5 +95,9 @@ public final class Constants {
         public static final double kRamseteB = 2;
         public static final double kRamseteZeta = 0.7;
 
+        public static final double kMetersConversionFactor = 0.04381; // meters per rotation
+        public static final double kTrackWidthMeters = .6024; // Distance between L/R wheels of the robot
+        public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(
+                kTrackWidthMeters);
     }
 }
