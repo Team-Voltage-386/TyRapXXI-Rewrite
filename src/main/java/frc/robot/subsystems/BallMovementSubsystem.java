@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.BallMovementConstants.*;
+
+import frc.robot.Robot;
 import frc.robot.Constants.ShooterData;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -53,14 +55,12 @@ public class BallMovementSubsystem extends SubsystemBase {
     public Boolean drumIdle = false;
     private Boolean drumPIDRunning = false;
     public int drumSP = 0;
-    public Boolean autoSF = false;
     public Boolean ejectBall = false;
     private Timer ejectTimer = new Timer();
 
     private ShuffleboardTab tab = Shuffleboard.getTab("test");
-    private NetworkTableEntry ejectWidget = tab.add("eject",false).withPosition(0, 0).withSize(1, 1).getEntry();
-    private NetworkTableEntry feedSWidget = tab.add("feedSensor",false).withPosition(0,1).withSize(1, 1).getEntry();
     private NetworkTableEntry rpmSetWidget = tab.add("setRPM",0).withPosition(0, 2).withSize(1,1).getEntry();
+    private NetworkTableEntry distWidget = tab.add("dist",0).withPosition(1,0).withSize(1, 1).getEntry();
 
 
     /**Creates a BallMovementSubsystem*/
@@ -164,9 +164,9 @@ public class BallMovementSubsystem extends SubsystemBase {
         feed = feederP >= kFeederProximityThreshold;
         entrance = entranceP >= kEntranceProximityThreshold;
 
-        feedSWidget.setBoolean(feed);
-        ejectWidget.setBoolean(ejectBall);
+
         rpmSetWidget.setDouble(drumSP);
+        distWidget.setDouble(Robot.m_robotContainer.metersToTarget);
 
         hoodLowLimit = !hoodLimit.get();
         if (!calibrated) {
@@ -203,9 +203,10 @@ public class BallMovementSubsystem extends SubsystemBase {
                 ejectTimer.start();
             }
         } else if (ejectTimer.hasElapsed(1)) {
-            runFeeder(false);
-            ejectTimer.reset();
             ejectBall = false;
+            runFeeder(false);
+            ejectTimer.stop();
+            ejectTimer.reset();
         }
         
     }
@@ -224,7 +225,6 @@ public class BallMovementSubsystem extends SubsystemBase {
         for (int j = 0; j < ShooterData.distances.length; j++) {
             if (m < ShooterData.distances[j]) {
                 i = j;
-                return;
             }
         }
         double upper = ShooterData.distances[i];
@@ -236,5 +236,6 @@ public class BallMovementSubsystem extends SubsystemBase {
         upper = ShooterData.hoodPositions[i];
         lower = ShooterData.hoodPositions[i-1];
         hoodSet = lower + ((upper-lower)*lerpFactor);
+        
     }
 }

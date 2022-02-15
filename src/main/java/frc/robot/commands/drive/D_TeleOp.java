@@ -67,7 +67,7 @@ public class D_TeleOp extends CommandBase {
   public void execute() {
     rootForward = RobotContainer.driverController.getRawAxis(kLeftVertical);
     Robot.m_robotContainer.metersToTarget = _llss.metersToTarget();
-    
+
     Boolean hl = false;
     Boolean ht = false;
     Boolean bf = false;
@@ -92,6 +92,7 @@ public class D_TeleOp extends CommandBase {
       if (_controller.getRawButtonPressed(kRightJoystickPressed)) pid.reset();
       rootTurn = MathUtil.clamp(pid.calculate(_llssb.tx, 0), -1*pidConstants.TC, pidConstants.TC);
     } else {
+      pid.reset();
       rootTurn = -1 * RobotContainer.driverController.getRawAxis(kRightHorizontal); // else get turn from remote
     }
 
