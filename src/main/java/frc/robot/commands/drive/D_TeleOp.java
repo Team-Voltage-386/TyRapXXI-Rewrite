@@ -66,7 +66,8 @@ public class D_TeleOp extends CommandBase {
   @Override
   public void execute() {
     rootForward = RobotContainer.driverController.getRawAxis(kLeftVertical);
-
+    Robot.m_robotContainer.metersToTarget = _llss.metersToTarget();
+    
     Boolean hl = false;
     Boolean ht = false;
     Boolean bf = false;
@@ -76,7 +77,6 @@ public class D_TeleOp extends CommandBase {
     else if (_controller.getRawButton(kRightJoystickPressed)) {llcb = true; llaa = false;}
     else {llaa = false; llcb = false;}
     if (llaa && _llss.targetFound) {
-      Robot.m_robotContainer.metersToTarget = _llss.metersToTarget();
       ht = true;
       if ((-1 < _llss.tx && _llss.tx < 1)) {
         hl = true;

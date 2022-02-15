@@ -62,9 +62,9 @@ public final class Constants {
     /**PID paramaters*/
     public static final class pidConstants {
         // LimeLight arcade drive pid constants:
-        public static final double TP = 0.05; // P
-        public static final double TI = 0.03;  // I
-        public static final double TD = 0.014; // D
+        public static final double TP = 0.02; // P
+        public static final double TI = 0.005;  // I
+        public static final double TD = 0.001; // D
         public static final double TC = 0.8; // Clamp
 
         public static final double DP = 0.35;
@@ -90,7 +90,7 @@ public final class Constants {
     public static final class LimeLightConstants {
         public static final double camHeightHoop = 0.63;
         public static final double camEleAngleHoop = 12.5;
-        public static final double targetHeightHoop = 2.6416;
+        public static final double targetHeightHoop = 1;//2.6416;
         public static final double camHeightBall = 0.72;
         public static final double camEleAngleBall = -13;
         public static final double targetHeightBall = 0.12065;
@@ -118,7 +118,7 @@ public final class Constants {
         public static final ColorSensorV3 feederSensor = new ColorSensorV3(I2C.Port.kMXP);
 
         public static final int kEntranceProximityThreshold = 100;
-        public static final int kFeederProximityThreshold = 110;
+        public static final int kFeederProximityThreshold = 95;
 
         public static final double serializerPower = 0.8;
         public static final double intakePower = 1;

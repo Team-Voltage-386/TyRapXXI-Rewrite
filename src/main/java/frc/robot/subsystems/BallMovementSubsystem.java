@@ -7,9 +7,13 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -50,6 +54,13 @@ public class BallMovementSubsystem extends SubsystemBase {
     private Boolean drumPIDRunning = false;
     public int drumSP = 0;
     public Boolean autoSF = false;
+    public Boolean ejectBall = false;
+    private Timer ejectTimer = new Timer();
+
+    private ShuffleboardTab tab = Shuffleboard.getTab("test");
+    private NetworkTableEntry ejectWidget = tab.add("eject",false).withPosition(0, 0).withSize(1, 1).getEntry();
+    private NetworkTableEntry feedSWidget = tab.add("feedSensor",false).withPosition(0,1).withSize(1, 1).getEntry();
+    private NetworkTableEntry rpmSetWidget = tab.add("setRPM",0).withPosition(0, 2).withSize(1,1).getEntry();
 
 
     /**Creates a BallMovementSubsystem*/
@@ -97,12 +108,12 @@ public class BallMovementSubsystem extends SubsystemBase {
      */
     public void runFeeder(Boolean on) {
         if (on) feederMotor.set(ControlMode.PercentOutput, feederPower);
-        else feederMotor.set(ControlMode.PercentOutput, 0);
+        else if (!ejectBall) feederMotor.set(ControlMode.PercentOutput, 0);
     }
 
     public void runFeedSlow(Boolean on) {
-        if (on) feederMotor.set(ControlMode.PercentOutput, 0.2);
-        else feederMotor.set(ControlMode.PercentOutput, 0);
+        if (on && !feed) feederMotor.set(ControlMode.PercentOutput, 0.6);
+        else if (!ejectBall) feederMotor.set(ControlMode.PercentOutput, 0);
     }
 
     /** set serializer motor on/off
@@ -145,6 +156,18 @@ public class BallMovementSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+
+        drumCurrentSpeed = launcherLeadMotor.getEncoder().getVelocity();
+        entranceP = entranceSensor.getProximity();
+        feederP = feederSensor.getProximity();
+        index = !indexerSensor.get();
+        feed = feederP >= kFeederProximityThreshold;
+        entrance = entranceP >= kEntranceProximityThreshold;
+
+        feedSWidget.setBoolean(feed);
+        ejectWidget.setBoolean(ejectBall);
+        rpmSetWidget.setDouble(drumSP);
+
         hoodLowLimit = !hoodLimit.get();
         if (!calibrated) {
             hoodMotor.set(ControlMode.PercentOutput, 1);
@@ -171,15 +194,20 @@ public class BallMovementSubsystem extends SubsystemBase {
             }
         }
 
-        runSerializer(!feed && autoSF);
-        runFeedSlow(!feed && autoSF);
-
-        drumCurrentSpeed = launcherLeadMotor.getEncoder().getVelocity();
-        entranceP = entranceSensor.getProximity();
-        feederP = feederSensor.getProximity();
-        index = !indexerSensor.get();
-        feed = feederP >= kFeederProximityThreshold;
-        entrance = entranceP >= kEntranceProximityThreshold;
+        if (ejectBall && !ejectTimer.hasElapsed(1)) {
+            setDrumPower(0.4);
+            if (feed) {
+                runFeeder(true);
+                ejectTimer.stop();
+            } else {
+                ejectTimer.start();
+            }
+        } else if (ejectTimer.hasElapsed(1)) {
+            runFeeder(false);
+            ejectTimer.reset();
+            ejectBall = false;
+        }
+        
     }
 
     public void stop() {

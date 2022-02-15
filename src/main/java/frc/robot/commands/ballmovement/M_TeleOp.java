@@ -31,7 +31,6 @@ public class M_TeleOp extends CommandBase {
 
     @Override
     public void initialize() {
-        _bmss.hoodSet = 0.61;
         _bmss.reCalibrate();
     }
 
@@ -42,12 +41,15 @@ public class M_TeleOp extends CommandBase {
             _bmss.deployIntake(intakeDeployed);
         }
 
+        if (_controller.getRawButtonPressed(kRightBumper)) _bmss.ejectBall = true;
+
         _bmss.runIntake(_controller.getRawButton(kLeftBumper));
-        if (_controller.getRawButtonPressed(kX)) _bmss.autoSF = !_bmss.autoSF;
+        _bmss.runFeedSlow(_controller.getRawButton(kX));
+        _bmss.runSerializer(_controller.getRawButton(kX));
         if (_controller.getRawButtonPressed(kB)) _bmss.drumIdle = !_bmss.drumIdle;
         if (Robot.m_robotContainer.hoopTargeted) {
             _bmss.setAimDistance(Robot.m_robotContainer.metersToTarget);
-            _bmss.drumControllerOn = true;
+            //_bmss.drumControllerOn = true;
             if (Robot.m_robotContainer.hoopLocked && _bmss.RTF()){
                 if(_controller.getRawButton(kA)) _bmss.runFeeder(true);
                 else {
@@ -59,8 +61,8 @@ public class M_TeleOp extends CommandBase {
                 _controller.setRumble(RumbleType.kRightRumble,0);
             }
         } else {
-            _bmss.drumControllerOn = false;
             _bmss.runFeeder(false);
+            _bmss.drumControllerOn = false;
             _controller.setRumble(RumbleType.kRightRumble,0);
         }
     }
