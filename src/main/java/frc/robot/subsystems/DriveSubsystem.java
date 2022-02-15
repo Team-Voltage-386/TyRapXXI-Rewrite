@@ -137,8 +137,8 @@ public class DriveSubsystem extends SubsystemBase {
                 botYWidget.setDouble(getPose().getY());
                 botYawWidget.setDouble(getYaw());
 
-                odometry.update(Rotation2d.fromDegrees(getHeading()), -1 * leftEncoder.getPosition(),
-                                -1 * rightEncoder.getPosition());
+                odometry.update(Rotation2d.fromDegrees(getHeading()), leftEncoder.getPosition(),
+                                rightEncoder.getPosition());
 
         }
 
@@ -245,6 +245,10 @@ public class DriveSubsystem extends SubsystemBase {
         /** Zeroes the heading of the robot. */
         public void zeroHeading() {
                 _pigeon.setYaw(0.0);
+        }
+
+        public void setYaw(double angle){
+                _pigeon.setYaw(angle);
         }
 
         @Override

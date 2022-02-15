@@ -61,7 +61,7 @@ public class ManualBallMovementCommand extends CommandBase {
     } else if (intakeState == 2) {
       subsystem.offIntake();
     }
-    System.out.println(intakeState);
+    // System.out.println(intakeState);
 
     // Manually run motors with joysticks
     subsystem.runFeeder(RobotContainer.manipulatorController.getRawAxis(kRightVertical));

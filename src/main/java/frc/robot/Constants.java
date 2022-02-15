@@ -87,12 +87,12 @@ public final class Constants {
         // public static final double kPDriveVel = 2.8; // volt m/s
         // public static final double kPDriveI = 1.5;
         // public static final double kPDriveD = 0.5;
-        public static final double kPDriveVel = 3.2;
-        public static final double kPDriveI = 1.5;
-        public static final double kPDriveD = 0.5;
+        public static final double kPDriveVel = 1.0;
+        public static final double kPDriveI = .25;
+        public static final double kPDriveD = .0;
 
-        public static final double kMaxSpeedMetersPerSecond = 0.25;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 0.25;
+        public static final double kMaxSpeedMetersPerSecond = .15;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 0.10;
 
         // reasonable baseline Ramsete follower values in units meters and seconds
         public static final double kRamseteB = 2;
