@@ -56,17 +56,15 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem driveSubSystem = new DriveSubsystem();
-  private final BallMovementSubsystem ballMovementSubsystem = new
-  BallMovementSubsystem();
-  private final ManualBallMovementCommand ballMovementCommand = new
-  ManualBallMovementCommand(ballMovementSubsystem);
+  private final BallMovementSubsystem ballMovementSubsystem = new BallMovementSubsystem();
+  private final ManualBallMovementCommand ballMovementCommand = new ManualBallMovementCommand(ballMovementSubsystem);
 
   // Sendable chooser declarations
   // Shuffleboard declarations
   public static ShuffleboardTab driverTab;
   private SendableChooser<Boolean> teleopSendableChooser;
   private final ManualDriveTank manualDriveTankCommand = new ManualDriveTank(driveSubSystem);
-  private final ManualDriveArcade manualDriveCommand = new ManualDriveArcade(driveSubSystem);
+  private final ManualDriveArcade manualDriveArcaadeCommand = new ManualDriveArcade(driveSubSystem);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -79,7 +77,7 @@ public class RobotContainer {
     driverTab = Shuffleboard.getTab("Driver Tab");
 
     // configure default commands
-    driveSubSystem.setDefaultCommand(manualDriveTankCommand);
+    driveSubSystem.setDefaultCommand(manualDriveArcaadeCommand);
 
     // configure default commands
     ballMovementSubsystem.setDefaultCommand(ballMovementCommand);
@@ -122,9 +120,9 @@ public class RobotContainer {
     Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(// Start at the origin facing the +X direction
         new Pose2d(0, 0, new Rotation2d(0)),
         // Pass through these two interior waypoints, making an 's' curve path
-        List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+        List.of(),
         // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(3, 0, new Rotation2d(0)),
+        new Pose2d(2.0, 0, new Rotation2d(0)),
         config);
 
     // make Ramsete Command
@@ -138,6 +136,7 @@ public class RobotContainer {
         driveSubSystem::tankDriveVolts, driveSubSystem);
 
     // reset odometry to starting pose
+    driveSubSystem.zeroHeading();
     driveSubSystem.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
 
     // Run path following command, then stop at the end.

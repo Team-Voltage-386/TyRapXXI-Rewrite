@@ -76,10 +76,15 @@ public class DriveSubsystem extends SubsystemBase {
         private NetworkTableEntry backRightCurrentWidget = tab.add("B-R Current", 0).withPosition(7, 1).getEntry();
 
         // Create encoder widgets
-        private NetworkTableEntry leftEncoderWidget = tab.add("Left Encoder", 0).withSize(2, 1).withPosition(2, 2)
+        private NetworkTableEntry leftEncoderWidget = tab.add("Left Encoder", 0).withSize(1, 1).withPosition(1, 2)
                         .getEntry();
-        private NetworkTableEntry rightEncoderWidget = tab.add("Right Encoder", 0).withSize(2, 1).withPosition(4, 2)
+        private NetworkTableEntry rightEncoderWidget = tab.add("Right Encoder", 0).withSize(1, 1).withPosition(2, 2)
                         .getEntry();
+
+        // Position widgets
+        private NetworkTableEntry botXWidget = tab.add("Bot X", 0.0).withSize(1, 1).withPosition(3, 2).getEntry();
+        private NetworkTableEntry botYWidget = tab.add("Bot Y", 0.0).withSize(1, 1).withPosition(4, 2).getEntry();
+        private NetworkTableEntry botYawWidget = tab.add("Bot Yaw", 0.0).withSize(1, 1).withPosition(5, 2).getEntry();
 
         public DriveSubsystem() {
                 // drivetrain
@@ -106,8 +111,6 @@ public class DriveSubsystem extends SubsystemBase {
                 _pigeon.getGeneralStatus(genStatus);
 
                 _pigeon.getYawPitchRoll(ypr);
-                // System.out.println("Yaw:" + getYaw());
-                // System.out.println("Heading:" + getHeading());
 
                 // Update output widgets
                 frontLeftOutputWidget.setDouble(frontLeftMotor.get());
@@ -130,9 +133,12 @@ public class DriveSubsystem extends SubsystemBase {
                 // Update encoder widgets
                 leftEncoderWidget.setDouble(leftEncoder.getPosition());
                 rightEncoderWidget.setDouble(rightEncoder.getPosition());
+                botXWidget.setDouble(getPose().getX());
+                botYWidget.setDouble(getPose().getY());
+                botYawWidget.setDouble(getYaw());
 
-                odometry.update(Rotation2d.fromDegrees(getHeading()), leftEncoder.getPosition(),
-                                rightEncoder.getPosition());
+                odometry.update(Rotation2d.fromDegrees(getHeading()), -1 * leftEncoder.getPosition(),
+                                -1 * rightEncoder.getPosition());
 
         }
 
