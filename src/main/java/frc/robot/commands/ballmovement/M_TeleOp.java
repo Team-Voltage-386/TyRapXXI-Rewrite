@@ -1,16 +1,12 @@
 package frc.robot.commands.ballmovement;
 
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.BallMovementSubsystem;
-import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import static frc.robot.Constants.ControllerConstants.*;
-import frc.robot.commands.drive.D_TeleOp;
 
 /**Manipulator TeleOp Command*/
 public class M_TeleOp extends CommandBase {
