@@ -36,6 +36,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -108,35 +109,39 @@ public class RobotContainer {
 
     // create voltage constraint so we do not go too fast
     var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
-        new SimpleMotorFeedforward(AutonomousConstants.ksVolts, AutonomousConstants.kvVoltSecondsPerMeter,
-            AutonomousConstants.kaVoltSecondsSquaredPerMeter),
+        new SimpleMotorFeedforward(AutonomousConstants.ks, AutonomousConstants.kv,
+            AutonomousConstants.ka),
         AutonomousConstants.kDriveKinematics, 10.0);
 
     // create config for trajectory
     TrajectoryConfig config = new TrajectoryConfig(AutonomousConstants.kMaxSpeedMetersPerSecond,
         AutonomousConstants.kMaxAccelerationMetersPerSecondSquared).setKinematics(AutonomousConstants.kDriveKinematics);
+    config.setReversed(true);
 
     // make trajectory
-    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(// Start at the origin facing the +X direction
-        new Pose2d(0, 0, new Rotation2d(0)),
-        // Pass through these two interior waypoints, making an 's' curve path
-        List.of(),
-        // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(2.0, 2.0, new Rotation2d(0)),
+    var startPoint = new Pose2d(0.0, 0.0, new Rotation2d(0.0));
+    var endPoint = new Pose2d(3.0,0.0, new Rotation2d(0.0));
+    var interiorWaypoints = new ArrayList<Translation2d>();
+    interiorWaypoints.add(new Translation2d(1.0,-1.0));
+    interiorWaypoints.add(new Translation2d(2.0,1.0));
+    var exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+        startPoint,
+        interiorWaypoints,
+        endPoint,
         config);
 
     // make Ramsete Command
     RamseteCommand ramseteCommand = new RamseteCommand(exampleTrajectory, driveSubSystem::getPose,
         new RamseteController(AutonomousConstants.kRamseteB, AutonomousConstants.kRamseteZeta),
-        new SimpleMotorFeedforward(AutonomousConstants.ksVolts, AutonomousConstants.kvVoltSecondsPerMeter,
-            AutonomousConstants.kaVoltSecondsSquaredPerMeter),
-            AutonomousConstants.kDriveKinematics, driveSubSystem::getDifferentialDriveWheelSpeeds,
+        new SimpleMotorFeedforward(AutonomousConstants.ks, AutonomousConstants.kv,
+            AutonomousConstants.ka),
+        AutonomousConstants.kDriveKinematics, driveSubSystem::getDifferentialDriveWheelSpeeds,
         new PIDController(AutonomousConstants.kPDriveVel, 0, 0),
         new PIDController(AutonomousConstants.kPDriveVel, 0, 0),
         driveSubSystem::tankDriveVolts, driveSubSystem);
 
     // reset odometry to starting pose
-    driveSubSystem.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
+    driveSubSystem.resetOdometry(exampleTrajectory.getInitialPose());
 
     // Run path following command, then stop at the end.
     return ramseteCommand.andThen(() -> driveSubSystem.tankDriveVolts(0, 0));

@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
-// import com.ctre.phoenix.sensors.PigeonIMU.*;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -82,9 +81,9 @@ public class DriveSubsystem extends SubsystemBase {
                         .getEntry();
 
         // Position widgets
-        private NetworkTableEntry botXWidget = tab.add("Bot X", 0.0).withSize(1, 1).withPosition(3, 2).getEntry();
-        private NetworkTableEntry botYWidget = tab.add("Bot Y", 0.0).withSize(1, 1).withPosition(4, 2).getEntry();
-        private NetworkTableEntry botYawWidget = tab.add("Bot Yaw", 0.0).withSize(1, 1).withPosition(5, 2).getEntry();
+        private NetworkTableEntry positionXWidget = tab.add("position X", 0.0).withSize(1, 1).withPosition(3, 2).getEntry();
+        private NetworkTableEntry positionYWidget = tab.add("position Y", 0.0).withSize(1, 1).withPosition(4, 2).getEntry();
+        private NetworkTableEntry positionHeadingWidget = tab.add("position Yaw", 0.0).withSize(1, 1).withPosition(5, 2).getEntry();
 
         public DriveSubsystem() {
                 // drivetrain
@@ -133,9 +132,9 @@ public class DriveSubsystem extends SubsystemBase {
                 // Update encoder widgets
                 leftEncoderWidget.setDouble(leftEncoder.getPosition());
                 rightEncoderWidget.setDouble(rightEncoder.getPosition());
-                botXWidget.setDouble(getPose().getX());
-                botYWidget.setDouble(getPose().getY());
-                botYawWidget.setDouble(getYaw());
+                positionXWidget.setDouble(getPose().getX());
+                positionYWidget.setDouble(getPose().getY());
+                positionHeadingWidget.setDouble(getHeading());
 
                 odometry.update(Rotation2d.fromDegrees(getHeading()), leftEncoder.getPosition(),
                                 rightEncoder.getPosition());
@@ -157,7 +156,7 @@ public class DriveSubsystem extends SubsystemBase {
         }
 
         public double getHeading() {
-                return Math.IEEEremainder(getYaw(), 360.0);
+                return Math.IEEEremainder(getYaw(), 360.0)*-1.0;
         }
 
         public void resetEncoders() {

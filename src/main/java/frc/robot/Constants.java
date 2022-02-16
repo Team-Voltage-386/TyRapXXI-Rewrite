@@ -75,20 +75,12 @@ public final class Constants {
 
     public static final class AutonomousConstants {
         public static final TalonSRX kGyro = new TalonSRX(BallMovementConstants.kFeeder); // Location of gyro
-        /** from drive characterization */
-        public static final double ksVolts = 0.2403;
-        /** from drive characterization */
-        public static final double kvVoltSecondsPerMeter = 2.7629;
-        /** from drive characterization */
-        public static final double kaVoltSecondsSquaredPerMeter = 0.64821;
-        public static final double kPDriveVel = 2.8; // volt m/s
-        public static final double kPDriveI = 1.5;
-        public static final double kPDriveD = 0.5;
-        // public static final double kPDriveVel = 1.0;
-        // public static final double kPDriveI = 0.25;
-        // public static final double kPDriveD = 0.0;
+        public static final double ks = .223;//drive characterization, volts per second (position)
+        public static final double kv = 2.97;//drive characterization, volts secods per meter (velocoity)
+        public static final double ka = .415;//drive characterization, volts second squared per meter
+        public static final double kPDriveVel = .153; // volt m/s
 
-        public static final double kMaxSpeedMetersPerSecond = .15;
+        public static final double kMaxSpeedMetersPerSecond = .60;
         public static final double kMaxAccelerationMetersPerSecondSquared = 0.10;
 
         // reasonable baseline Ramsete follower values in units meters and seconds
