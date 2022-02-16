@@ -39,7 +39,7 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   public final BallMovementSubsystem ballMovementSS = new BallMovementSubsystem();
-  public final LLSubsystem limeLightSubsystemHoop = new LLSubsystem("limelight",LimeLightConstants.targetHeightHoop,LimeLightConstants.camEleAngleHoop,LimeLightConstants.camHeightHoop);
+  public final LLSubsystem limeLightSubsystemHoop = new LLSubsystem("limelight-hoop",LimeLightConstants.targetHeightHoop,LimeLightConstants.camEleAngleHoop,LimeLightConstants.camHeightHoop);
   public final LLSubsystem limeLightSubsystemBall = new LLSubsystem("limelight-ball",LimeLightConstants.targetHeightBall,LimeLightConstants.camEleAngleBall,LimeLightConstants.camHeightBall);
   public final DriveSubsystem driveSubsystem = new DriveSubsystem();
   public final D_TeleOp teleOpD = new D_TeleOp(driveSubsystem, limeLightSubsystemHoop, limeLightSubsystemBall);
@@ -72,13 +72,22 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return new SequentialCommandGroup(  new LinearDrive(driveSubsystem, 1, 0, true),
+    /*return new SequentialCommandGroup(  new LinearDrive(driveSubsystem, 1, 0, true),
                                         new StationaryTurn(driveSubsystem, -170, true),
                                         new StationaryTurn(driveSubsystem, -78, true),
                                         new LinearDrive(driveSubsystem, 2.65, 0, true),
                                         new StationaryTurn(driveSubsystem, -37, true),
                                         new LinearDrive(driveSubsystem, 3.5, 0, true),
-                                        new StationaryTurn(driveSubsystem, 167.5, true));
+                                        new StationaryTurn(driveSubsystem, 167.5, true));*/
+      return new SequentialCommandGroup(  new LinearDrive(driveSubsystem,0.5,0,false),
+                                          new StationaryTurn(driveSubsystem, 270, false),
+                                          new LinearDrive(driveSubsystem,0.5,270,false),
+                                          new StationaryTurn(driveSubsystem,0,false),
+                                          new LinearDrive(driveSubsystem,0.5,0,false),
+                                          new StationaryTurn(driveSubsystem, 270, false),
+                                          new LinearDrive(driveSubsystem,0.5,270,false),
+                                          new StationaryTurn(driveSubsystem,0,false),
+                                          new LinearDrive(driveSubsystem,0.5,0,false));
   }
 
   public ParallelCommandGroup getTeleOpCommands() {

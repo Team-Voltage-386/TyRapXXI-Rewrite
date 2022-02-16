@@ -49,7 +49,7 @@ public class M_TeleOp extends CommandBase {
         if (_controller.getRawButtonPressed(kB)) _bmss.drumIdle = !_bmss.drumIdle;
         if (Robot.m_robotContainer.hoopTargeted) {
             _bmss.setAimDistance(Robot.m_robotContainer.metersToTarget);
-            //_bmss.drumControllerOn = true;
+            _bmss.drumControllerOn = true;
             if (Robot.m_robotContainer.hoopLocked && _bmss.RTF()){
                 if(_controller.getRawButton(kA)) _bmss.runFeeder(true);
                 else {

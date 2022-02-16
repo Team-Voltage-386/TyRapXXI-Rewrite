@@ -62,13 +62,13 @@ public final class Constants {
     /**PID paramaters*/
     public static final class pidConstants {
         // LimeLight arcade drive pid constants:
-        public static final double TP = 0.05; // P
-        public static final double TI = 0.03;  // I
-        public static final double TD = 0.014; // D
+        public static final double TP = 0.02; // P
+        public static final double TI = 0.05;  // I
+        public static final double TD = 0.008; // D
         public static final double TC = 0.8; // Clamp
 
-        public static final double DP = 0.35;
-        public static final double DI = 0.2;
+        public static final double DP = 0.3;
+        public static final double DI = 0.15;
         public static final double DD = 0;
         public static final double DC = 1;
 
@@ -82,15 +82,15 @@ public final class Constants {
         public static final double HC = 1;
 
         public static final double LP = 0.00045;
-        public static final double LI = 0.0003;
+        public static final double LI = 0.001;
         public static final double LD = 0.000025;
     }
 
     /**Constants for the limelight used for estimating distance*/
     public static final class LimeLightConstants {
-        public static final double camHeightHoop = 0.63;
+        public static final double camHeightHoop = 0.63; // 32" on XXII
         public static final double camEleAngleHoop = 12.5;
-        public static final double targetHeightHoop = 1;//2.6416;
+        public static final double targetHeightHoop = 2.6416;
         public static final double camHeightBall = 0.72;
         public static final double camEleAngleBall = -13;
         public static final double targetHeightBall = 0.12065;
@@ -149,7 +149,7 @@ public final class Constants {
         of DBZ, aboard a raft equipped with nothing but a Chromebook.
         */
         public static final double[] distances = {4.06,5.03,5.97};
-        public static final int[] drumSpeeds = {3500,3600,3950};
+        public static final int[] drumSpeeds = {3550,3600,3950};
         public static final double[] hoodPositions = {0.1,0.1,0.1};
     }
 }
