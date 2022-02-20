@@ -132,12 +132,13 @@ public class DriveSubsystem extends SubsystemBase {
                 // Update encoder widgets
                 leftEncoderWidget.setDouble(leftEncoder.getPosition());
                 rightEncoderWidget.setDouble(rightEncoder.getPosition());
-                positionXWidget.setDouble(getPose().getX());
-                positionYWidget.setDouble(getPose().getY());
-                positionHeadingWidget.setDouble(getHeading());
+                
 
                 odometry.update(Rotation2d.fromDegrees(getHeading()), leftEncoder.getPosition(),
                                 rightEncoder.getPosition());
+                positionXWidget.setDouble(odometry.getPoseMeters().getX());
+                positionYWidget.setDouble(odometry.getPoseMeters().getY());
+                positionHeadingWidget.setDouble(odometry.getPoseMeters().getRotation().getDegrees());
 
         }
 

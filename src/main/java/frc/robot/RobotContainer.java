@@ -116,14 +116,14 @@ public class RobotContainer {
     // create config for trajectory
     TrajectoryConfig config = new TrajectoryConfig(AutonomousConstants.kMaxSpeedMetersPerSecond,
         AutonomousConstants.kMaxAccelerationMetersPerSecondSquared).setKinematics(AutonomousConstants.kDriveKinematics);
-    config.setReversed(true);
+    // config.setReversed(true);
 
     // make trajectory
-    var startPoint = new Pose2d(0.0, 0.0, new Rotation2d(0.0));
-    var endPoint = new Pose2d(3.0,0.0, new Rotation2d(0.0));
+    var startPoint = new Pose2d(0.0, 0.0, new Rotation2d(Math.toRadians(0)));
+    var endPoint = new Pose2d(2.0, 0.0, new Rotation2d(Math.toRadians(0)));
     var interiorWaypoints = new ArrayList<Translation2d>();
-    interiorWaypoints.add(new Translation2d(1.0,-1.0));
-    interiorWaypoints.add(new Translation2d(2.0,1.0));
+    // interiorWaypoints.add(new Translation2d(1.0,-1.0));
+    // interiorWaypoints.add(new Translation2d(2.0,1.0));
     var exampleTrajectory = TrajectoryGenerator.generateTrajectory(
         startPoint,
         interiorWaypoints,
