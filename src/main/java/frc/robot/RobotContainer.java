@@ -78,7 +78,7 @@ public class RobotContainer {
                                         new LinearDrive(driveSubsystem, 2.65, 0, true),
                                         new StationaryTurn(driveSubsystem, -37, true),
                                         new LinearDrive(driveSubsystem, 3.5, 0, true),
-                                        new StationaryTurn(driveSubsystem, 167.5, true));*/
+                                        new StationaryTurn(driveSubsystem, 167.5, true));
       return new SequentialCommandGroup(  new LinearDrive(driveSubsystem,0.5,0,false),
                                           new StationaryTurn(driveSubsystem, 270, false),
                                           new LinearDrive(driveSubsystem,0.5,270,false),
@@ -87,7 +87,8 @@ public class RobotContainer {
                                           new StationaryTurn(driveSubsystem, 270, false),
                                           new LinearDrive(driveSubsystem,0.5,270,false),
                                           new StationaryTurn(driveSubsystem,0,false),
-                                          new LinearDrive(driveSubsystem,0.5,0,false));
+                                          new LinearDrive(driveSubsystem,0.5,0,false));*/
+    return new DriveTo(driveSubsystem, 1, 1);
   }
 
   public ParallelCommandGroup getTeleOpCommands() {

@@ -134,11 +134,9 @@ public class BallMovementSubsystem extends SubsystemBase {
 
     /**run the hood control system*/
     private void runHood() {
-        if (calibrated) {
             double control = MathUtil.clamp(-1*pidH.calculate(hoodPosition, hoodSet), -1*HC, HC);
             if (!hoodLowLimit) hoodMotor.set(ControlMode.PercentOutput, control);
             else hoodMotor.set(ControlMode.PercentOutput, MathUtil.clamp(control, -1, 0));
-        }
     }
 
     /**recalibrate pids and hood*/
@@ -185,7 +183,7 @@ public class BallMovementSubsystem extends SubsystemBase {
             setDrumPower(pidL.calculate(drumCurrentSpeed, drumSP));
         } else if (drumIdle) {
             drumPIDRunning = true;
-            setDrumPower(pidL.calculate(drumCurrentSpeed,drumIdleSpeed));
+            setDrumPower(pidL.calculate(drumCurrentSpeed, drumIdleSpeed));
         }else {
             setDrumPower(0);
             if (drumPIDRunning) {
@@ -236,6 +234,5 @@ public class BallMovementSubsystem extends SubsystemBase {
         upper = ShooterData.hoodPositions[i];
         lower = ShooterData.hoodPositions[i-1];
         hoodSet = lower + ((upper-lower)*lerpFactor);
-        
     }
 }
